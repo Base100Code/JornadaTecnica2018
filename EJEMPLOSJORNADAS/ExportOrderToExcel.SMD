@@ -1,0 +1,313 @@
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CLimits is Form begin
+		objects begin
+			from1 as Smallint default 1
+			preview as Smallint default 1
+				boolean values "0|1"
+			to1 as Smallint default 1
+		end
+		INTERFACE
+			POSITION 0 0 391 157
+			FOREGROUND RGB 0 0 0
+			LABEL "Select the limits of the report"
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 383 131
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL AS BOX
+					POSITION 63 6 203 110
+					BOLD 
+					LABEL " Orders "
+					BORDER DOWN
+				BEGIN
+					CONTROL AS TEXT
+						POSITION 7 11 56 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "From :"
+					CONTROL AS TEXT
+						POSITION 7 37 56 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "To :"
+					CONTROL AS EDIT
+						POSITION 70 11 72 22
+						BORDER DOUBLE DOWN
+						VARIABLE from1
+						ALIGNMENT RIGHT
+						DATATYPE INTEGER MASK 2
+					CONTROL AS EDIT
+						POSITION 70 39 72 22
+						BORDER DOUBLE DOWN
+						VARIABLE to1
+						ALIGNMENT RIGHT
+						DATATYPE INTEGER MASK 2
+					CONTROL AS CHECK
+						POSITION 65 65 22 22
+						LABEL "Control"
+						NOLABEL
+						NOBORDER
+						VARIABLE preview
+					CONTROL AS TEXT
+						POSITION 8 63 50 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Preview :"
+				END
+				CONTROL AS BOX
+					POSITION 7 0 35 52
+					NOLABEL
+					NOBORDER
+					ICON 18 FILE "Icon Hardware" CENTER
+				BEGIN
+				END
+				CONTROL AS BUTTON
+					POSITION 289 58 84 26
+					LABEL "Accept"
+					DEFPUSH
+					ICON 2 FILE "Small Buttons" CENTER
+					COMMAND Ok
+				CONTROL AS BUTTON
+					POSITION 289 88 84 26
+					LABEL "Cancel"
+					ICON 3 FILE "Small Buttons" CENTER
+					COMMAND Close
+			END
+		END
+	end
+	cPageOrders is Page begin
+		objects begin
+			vTitulo as Char (50)
+			vFecha as Date default TODAY
+			vPag as Smallint default 0
+			vDescription as Char
+			vQuantity as Smallint
+			vDiscount as Smallint
+			vPrice as Decimal (12,2)
+			vTotline as Decimal (12,2)
+			vOrders as Integer
+			vItem as Integer
+			vSupplier as Integer
+		end
+		INTERFACE
+			SIZE 595 842
+			MARGIN 0 0 0 0
+		BEGIN
+			CONTROL AS BOX
+				POSITION 8 5 578 89
+				BACKGROUND COLOR transparent
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL AS VAR
+					POSITION 152 32 272 22
+					FONT "Times New Roman" 18  CHARSET Ansi 
+					VARIABLE vTitulo
+					DATATYPE CHAR
+				CONTROL AS VAR
+					POSITION 511 6 49 22
+					VARIABLE vFecha
+					DATATYPE CHAR
+				CONTROL AS VAR
+					POSITION 514 64 50 22
+					VARIABLE vPag
+					DATATYPE CHAR
+				CONTROL AS TEXT
+					POSITION 452 7 53 22
+					TAGS "Date"
+				CONTROL AS TEXT
+					POSITION 450 65 53 22
+					TAGS "Page"
+			END
+			CONTROL IdBandGroup AS BANDGROUP
+				POSITION 8 170 577 579
+				BACKGROUND COLOR transparent
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL IdLines AS BOX
+					POSITION 0 0 575 24
+					BACKGROUND COLOR transparent
+					NOLABEL
+				BEGIN
+					CONTROL idCode AS VAR
+						POSITION 102 0 32 22
+						LABEL "Item"
+						VARIABLE vItem
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT
+					CONTROL AS VAR
+						POSITION 161 0 173 22
+						LABEL "Description"
+						VARIABLE vDescription
+						DATATYPE CHAR
+					CONTROL AS VAR
+						POSITION 339 0 37 22
+						LABEL "Quantity"
+						VARIABLE vQuantity
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT
+					CONTROL AS VAR
+						POSITION 379 0 29 22
+						LABEL "Discount"
+						VARIABLE vDiscount
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT
+					CONTROL AS VAR
+						POSITION 422 0 61 22
+						LABEL "Price"
+						VARIABLE vPrice
+						ALIGNMENT RIGHT
+						DATATYPE DECIMAL(9,2) MASK 4
+					CONTROL idToralPrice AS VAR
+						POSITION 486 0 79 22
+						LABEL "Total Price"
+						VARIABLE vTotline
+						ALIGNMENT RIGHT
+						DATATYPE DECIMAL(12,2) MASK 4
+					CONTROL AS VAR
+						POSITION 48 0 32 22
+						LABEL "Supplier"
+						VARIABLE vSupplier
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT
+				END
+				CONTROL IdBoxOrders AS BOX
+					POSITION 0 24 575 26
+					BACKGROUND COLOR transparent
+					NOLABEL
+				BEGIN
+					CONTROL idOrders AS VAR
+						POSITION 5 4 55 22
+						LABEL "Order"
+						VARIABLE vOrders
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT
+				END
+			END
+			CONTROL AS TEXT
+				POSITION 11 144 62 22
+				TAGS "Order"
+			CONTROL AS TEXT
+				POSITION 246 144 53 22
+				TAGS "Description"
+			CONTROL AS TEXT
+				POSITION 344 144 47 22
+				TAGS "Quantity"
+			CONTROL AS TEXT
+				POSITION 396 144 35 22
+				TAGS "Dto"
+			CONTROL AS TEXT
+				POSITION 449 144 43 22
+				TAGS "Price"
+			CONTROL AS TEXT
+				POSITION 527 144 53 22
+				TAGS "Total"
+			CONTROL AS TEXT
+				POSITION 110 144 53 22
+				TAGS "Item"
+			CONTROL AS TEXT
+				POSITION 53 144 53 22
+				TAGS "Supplier"
+		END
+	end
+END
+objects begin
+	oCLimits AS CLimits
+end
+CODE CLASS CLimits BEGIN
+//{{CODEBEGIN
+{*
+ * This method allows you to stablish the selected limits..
+ * @global
+ *}
+
+On Command Ok
+objects begin
+    i as integer
+end
+begin
+    if to1 >= from1 then
+        Exit(1);    
+    else
+        MessageBox("The limits are wrong", "Attention", 48);
+end
+//{{CODEEND
+END
+CODE CLASS cPageOrders BEGIN
+//{{CODEBEGIN
+Public RunReport()
+objects begin
+    oPrnDocument as PrnDocument
+    cSqlCursor as SqlCursor
+    ancho altoIdlines as integer    
+    lInAntOrders as Integer
+end
+begin
+    vTitulo= "Report Oders (Band group)";
+    IdLines.GetSize(ancho ,altoIdlines);
+    PrintVars;
+    //oPrnDocument.SetGroupExportDataReport("IdBandGroup:ALL");
+    oPrnDocument.SetGroupExportDataReport("IdBandGroup:IdBoxOrders,IdLines=PLAINDETAIL"); 
+    vOrders = lInAntOrders = oCLimits.from1; 
+    PrintVars;
+    AddBand("IdBandGroup" ,"IdBoxOrders");
+  
+    cSqlCursor.Prepare("select orderlines.item, orderlines.supplier, description, quantity, discount, price, orderlines.order_nbr "
+                        + " from orderlines, items"
+                        + " where  orderlines.order_nbr >= ? and orderlines.order_nbr <= ? "
+                        + " and items.item = orderlines.item"
+                        + " and items.supplier = orderlines.supplier order by orderlines.order_nbr, item");
+    cSqlCursor.Open(oCLimits.from1, oCLimits.to1);
+    while cSqlCursor.Fetch(vItem, vSupplier, vDescription, vQuantity, vDiscount, vPrice, vOrders).Found() do begin
+        if lInAntOrders != vOrders then begin
+            PrintVars;
+             AddBand("IdBandGroup" ,"IdBoxOrders");
+        end     
+        vTotline = vQuantity * (1 - vQuantity/100) * vPrice;
+        
+        if IdBandGroup.RemainingSpace() < altoIdlines then begin
+            ++vPag;
+            PrintVars;
+            oPrnDocument.SendPage(self);
+            Clear;
+        end
+        PrintVars;
+        AddBand("IdBandGroup" ,"IdLines");
+        lInAntOrders = vOrders;
+    end
+    ++vPag;
+    
+    PrintVars;
+    oPrnDocument.SendPage(self);
+    oPrnDocument.Preview();
+    cSqlCursor.Close().Free();
+    oPrnDocument.ClosePrinter();    
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+     oCOrderPage as cPageOrders
+end
+begin
+    PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    oCLimits.Run();
+    oCOrderPage.RunReport();
+    Sql.Disconnect();
+    
+end
+//{{CODEEND
+END
+

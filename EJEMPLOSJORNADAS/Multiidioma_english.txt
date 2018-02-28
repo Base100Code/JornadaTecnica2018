@@ -1,0 +1,9 @@
+Estado|Cliente  |Fecha pedido |Fecha pago |Estado |Descripción|Precio=State|Customer  |Order date |Pay date |Status |Description|Price
+Archivo=File
+Abrir=Open
+Guardar=Save
+Salir=Exit
+Fichero Multiidoma=Multilanguage File
+List=List
+MULTILANGUAGE=MULTI-IDIOMA
+Descomentar la variable de entorno MULTILANGUAGEFILE de samples.ini para el ejemplo de multi-idioma=Uncomment the MULTILANGUAGEFILE environment variable in samples.ini for the multi-language example

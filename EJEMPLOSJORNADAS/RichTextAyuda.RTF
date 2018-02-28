@@ -1,0 +1,124 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang3082{\fonttbl{\f0\fswiss\fprq2\fcharset0 Calibri;}{\f1\fmodern\fprq1\fcharset0 Courier New;}{\f2\froman\fprq2\fcharset0 Times New Roman;}{\f3\fnil\fcharset0 Segoe UI;}{\f4\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red51\green51\blue51;\red255\green255\blue255;\red78\green78\blue118;\red128\green128\blue128;\red0\green0\blue255;\red191\green191\blue191;}
+{\stylesheet{ Normal;}{\s1 heading 1;}{\s2 heading 2;}}
+{\*\generator Riched20 10.0.15063}\viewkind4\uc1 
+\pard\brdrb\brdrs\brdrw20\brsp20 \keepn\pagebb\widctlpar\s1\fi-431\li431\sa240\sl276\slmult1\cf1\b\f0\fs32 1.\tab Texto enriquecido en el control de edici\'f3n\par
+
+\pard\widctlpar\sa200\sl276\slmult1\qj\cf0\b0\fs20\lang1034 Se ha implementado la posibilidad de utilizar un control de edici\'f3n como un control de edici\'f3n\highlight2  con\highlight0  texto enriquecido.\par
+Para ello, hay que marcar el control Check \ldblquote Rich Text\rdblquote  en el cuadro de di\'e1logo de propiedades del control en la pesta\'f1a General.\par
+
+\pard\keepn\widctlpar\s2\fi-578\li578\sb240\sa120\sl276\slmult1\qj\cf1\b\lang3082 1.1\tab\fs24 M\'e9todos\par
+
+\pard\widctlpar\sa200\sl276\slmult1\qj\cf0\b0\fs20 Todos los m\'e9todos que se enumeran a continuaci\'f3n son de la clase SimpleControl, pero se indican en este apartado para mayor claridad.\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-360\li360\sa200\sl276\slmult1\qj RichTextAddText\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\lang1034 A\'f1ade texto al final del editor.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf3\b\f1\fs18\lang1033 RichTextAddText (text as Char)\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-360\li360\sa200\sl276\slmult1\qj\cf0\b0\f0\fs20\lang3082 RichTextGetProperty\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\lang1034 Consulta el valor de una propiedad del texto seleccionado o del p\'e1rrafo donde se encuentra el cursor.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf3\b\f1\fs18\lang1033 RichTextGetProperty (name as Char ,VAR value as Object ,VAR indexes as ArgList OF Object)\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20\lang1034 Par\'e1metros:\lang3082\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119\lang1034 Name\tab Nombre de la propiedad.\par
+Value\tab Valor a asignar.\par
+Indexes\tab\lang3082 Par\'e1metro reservado para futuras implementaciones.\lang1034\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-360\li360\sa200\sl276\slmult1\qj\lang3082 RichTextSaveToFile\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\lang1034 Guarda el contenido del control rich text en un fichero con el formato indicado.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf3\b\f1\fs18\lang1033  RichTextSaveToFile (fileName as Char ,fileFormat as Char) return Boolean\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20\lang3082 Par\'e1metros:\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119\lang1040 filename\tab Ruta completa del fichero.\par
+\lang1034 fileFormat \tab "RTF" o "TXT".\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-360\li360\sa200\sl276\slmult1\qj\lang3082 RichTextSetProperty\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\lang1034 Asigna propiedad al texto seleccionado de un rich text o al p\'e1rrafo donde se encuentra el cursor.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf3\b\f1\fs18\lang1033 RichTextSetProperty(name as Char ,VAR value as Object ,VAR indexes as ArgList OF Object)\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20\lang1034 Par\'e1metros:\lang3082\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119\lang1034 Name\tab Nombre de la propiedad.\par
+Value\tab Valor a asignar.\par
+Indexes\tab Par\'e1metro reservado para futuras implementaciones.\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-360\li360\sa200\sl276\slmult1\qj\lang3082 RichTextPrint.\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\lang1034 Imprime el contenido del control a la impresora indicada.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf3\b\f1\fs18\lang1033  RichTextPrint (printerName as Char ,showPrintDlg as Boolean default FALSE)\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20\lang1034 Par\'e1metros.\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119 PrinterName\tab Nombre de la impresora por la que se desea imprimir.\par
+showPrintDlg \tab Si es TRUE, mostrar\'e1 el cuadro de selecci\'f3n de impresora.\par
+\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clcbpat6\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1985\clcbpat6\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx4111\clcbpat6\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1\fs18\lang3082 Par\'e1metro \lang1034 PrinterName\lang3082\cell Par\'e1metro showPrintDlg\cell El contenido del control se imprimir\'e1 por:\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NULL\cell FALSE\cell Impresora por defecto.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NULL\cell TRUE\cell Se mostrar\'e1 un cuadro de di\'e1logo para seleccionar la impresora.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 No Nulo\cell FALSE\cell Impresora seleccionada.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 No Nulo\cell TRUE\cell Mostrar\'e1 el cuadro de di\'e1logo para seleccionar la impresora y se ignorar\'e1 el valor indicado en el primer par\'e1metro.\cell\row 
+\pard\keepn\widctlpar\s2\fi-578\li578\sb240\sa120\sl276\slmult1\qj\cf1\b\fs20\lang1034 1.2\tab\fs24 Propiedades\par
+\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clcbpat6\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clcbpat6\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1\cf0\b0\fs18\lang3082 Nombre\cell Descripci\'f3n\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 ALIGNMENT\cell Indica la alineaci\'f3n del p\'e1rrafo donde se encuentra el cursor:\par
+1: izquierda, 2: derecha, 3: centrado.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1\highlight2 BACKCOLOR\highlight0\cell Color de fondo.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 BOLD\cell El texto seleccionado se mostrar\'e1 en negrita. Si ya estuviese en negrita se quitar\'e1 la propiedad.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 CARETPOSITION\cell Posici\'f3n del cursor. El primer car\'e1cter es 0.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 FILE\cell Fichero asignado al control.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 FONT\cell Fuente de texto.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 FORECOLOR\cell Color del texto.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 ITALIC\cell El texto seleccionado se mostrar\'e1 en cursiva. Si ya estuviese en cursiva, se quitar\'e1 la propiedad.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 LEFTINDENT\cell Indica la sangr\'eda del p\'e1rrafo \i (indentation)\i0  donde se encuentra el cursor respecto a la sangr\'eda actual del p\'e1rrafo.\par
+Una sangr\'eda negativa indica que se suprimir\'e1 en la medida indicada en el par\'e1metro.\par
+La unidad que se utiliza es el \ldblquote twip\rdblquote . 1.440 twips se corresponden con 1 pulgada, o 57 twips con 1 mm.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 LINESPACING\cell Espaciado entre l\'edneas.\par
+Valores posibles:\par
+
+\pard\intbl\widctlpar\li891\sb20\sa20\sl276\slmult1\tx1317 0\tab Espaciado sencillo.\par
+1\tab Espaciado de 1,5 l\'edneas.\par
+2\tab Espaciado doble.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGBULLET\cell Punto gr\'e1fico de enumeraci\'f3n del p\'e1rrafo donde se encuentra el cursor.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGLETTER\cell Letra min\'fascula para la enumeraci\'f3n del p\'e1rrafo donde se encuentra el cursor.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGNUMBER\cell N\'famero natural para la enumeraci\'f3n del p\'e1rrafo donde se encuentra el cursor.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGROMAN\cell N\'famero romano en letras min\'fasculas para la enumeraci\'f3n del p\'e1rrafo donde se encuentra el cursor.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGULETTER\cell Letra may\'fascula para la enumeraci\'f3n del p\'e1rrafo donde se encuentra el cursor.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGUROMAN\cell N\'famero romano en letras may\'fasculas para la enumeraci\'f3n del p\'e1rrafo donde se encuentra el cursor.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf4 \trbrdrt\brdrs\brdrw10\brdrcf4 \trbrdrr\brdrs\brdrw10\brdrcf4 \trbrdrb\brdrs\brdrw10\brdrcf4 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx1984\clbrdrl\brdrw10\brdrs\brdrcf4\clbrdrt\brdrw10\brdrs\brdrcf4\clbrdrr\brdrw10\brdrs\brdrcf4\clbrdrb\brdrw10\brdrs\brdrcf4 \cellx8329 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 UNDERLINE\cell El texto seleccionado se mostrar\'e1 subrayado. Si ya estuviese subrayado, se quitar\'e1 la propiedad.\cell\row 
+\pard\sl0\slmult0\f3\fs20\par
+}
+ 

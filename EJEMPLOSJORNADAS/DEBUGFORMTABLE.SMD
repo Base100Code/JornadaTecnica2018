@@ -1,0 +1,336 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	COrdersHeadLines is Form begin
+		objects begin
+		end
+		Table orders is orders
+		begin
+			order_nbr as column required
+			customer as column required
+			order_date as column
+			pay_date as column
+			payform as column
+			order_status as column
+			fk1_orders_company as customers.company
+				join fk1_orders lookup "company"
+		end
+		Table orderlines is orderlines
+			depend on orders join fk2_lines
+		begin
+			line_nbr as column required
+			item as column
+			supplier as column
+			quantity as column
+			discount as column
+			price as column
+		end
+		INTERFACE
+			POSITION 0 0 773 556
+			LABEL "Header Lines"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 757 490
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL IDMASTER AS BOX
+					POSITION 7 5 651 169
+					ATTACH ALL
+					NOLABEL
+					BORDER DOUBLE FRAME
+					TABLE orders
+				BEGIN
+					CONTROL AS SPIN
+						POSITION 622 0 17 157
+						ATTACH TOP RIGHT BOTTOM
+						NOBORDER
+						VERTICAL
+						QUADRUPLE
+						COMMAND
+					CONTROL AS TEXT
+						POSITION 7 13 121 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Order number"
+					CONTROL AS EDIT
+						POSITION 137 13 94 22
+						LABEL "Número de Pedido"
+						BORDER DOUBLE DOWN
+						VARIABLE orders.order_nbr
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 39 105 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Customer Code"
+					CONTROL AS EDIT
+						POSITION 137 39 94 22
+						LABEL "Código de Cliente"
+						BORDER DOUBLE DOWN
+						VARIABLE orders.customer
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 65 108 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Order Date"
+					CONTROL AS EDIT
+						POSITION 137 65 82 22
+						LABEL "Fecha de Pedido"
+						BORDER DOUBLE DOWN
+						VARIABLE orders.order_date
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 91 89 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Date pay"
+					CONTROL AS EDIT
+						POSITION 137 91 82 22
+						LABEL "Día de Pago"
+						BORDER DOUBLE DOWN
+						VARIABLE orders.pay_date
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 270 13 96 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Pay Form"
+					CONTROL AS EDIT
+						POSITION 381 13 34 22
+						LABEL "Forma de Pago"
+						BORDER DOUBLE DOWN
+						VARIABLE orders.payform
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 270 39 96 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Invoiced"
+					CONTROL AS EDIT
+						POSITION 381 39 22 22
+						LABEL "Facturado"
+						BORDER DOUBLE DOWN
+						VARIABLE orders.order_status
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 270 65 270 22
+						LABEL "Empresa"
+						NOBORDER
+						VARIABLE orders.fk1_orders_company
+						LIKEVAR
+						TAGS "Empresa"
+				END
+				CONTROL AS BOX
+					POSITION 7 175 651 309
+					ATTACH LEFT RIGHT BOTTOM
+					NOLABEL
+					BORDER DOUBLE FRAME
+				BEGIN
+					CONTROL IDLINES AS GRID
+						POSITION 0 0 639 274
+						ATTACH ALL
+						BORDER DOWN
+						SCROLL VERTICAL
+						TABLE orderlines
+						PARENTGRID
+					BEGIN
+						CONTROL AS EDIT
+							POSITION 0 0 116 22
+							LABEL "Número de Línea"
+							NOBORDER
+							VARIABLE orderlines.line_nbr
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 117 0 103 22
+							LABEL "Código de Artículo"
+							NOBORDER
+							VARIABLE orderlines.item
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 221 0 109 22
+							LABEL "Código de Proveedor"
+							NOBORDER
+							VARIABLE orderlines.supplier
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 331 0 48 22
+							LABEL "Cantidad"
+							NOBORDER
+							VARIABLE orderlines.quantity
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 380 0 48 22
+							LABEL "Descuento"
+							NOBORDER
+							VARIABLE orderlines.discount
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 429 0 90 22
+							LABEL "Precio Unitario"
+							NOBORDER
+							VARIABLE orderlines.price
+							LIKEVAR
+					END
+					CONTROL AS BUTTON
+						POSITION 474 275 165 22
+						ATTACH RIGHT BOTTOM
+						LABEL "Update Line"
+						ICON 158 FILE "Small Buttons" CENTER
+						COMMAND UpdateLine
+					CONTROL AS BUTTON
+						POSITION 165 275 309 22
+						ATTACH LEFT RIGHT BOTTOM
+						LABEL "Delete Line"
+						ICON 159 FILE "Small Buttons" CENTER
+						COMMAND DeleteLine
+					CONTROL AS BUTTON
+						POSITION 0 275 165 22
+						ATTACH LEFT BOTTOM
+						LABEL "Add Line"
+						ICON 157 FILE "Small Buttons" CENTER
+						COMMAND AddLine
+				END
+				CONTROL AS BUTTON
+					POSITION 673 6 76 22
+					ATTACH RIGHT
+					LABEL "&Query"
+					ICON 6 FILE "Small Buttons"
+					COMMAND EditQueryLike
+				CONTROL AS BUTTON
+					POSITION 673 32 76 22
+					ATTACH RIGHT
+					LABEL "&Add"
+					ICON 157 FILE "Small Buttons"
+					COMMAND EditNew
+				CONTROL AS BUTTON
+					POSITION 673 58 76 22
+					ATTACH RIGHT
+					LABEL "&Delete"
+					ICON 159 FILE "Small Buttons"
+					COMMAND Delete
+				CONTROL AS BUTTON
+					POSITION 673 84 76 22
+					ATTACH RIGHT
+					LABEL "&Update"
+					ICON 158 FILE "Small Buttons"
+					COMMAND EditUpdate
+				CONTROL AS BUTTON
+					POSITION 673 110 76 22
+					ATTACH RIGHT
+					LABEL "Acc&ept"
+					ICON 2 FILE "_MBSTDBMP_"
+					COMMAND AcceptEdit
+				CONTROL AS BUTTON
+					POSITION 673 136 76 22
+					ATTACH RIGHT
+					LABEL "&Cancel"
+					ICON 3 FILE "_MBSTDBMP_"
+					COMMAND CancelEdit
+				CONTROL AS BUTTON
+					POSITION 673 456 76 22
+					ATTACH RIGHT BOTTOM
+					LABEL "E&xit"
+					ICON 4 FILE "Small Buttons"
+					COMMAND Close
+				CONTROL btn_debugon AS BUTTON
+					POSITION 665 194 92 22
+					ATTACH RIGHT
+					LABEL "Debug ON"
+					ICON 167 FILE "Cosmos 7"
+				CONTROL btn_debugoff AS BUTTON
+					POSITION 665 223 92 22
+					ATTACH RIGHT
+					LABEL "Debug OFF"
+					ICON 143 FILE "Cosmos 7"
+			END
+			CONTROL AS BAR
+				POSITION 0 490 757 27
+				FOREGROUND RGB 0 0 0
+				ATTACH LEFT RIGHT BOTTOM
+				BORDER ETCHED EXTRA 3
+				BARTYPE STATUS
+			BEGIN
+				CONTROL panel_msg AS PANEL
+					POSITION 3 0 707 19
+					FOREGROUND RGB 0 0 0
+					ATTACH ALL
+					NOBORDER
+				CONTROL AS PANEL
+					POSITION 713 0 35 19
+					FOREGROUND RGB 0 0 0
+					ATTACH TOP RIGHT BOTTOM
+					BORDER DOWN
+					PANELTYPE EDITMODE
+			END
+		END
+	end
+END
+CODE CLASS COrdersHeadLines BEGIN
+//{{CODEBEGIN
+On Open
+begin
+    Self.SetEditMode(TRUE);
+    MasterTable.Query();
+    panel_msg.Text = "Press Update botton and place the focus in a field. In the lower left part of the window there is a tooltips with table's name and column's name";
+end
+
+On command AddLine
+begin
+    MasterTable.ChildTable.EditNew;
+end
+
+On command DeleteLine
+begin
+    MasterTable.ChildTable.Delete;
+end
+
+On command UpdateLine
+begin
+    MasterTable.ChildTable.EditUpdate;
+end
+
+On event Click control btn_debugon(e as event)
+begin
+    if Module.Version() < "7.1" then begin
+        MessageBox("This variable can be changed dynamically from version 7.1 of Cosmos" ,"WARNING");
+    end
+    Module.PutEnv("DEBUGFORMTABLE", "TRUE");
+end
+
+On event Click control btn_debugoff(e as event)
+begin
+    if Module.Version() < "7.1" then begin
+        MessageBox("This variable can be changed dynamically from version 7.1 of Cosmos" ,"WARNING");
+    end
+    Module.PutEnv("DEBUGFORMTABLE", "FALSE");
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+oCOrdersHeadLines as COrdersHeadLines
+end
+begin
+    if Module.Version() < "7.1" then begin
+        Module.PutEnv("DEBUGFORMTABLE", "TRUE");
+    end    
+    Module.PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    oCOrdersHeadLines.Run;
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

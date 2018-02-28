@@ -1,0 +1,447 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	frm2 is Form begin
+		objects begin
+			ribbonType as Integer default 1
+			fileVisualStyle as Char
+		end
+		Table customers is customers
+		begin
+			customer as column required
+			company as column
+			surname as column
+			fname as column
+		end
+		menu MnuSplit_1
+		PULLDOWN
+			BEGIN
+				OPTION
+					"Pegar"
+				OPTION
+					"Pegado Especial"
+			END
+		INTERFACE
+			POSITION 0 0 1156 834
+			FONT "Verdana" 9  CHARSET Ansi 
+			LABEL "Change visual styles at run time"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 1140 795
+				FOREGROUND COLOR lightgray
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL ctr_tabribbon AS TAB
+					POSITION 2 13 1136 165
+					ATTACH LEFT TOP RIGHT
+					BORDER DOUBLE
+					NUMBER 8
+						TAB LABEL "Home"
+						TAB LABEL "Insert"
+						TAB LABEL "Page Desing"
+						TAB LABEL "Formulas"
+						TAB LABEL "Data"
+						TAB LABEL "Review"
+						TAB LABEL "View"
+						TAB LABEL "Programer"
+				BEGIN
+					CONTROL ctr_box1 AS BOX
+						POSITION 2 4 104 131
+						BACKGROUND COLOR transparent
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+						CONTROL btn_pegar AS BUTTON
+							POSITION 2 1 48 88
+							ATTACH LEFT
+							LABEL "Paste"
+							BORDER HILIGHT
+						CONTROL btn_cortar AS BUTTON
+							POSITION 67 2 31 26
+							BORDER HILIGHT
+							ICON 7 FILE "listaiconosgif" CENTER
+						CONTROL btn_buscar AS BUTTON
+							POSITION 67 32 31 26
+							BORDER HILIGHT
+							ICON 13 FILE "listaiconosgif" CENTER
+						CONTROL btn_limpiar AS BUTTON
+							POSITION 67 62 31 26
+							BORDER HILIGHT
+							ICON 38 FILE "listaiconosgif" CENTER
+						CONTROL box_txtcopypaste AS BOX
+							POSITION 0 105 98 22
+							FONT "Calibri" 8  CHARSET Ansi 
+							ATTACH LEFT RIGHT BOTTOM
+							NOLABEL
+							NOBORDER
+						BEGIN
+							CONTROL txt_portapapeles AS TEXT
+								POSITION 0 1 98 20
+								FONT "Verdana" 8  CHARSET Ansi 
+								ATTACH LEFT RIGHT
+								NOBORDER
+								ALIGNMENT CENTER
+								DATATYPE CHAR
+								TAGS "Clipboard"
+						END
+					END
+					CONTROL ctr_box2 AS BOX
+						POSITION 107 4 222 131
+						BACKGROUND COLOR transparent
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+						CONTROL ctr_dropfontname AS DROPEDIT
+							POSITION 3 7 89 23
+							BORDER DOUBLE DOWN
+							AUTOSIZE
+							DATATYPE CHAR
+							SHOW 8 LINES
+							COLUMNS 1
+							SELECTTYPE SIMPLE
+						CONTROL ctr_dropfontsize AS DROPEDIT
+							POSITION 94 7 54 23
+							BORDER DOUBLE DOWN
+							AUTOSIZE
+							DATATYPE CHAR
+							TAGS "8" "9" "10" "11" "12" "13" "14" "15" "16" "17"
+							SHOW 8 LINES
+							COLUMNS 1
+							SELECTTYPE SIMPLE
+						CONTROL btn_upsizfont AS BUTTON
+							POSITION 156 7 31 26
+							ICON 176 FILE "_MBSTDBMP_" CENTER
+						CONTROL btn_downsizfont AS BUTTON
+							POSITION 187 7 31 26
+							ICON 175 FILE "_MBSTDBMP_" CENTER
+						CONTROL btn_negrita AS BUTTON
+							POSITION 3 37 25 22
+							BORDER HILIGHT
+							ICON 1 FILE "iconos_2" CENTER
+						CONTROL btn_cursiva AS BUTTON
+							POSITION 27 37 25 22
+							BORDER HILIGHT
+							ICON 6 FILE "iconos_2" CENTER
+						CONTROL btn_subrayado AS BUTTON
+							POSITION 51 37 47 22
+							BORDER HILIGHT
+							ICON 13 FILE "iconos_2" CENTER
+						CONTROL btn_bordeinferior AS BUTTON
+							POSITION 101 37 47 22
+							BORDER HILIGHT
+							ICON 239 FILE "_MBSTDBMP_" CENTER
+						CONTROL box_txtfuente AS BOX
+							POSITION 0 105 218 22
+							FONT "Calibri" 8  CHARSET Ansi 
+							ATTACH LEFT RIGHT BOTTOM
+							NOLABEL
+							NOBORDER
+						BEGIN
+							CONTROL txt_fuente AS TEXT
+								POSITION 0 3 218 13
+								FONT "Verdana" 8  CHARSET Ansi 
+								NOBORDER
+								ALIGNMENT CENTER
+								DATATYPE CHAR
+								TAGS "Font"
+						END
+					END
+					CONTROL AS BOX
+						POSITION 332 4 221 131
+						BACKGROUND COLOR transparent
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+						CONTROL btn_upalign AS BUTTON
+							POSITION 5 7 31 26
+							ICON 176 FILE "_MBSTDBMP_" CENTER
+						CONTROL btn_midalign AS BUTTON
+							POSITION 35 7 31 26
+							ICON 176 FILE "_MBSTDBMP_" CENTER
+						CONTROL btn_downalign AS BUTTON
+							POSITION 72 7 31 26
+							BORDER HILIGHT
+							ICON 176 FILE "_MBSTDBMP_" CENTER
+						CONTROL box_txtalineacion AS BOX
+							POSITION 0 104 217 22
+							FONT "Calibri" 8  CHARSET Ansi 
+							ATTACH LEFT RIGHT BOTTOM
+							NOLABEL
+							NOBORDER
+						BEGIN
+							CONTROL txt_alineacion AS TEXT
+								POSITION 0 3 217 13
+								FONT "Verdana" 8  CHARSET Ansi 
+								ATTACH LEFT RIGHT
+								NOBORDER
+								ALIGNMENT CENTER
+								DATATYPE CHAR
+								TAGS "Alignment"
+						END
+					END
+					CONTROL Box_theme AS BOX
+						POSITION 818 3 153 128
+						ATTACH RIGHT
+						LABEL "Theme"
+						BORDER ETCHED
+					BEGIN
+						CONTROL rad_estilos AS RADIO
+							POSITION 11 8 112 107
+							NOLABEL
+							NOBORDER
+							NUMBER 5 TAGS "Blue" "Gray" "Brown" "Black" "Classic"
+					END
+					CONTROL chkVisualStyles AS CHECK
+						POSITION 990 12 74 23
+						ATTACH RIGHT
+						LABEL "Activate"
+						NOBORDER
+						AUTOSIZE
+					CONTROL btnCambiaEstilo AS BUTTON
+						POSITION 985 65 137 31
+						ATTACH RIGHT
+						LABEL "Change Style"
+					CONTROL btnRecargar AS BUTTON
+						POSITION 985 100 137 31
+						ATTACH RIGHT
+						LABEL "Reload"
+				END
+				CONTROL AS BOX
+					POSITION 2 188 1136 562
+					ATTACH ALL
+					NOLABEL
+					BORDER ETCHED
+				BEGIN
+					CONTROL AS GRID
+						POSITION 162 7 812 541
+						ATTACH ALL
+						BORDER DOUBLE DOWN
+						SCROLL VERTICAL HORIZONTAL
+						TABLE customers
+						PARENTGRID
+					BEGIN
+						CONTROL AS EDIT
+							POSITION 0 0 90 22
+							LABEL "Customer Code"
+							NOBORDER
+							VARIABLE customers.customer
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 91 0 162 22
+							LABEL "Company"
+							NOBORDER
+							VARIABLE customers.company
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 254 0 162 22
+							LABEL "Surname"
+							NOBORDER
+							VARIABLE customers.surname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 417 0 102 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE customers.fname
+							LIKEVAR
+					END
+					CONTROL ctrButtonGroup AS BUTTONGROUP
+						POSITION 11 5 145 550
+						NOBORDER
+						ICON FILE "almacen" CENTER VERTICAL
+						CLICKTYPE RADIO
+						NUMBER 6 ROWS 6 
+						BORDER HILIGHT
+							BUTTON LABEL "Open" ICON 1
+							BUTTON LABEL "Close" ICON 3
+							BUTTON LABEL "Save" ICON 4
+							BUTTON LABEL "Select" ICON 5
+							BUTTON LABEL "Remove" ICON 9
+							BUTTON LABEL "Save As" ICON 2
+					CONTROL AS BUTTONGROUP
+						POSITION 983 11 135 161
+						ATTACH TOP RIGHT
+						NOBORDER
+						ICON FILE "listaiconosgif"
+						CLICKTYPE RADIO
+						NUMBER 6 ROWS 6 
+						BORDER HILIGHT
+							BUTTON LABEL "Open" ICON 51
+							BUTTON LABEL "Close" ICON 53
+							BUTTON LABEL "Save" ICON 71
+							BUTTON LABEL "Select" ICON 72
+							BUTTON LABEL "Remove" ICON 74
+							BUTTON LABEL "Save As" ICON 73
+				END
+				CONTROL AS BAR
+					POSITION 0 748 1140 47
+					ATTACH LEFT RIGHT BOTTOM
+				BEGIN
+					CONTROL AS PANEL
+						POSITION 987 11 69 23
+						ATTACH RIGHT BOTTOM
+						BORDER DOWN
+					CONTROL AS PANEL
+						POSITION 1063 11 69 23
+						ATTACH RIGHT BOTTOM
+						BORDER DOWN
+				END
+			END
+		END
+	end
+END
+objects begin
+	f2 AS frm2
+end
+CODE CLASS frm2 BEGIN
+//{{CODEBEGIN
+
+On Open
+begin
+    ChangeStyleByRadio();
+    customers.Query();
+    MySetControlsProperties();
+    btn_pegar.SetSplitButton(MnuSplit_1, NULL, 1);
+    if Module.Version() < "7.1" then begin
+        rad_estilos.Disabled = TRUE;
+        chkVisualStyles.Disabled = TRUE;
+        btnCambiaEstilo.Disabled = TRUE;
+        btnRecargar.Disabled = TRUE;
+    end
+end
+
+Private function MySetControlsColors (color1 color2 color3 color4 as integer)
+objects begin
+end
+begin
+    return;
+end
+Private function MySetControlsProperties
+objects begin
+    color1 as integer
+    color2 as integer
+    color3 as integer
+    color4 as integer
+end
+begin
+
+    
+    ctr_dropfontname.AddString("Arial");
+    ctr_dropfontname.AddString("Verdana");
+    ctr_dropfontname.AddString("Times");
+    ctr_dropfontname.AddString("Calibri");
+    ctr_dropfontname.AddString("Courier");
+
+    
+end
+
+
+private function repaint
+begin
+    if Module.Version() >= "7.1" then begin
+       // Frame.Refresh();
+    end
+    
+end
+
+
+On event Click control btnCambiaEstilo(e as event)
+objects begin
+    fileName as char
+    i as integer
+end
+begin
+    fileName = TreeWalk(ProjectDir() + "\estilos visuales");
+    if fileName is not null then begin
+        if Module.Version() >= "7.1" then begin
+           // Module.LoadCustomColors(fileName);
+        end    
+        repaint;
+        fileVisualStyle = fileName;
+    end
+
+
+end
+
+On event Click control btnRecargar(e as event)
+begin
+    if fileVisualStyle is not null then
+    begin
+        if Module.Version() >= "7.1" then begin
+           // Module.LoadCustomColors(fileVisualStyle);
+        end    
+        repaint;
+    end
+end
+
+On event Click control rad_estilos(e as event)
+begin
+    ChangeStyleByRadio();
+end
+
+private function ChangeStyleByRadio()
+objects begin
+    selectedItem as integer
+end
+begin
+    selectedItem = rad_estilos.Selected;
+    
+    if selectedItem == 1 then begin
+        fileVisualStyle = ProjectDir() + "\themes\theme_blue.ini";
+    end else if selectedItem == 2 then begin
+        fileVisualStyle = ProjectDir() + "\themes\theme_gray.ini";
+    end else if selectedItem == 3 then begin
+        fileVisualStyle = ProjectDir() + "\themes\theme_brown.ini";
+    end else if selectedItem == 4 then begin
+        fileVisualStyle = ProjectDir() + "\themes\theme_black.ini";
+    end else begin
+        fileVisualStyle = ProjectDir() + "\themes\theme_classic.ini";
+    end
+    if Module.Version() >= "7.1" then begin
+      //  Module.LoadCustomColors(fileVisualStyle);
+    end    
+    repaint;
+end
+
+On Click chkVisualStyles
+begin
+    if chkVisualStyles.Checked then begin
+        Module.PutEnv("COSMOSVISUALMODE","7");
+    end else begin
+        Module.PutEnv("COSMOSVISUALMODE","0");
+    end
+    repaint;
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+end
+begin
+    if Module.Version() < "7.1" then begin
+        MessageBox("To see the themes in Cosmos version 7.0 you must be change the file "+ProjectDir()+ "\"+ Module.ProjectName() +".ini: " +
+                    10.Character()+10.Character()+ "1- Activate variable COSMOSVISUALMODE=7" + 
+                    10.Character()+10.Character()+ "2- Copy the [Custom Colors] section of any of the files you can find in the ("+ProjectDir() + "\estilos visuales) in the project file"+
+                    10.Character()+10.Character()+ "3- Exit the program and come back",
+                   "WARNING" );
+       
+    end    
+    //Module.PutEnv("COSMOSVISUALMODE","7");
+    Module.PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    f2.Run();
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

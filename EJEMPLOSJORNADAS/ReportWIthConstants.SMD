@@ -1,0 +1,557 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CLimits is Form begin
+		objects begin
+			from1 as Smallint default 1
+			preview as Smallint default 1
+				boolean values "0|1"
+			to1 as Smallint default 200
+		end
+		INTERFACE
+			POSITION 0 0 391 157
+			FOREGROUND RGB 0 0 0
+			LABEL "Select the limits of the report"
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 383 131
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL AS BOX
+					POSITION 63 6 203 110
+					BOLD 
+					LABEL " Orders "
+					BORDER DOWN
+				BEGIN
+					CONTROL AS TEXT
+						POSITION 7 11 56 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "From :"
+					CONTROL AS TEXT
+						POSITION 7 37 56 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "To :"
+					CONTROL AS EDIT
+						POSITION 70 11 72 22
+						FOCUS
+						BORDER DOUBLE DOWN
+						VARIABLE from1
+						ALIGNMENT RIGHT
+						DATATYPE INTEGER MASK 2
+					CONTROL AS EDIT
+						POSITION 70 39 72 22
+						BORDER DOUBLE DOWN
+						VARIABLE to1
+						ALIGNMENT RIGHT
+						DATATYPE INTEGER MASK 2
+					CONTROL AS CHECK
+						POSITION 65 65 22 22
+						LABEL "Control"
+						NOLABEL
+						NOBORDER
+						VARIABLE preview
+					CONTROL AS TEXT
+						POSITION 8 63 50 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Preview :"
+				END
+				CONTROL AS BOX
+					POSITION 7 0 35 52
+					NOLABEL
+					NOBORDER
+					ICON 18 FILE "Icon Hardware" CENTER
+				BEGIN
+				END
+				CONTROL AS BUTTON
+					POSITION 289 58 84 26
+					LABEL "Accept"
+					DEFPUSH
+					ICON 2 FILE "Small Buttons" CENTER
+					COMMAND Ok
+				CONTROL AS BUTTON
+					POSITION 289 88 84 26
+					LABEL "Cancel"
+					ICON 3 FILE "Small Buttons" CENTER
+					COMMAND Close
+			END
+		END
+	end
+	COrderPage is Page begin
+		objects begin
+			sum as Decimal (16,0)
+			printer as PrnDocument
+			pagenumber as Smallint
+			total as Decimal (16,0)
+			curOrder as SqlCursor
+			curLines as SqlCursor
+			order1 as orders.order_nbr
+			date1 as orders.order_date
+			descformpayment as payforms.description
+			descstate as states.sname
+			company1 as customers.company
+			name1 as customers.fname
+			surname1 as customers.surname
+			v_address as customers.address1
+			zip1 as customers.zip
+			indline as Smallint default 1
+			item1 as orderlines.item
+			supplier1 as orderlines.supplier
+			description1 as items.description
+			quantity1 as orderlines.quantity
+			discount1 as orderlines.discount
+			price1 as orderlines.price
+			totline as Money (16,2)
+			page1 as Smallint
+		end
+		INTERFACE
+			SIZE 595 842
+			MARGIN 21 18 18 18
+		BEGIN
+			CONTROL AS BOX
+				POSITION 26 132 140 38
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL AS SEPARATOR
+					POSITION 0 12 138 2
+					ATTACH LEFT RIGHT
+				CONTROL AS TEXT
+					POSITION 27 0 65 13
+					FONT "Arial Narrow" 8 
+					ALIGNMENT CENTER
+					TAGS "DOCUMENT"
+				CONTROL c_document AS VAR
+					POSITION 8 17 115 15
+					NOLABEL
+					DATATYPE CHAR
+			END
+			CONTROL AS BOX
+				POSITION 26 174 140 28
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL AS TEXT
+					POSITION 3 6 47 13
+					FONT "Arial Narrow" 8 
+					TAGS "Number :"
+				CONTROL c_order AS VAR
+					POSITION 43 5 87 15
+					NOLABEL
+					VARIABLE order1
+					DATATYPE CHAR
+			END
+			CONTROL AS BOX
+				POSITION 26 206 140 24
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL AS TEXT
+					POSITION 4 5 36 13
+					FONT "Arial Narrow" 8 
+					TAGS "Date :"
+				CONTROL c_date AS VAR
+					POSITION 42 5 87 15
+					NOLABEL
+					VARIABLE date1
+					DATATYPE DATE MASK 5
+			END
+			CONTROL AS BOX
+				POSITION 26 235 140 24
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL AS TEXT
+					POSITION 4 5 39 13
+					FONT "Arial Narrow" 8 
+					TAGS "Page : "
+				CONTROL c_page AS VAR
+					POSITION 42 5 26 13
+					NOLABEL
+					VARIABLE page1
+					DATATYPE SMALLINT MASK 2
+			END
+			CONTROL IdGroup AS GROUP
+				POSITION 27 302 522 356
+				FONT "Arial Narrow" 8 
+				NOLABEL
+				BORDER DOWNSHADOW ALL
+				AS LINES
+				REPEAT 0
+			BEGIN
+				CONTROL idBoxLine AS BOX
+					POSITION 2 0 518 22
+					BACKGROUND COLOR transparent
+					NOLABEL
+				BEGIN
+					CONTROL c_code AS VAR
+						POSITION 3 0 76 17
+						NOLABEL
+						LABEL "Item/Supplier"
+						ALIGNMENT RIGHT
+						DATATYPE CHAR(20)
+					CONTROL c_description AS VAR
+						POSITION 88 0 154 17
+						NOLABEL
+						LABEL "DESCRIPTION"
+						VARIABLE description1
+						DATATYPE CHAR(30)
+					CONTROL c_quantity AS VAR
+						POSITION 251 0 47 17
+						NOLABEL
+						LABEL "QUANTITY"
+						VARIABLE quantity1
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT(6) MASK 2
+					CONTROL c_discount AS VAR
+						POSITION 315 0 31 17
+						NOLABEL
+						LABEL "DTO"
+						VARIABLE discount1
+						ALIGNMENT RIGHT
+						DATATYPE SMALLINT(3) MASK 1
+					CONTROL c_precio AS VAR
+						POSITION 356 0 80 17
+						NOLABEL
+						LABEL "PRICE"
+						VARIABLE price1
+						ALIGNMENT RIGHT
+						DATATYPE DECIMAL(10,2) MASK 4
+					CONTROL c_totalline AS VAR
+						POSITION 440 0 76 17
+						NOLABEL
+						LABEL "TOTAL PRICE"
+						VARIABLE totline
+						ALIGNMENT RIGHT
+						DATATYPE DECIMAL(10,2) MASK 4
+				END
+			END
+			CONTROL AS BOX
+				POSITION 28 668 522 70
+				NOLABEL
+				BORDER DOWNSHADOW ALL
+			BEGIN
+				CONTROL AS TEXT
+					POSITION 8 17 83 22
+					FONT "Arial Narrow" 12 BOLD 
+					TAGS "Form of payment :"
+				CONTROL c_formpayment AS VAR
+					POSITION 93 17 60 22
+					NOLABEL
+					VARIABLE descformpayment
+					DATATYPE CHAR(30)
+				CONTROL c_labeltotal AS TEXT
+					POSITION 343 17 89 22
+					FONT "Arial Narrow" 12 BOLD 
+					ALIGNMENT RIGHT
+					TAGS "Order Total :"
+				CONTROL c_totalorder AS VAR
+					POSITION 440 17 77 22
+					BOLD 
+					NOLABEL
+					ALIGNMENT RIGHT
+					DATATYPE DECIMAL(16,2) MASK 4
+			END
+			CONTROL AS BOX
+				POSITION 274 160 277 98
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL c_company AS VAR
+					POSITION 12 4 251 22
+					BOLD FONT "Times New Roman" 12 
+					NOLABEL
+					VARIABLE company1
+					DATATYPE CHAR(30)
+				CONTROL c_customer AS VAR
+					POSITION 12 26 248 22
+					NOLABEL
+					DATATYPE CHAR(50)
+				CONTROL c_state AS VAR
+					POSITION 14 69 248 22
+					NOLABEL
+					ALIGNMENT CENTER
+					DATATYPE CHAR(20)
+				CONTROL c_address AS VAR
+					POSITION 12 47 249 22
+					NOLABEL
+					DATATYPE CHAR(20)
+			END
+			CONTROL AS TEXT
+				POSITION 36 274 53 22
+				TAGS "Code"
+			CONTROL AS TEXT
+				POSITION 122 274 63 22
+				TAGS "Description"
+			CONTROL AS TEXT
+				POSITION 286 274 63 22
+				TAGS "Quantity"
+			CONTROL AS TEXT
+				POSITION 353 274 63 22
+				TAGS "Discount"
+			CONTROL AS TEXT
+				POSITION 407 274 63 22
+				TAGS "Price"
+			CONTROL AS TEXT
+				POSITION 482 274 63 22
+				TAGS "Total Price"
+			CONTROL AS BOX
+				POSITION 273 5 277 146
+				BACKGROUND COLOR transparent
+				NOLABEL
+				BORDER ALL
+			BEGIN
+				CONTROL AS TEXT
+					POSITION 5 5 53 22
+					TAGS "Page"
+				CONTROL AS TEXT
+					POSITION 74 5 53 22
+					FOREGROUND RGB 0 128 128
+					TAGS "%PAGE%"
+				CONTROL AS TEXT
+					POSITION 5 26 53 22
+					TAGS "Total Pages"
+				CONTROL AS TEXT
+					POSITION 74 26 53 22
+					FOREGROUND RGB 0 128 128
+					TAGS "%TOTALPAGES%"
+				CONTROL AS TEXT
+					POSITION 5 49 62 22
+					TAGS "Printing Date"
+				CONTROL AS TEXT
+					POSITION 74 49 191 22
+					FOREGROUND RGB 0 128 128
+					TAGS "%DD%/%MM%/%YYYY%"
+				CONTROL AS TEXT
+					POSITION 5 73 64 22
+					TAGS "Printing Date"
+				CONTROL AS TEXT
+					POSITION 76 73 200 22
+					FOREGROUND RGB 0 128 128
+					TAGS "%DAY%, %MONTH%  %DD%, %YYYY%"
+				CONTROL AS TEXT
+					POSITION 5 99 53 22
+					TAGS "Printed By"
+				CONTROL AS TEXT
+					POSITION 76 99 91 22
+					FOREGROUND RGB 0 128 128
+					TAGS "%USERNAME%"
+			END
+		END
+	end
+END
+objects begin
+	oCOrderPage AS COrderPage
+	oCLimits AS CLimits
+end
+CODE CLASS CLimits BEGIN
+//{{CODEBEGIN
+{*
+ * This method allows you to stablish the selected limits..
+ * @global
+ *}
+
+On Command Ok
+objects begin
+    i as integer
+end
+begin
+    if to1 >= from1 then
+        Exit(1);    
+    else
+        MessageBox("The limits are wrong", "Attention", 48);
+end
+//{{CODEEND
+END
+CODE CLASS COrderPage BEGIN
+//{{CODEBEGIN
+Public RunReport() return boolean
+objects begin
+    preview_pages as smallint default 5
+end
+begin
+
+    if oCLimits.Run == 0 then
+        return FALSE;
+    if not InitCursors then
+        return FALSE;
+            
+    printer.SetDocName("Report of Orders");
+    if oCLimits.preview == 0
+    then begin
+        preview_pages = 0;
+        printer.OpenPrinter;
+    end
+
+    printer.SetBufferPages(200);
+
+    while PrintOrder(oCLimits.preview, preview_pages, IdGroup.Count) do;
+
+    CloseCursors;
+    
+    if oCLimits.preview then
+        printer.Preview;
+    else
+        printer.ClosePrinter;
+        
+    return TRUE; 
+end
+
+
+
+
+Private InitCursors() return boolean
+begin
+    if curOrder.Prepare
+    (
+    "select order_nbr, order_date,"
+    + " payforms.description, states.sname,"
+    + " company, fname, surname, address1, zip"
+    + " from orders, customers, payforms, states"
+    + " where order_nbr >= ? and order_nbr <= ?"
+    + " and orders.customer = customers.customer"
+    + " and states.state = customers.state"
+    + " and payforms.payform = customers.payform"
+    ).Error != 0 then
+        return FALSE;
+        
+    if curLines.Prepare
+    (
+    "select orderlines.item, orderlines.supplier, description, quantity, discount, price"
+    + " from orderlines, items"
+    + " where orderlines.order_nbr = ?"
+    + " and items.item = orderlines.item"
+    + " and items.supplier = orderlines.supplier"
+    ).Error != 0 then
+        return FALSE;
+    if curOrder.Open(oCLimits.from1, oCLimits.to1).Error != 0 then
+        return FALSE;
+            
+   return TRUE; 
+end
+
+Private CloseCursors()
+begin
+    curOrder.Close;
+    curLines.Close;
+end
+
+
+
+Private PrintPage(var text1 as char, var v_page as smallint)
+begin
+//    "PrintPage".Trace();
+    c_labeltotal.Text = text1;
+    c_totalorder.Text = sum;
+    printer.SendPage(Self);
+    Clear;
+    ++v_page;        
+end
+
+
+Private FillHeader()
+begin
+    PrintVars;
+    c_document.Text = "ORDER";
+    c_customer.Text = (name1+" "+surname1).Trim;
+    c_address.Text = "C/ "+ v_address;
+    c_state.Text = ""+zip1+"-"+descstate;
+end
+
+Private FillLine()
+begin
+  IdGroup.CurrentRow = indline;
+  IdGroup.PrintVars;
+  c_code.Text = item1.char + "/" + supplier1.char;
+end
+
+
+Private PrintOrder
+        (
+        preview as boolean,
+        var preview_pages as smallint ,
+        numlines as smallint
+        ) return boolean
+begin
+    if curOrder.Fetch
+        (
+        order1,
+        date1,
+        descformpayment,
+        descstate,
+        company1,
+        name1,
+        surname1,
+        v_address,
+        zip1
+        ).Found == FALSE then
+            return FALSE;
+            
+    
+    if curLines.Open(order1).Error then
+        return FALSE;
+
+    sum = 0;
+    page1 = 1;
+    indline = 1;
+    FillHeader;
+
+    while true do
+    begin
+//        if preview and (preview_pages= 0) then
+//            return TRUE;
+        if curLines.Fetch
+            (
+            item1,
+            supplier1,
+            description1,
+            quantity1,
+            discount1,
+            price1
+            ).Found == FALSE then
+                break;
+        if indline > numlines then
+        begin
+            PrintPage("Sum and continue: ", page1);
+            indline = 1;
+            if preview then
+                --preview_pages;
+            FillHeader;
+        end
+        totline = quantity1 * (1 - discount1/100) * price1;
+        FillLine;
+        sum += totline;        
+        ++indline;        
+    end
+//    if preview and (preview_pages == 0) then
+//        return TRUE;
+       
+    PrintPage("Total of order :", page1);
+    if preview then
+       --preview_pages ;
+    return TRUE;
+end
+
+
+
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+begin
+    PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    oCOrderPage.RunReport();
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

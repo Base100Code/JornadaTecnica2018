@@ -1,0 +1,349 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CJSsonGrid is Form begin
+		objects begin
+		end
+		Table states is states
+		begin
+			state as column required
+			sname as column
+		end
+		Table suppliers is suppliers
+			depend on states join fk1_suppliers
+		begin
+			supplier as column required
+			company as column
+			surname as column
+			fname as column
+			address1 as column
+			address2 as column
+			city as column
+			zip as column
+			phone as column
+			fk1_suppliers_sname as states.sname
+				join fk1_suppliers lookup "sname"
+		end
+		INTERFACE
+			POSITION 0 0 1247 681
+			LABEL "Header-Lines"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 1231 616
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL IDMASTER AS BOX
+					POSITION 7 5 257 117
+					ATTACH LEFT
+					NOLABEL
+					BORDER ETCHED
+					TABLE states
+				BEGIN
+					CONTROL AS SPIN
+						POSITION 27 77 199 24
+						ATTACH TOP RIGHT BOTTOM
+						NOBORDER
+						QUADRUPLE
+						COMMAND
+					CONTROL AS TEXT
+						POSITION 7 13 25 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "State"
+					CONTROL AS EDIT
+						POSITION 41 13 28 22
+						LABEL "State"
+						BORDER DOUBLE DOWN
+						VARIABLE states.state
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 39 28 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Name"
+					CONTROL AS EDIT
+						POSITION 41 39 136 22
+						LABEL "Name"
+						BORDER DOUBLE DOWN
+						VARIABLE states.sname
+						LIKEVAR
+				END
+				CONTROL AS BOX
+					POSITION 7 124 484 486
+					ATTACH TOP BOTTOM
+					NOLABEL
+					BORDER ETCHED
+				BEGIN
+					CONTROL IDLINES AS GRID
+						POSITION 0 0 480 451
+						ATTACH LEFT TOP BOTTOM
+						BORDER DOWN
+						SCROLL VERTICAL
+						TABLE suppliers
+						PARENTGRID
+					BEGIN
+						CONTROL AS EDIT
+							POSITION 0 0 90 22
+							LABEL "Supplier Key"
+							NOBORDER
+							VARIABLE suppliers.supplier
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 91 0 162 22
+							LABEL "Company"
+							NOBORDER
+							VARIABLE suppliers.company
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 254 0 162 22
+							LABEL "Surname"
+							NOBORDER
+							VARIABLE suppliers.surname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 417 0 102 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE suppliers.fname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 520 0 162 22
+							LABEL "Address1"
+							NOBORDER
+							VARIABLE suppliers.address1
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 683 0 162 22
+							LABEL "Address2"
+							NOBORDER
+							VARIABLE suppliers.address2
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 846 0 102 22
+							LABEL "City"
+							NOBORDER
+							VARIABLE suppliers.city
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 949 0 90 22
+							LABEL "Zip Code"
+							NOBORDER
+							VARIABLE suppliers.zip
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 1040 0 96 22
+							LABEL "Phone"
+							NOBORDER
+							VARIABLE suppliers.phone
+							LIKEVAR
+						CONTROL AS TEXT
+							POSITION 1137 0 132 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE suppliers.fk1_suppliers_sname
+							LIKEVAR
+							TAGS "Name"
+					END
+					CONTROL AS BUTTON
+						POSITION 307 452 165 22
+						ATTACH RIGHT BOTTOM
+						LABEL "Update Line"
+						ICON 158 FILE "Small Buttons" CENTER
+						COMMAND UpdateLine
+					CONTROL AS BUTTON
+						POSITION 165 452 142 22
+						ATTACH LEFT RIGHT BOTTOM
+						LABEL "Delete Line"
+						ICON 159 FILE "Small Buttons" CENTER
+						COMMAND DeleteLine
+					CONTROL AS BUTTON
+						POSITION 0 452 165 22
+						ATTACH BOTTOM
+						LABEL "Add Line"
+						ICON 157 FILE "Small Buttons" CENTER
+						COMMAND AddLine
+				END
+				CONTROL AS BUTTON
+					POSITION 306 41 76 22
+					ATTACH LEFT
+					LABEL "&Query"
+					ICON 6 FILE "Small Buttons"
+					COMMAND QueryByForm
+				CONTROL AS BUTTON
+					POSITION 386 41 76 22
+					ATTACH LEFT
+					LABEL "&Add"
+					ICON 157 FILE "Small Buttons"
+					COMMAND EditNew
+				CONTROL AS BUTTON
+					POSITION 466 41 76 22
+					ATTACH LEFT
+					LABEL "&Delete"
+					ICON 159 FILE "Small Buttons"
+					COMMAND Delete
+				CONTROL AS BUTTON
+					POSITION 546 41 76 22
+					ATTACH LEFT
+					LABEL "&Update"
+					ICON 158 FILE "Small Buttons"
+					COMMAND EditUpdate
+				CONTROL AS BUTTON
+					POSITION 626 41 76 22
+					ATTACH LEFT
+					LABEL "Acce&pt"
+					ICON 2 FILE "_MBSTDBMP_"
+					COMMAND AcceptEdit
+				CONTROL AS BUTTON
+					POSITION 706 41 76 22
+					ATTACH LEFT
+					LABEL "&Cancel"
+					ICON 3 FILE "_MBSTDBMP_"
+					COMMAND CancelEdit
+				CONTROL AS BUTTON
+					POSITION 867 41 76 22
+					ATTACH LEFT
+					LABEL "&Exit"
+					ICON 4 FILE "Small Buttons"
+					COMMAND Close
+				CONTROL edtRichText AS EDIT
+					POSITION 501 125 722 480
+					FONT "Calibri" 12  CHARSET Ansi 
+					ATTACH ALL
+					BORDER DOUBLE DOWN
+					RICHTEXTEDIT
+					DATATYPE CHAR
+					SCROLL VERTICAL HORIZONTAL
+					READONLY
+			END
+			CONTROL AS BAR
+				POSITION 0 616 1231 27
+				FOREGROUND RGB 0 0 0
+				ATTACH LEFT RIGHT BOTTOM
+				BORDER ETCHED EXTRA 3
+				BARTYPE STATUS
+			BEGIN
+				CONTROL AS PANEL
+					POSITION 3 0 1181 19
+					FOREGROUND RGB 0 0 0
+					ATTACH ALL
+					NOBORDER
+					PANELTYPE COMMENT
+				CONTROL AS PANEL
+					POSITION 1187 0 35 19
+					FOREGROUND RGB 0 0 0
+					ATTACH TOP RIGHT BOTTOM
+					BORDER DOWN
+					PANELTYPE EDITMODE
+			END
+		END
+	end
+END
+CODE CLASS CJSsonGrid BEGIN
+//{{CODEBEGIN
+On Open
+begin
+    SetEditMode(true);
+    MasterTable.Query();
+end
+
+On command AddLine
+begin
+    MasterTable.ChildTable.EditNew;
+end
+
+On command DeleteLine
+begin
+    MasterTable.ChildTable.Delete;
+end
+
+On command UpdateLine
+begin
+    MasterTable.ChildTable.EditUpdate;
+end
+
+On RowChanged table states
+objects begin
+    jsonObj as json
+end
+begin
+    jsonObj = CreateJSonForState(states.state, states.sname);
+
+    edtRichText.Text= "";
+    edtRichText.RichTextSetProperty("FONT", "Calibri;Size=12");
+    edtRichText.RichTextAddText(jsonObj.GetString(true));
+    edtRichText.RichTextSetProperty("CARETPOSITION", 0.Integer);
+end
+
+private function CreateJSonForState(stateId as Char, stateName as Char) return json
+objects begin
+    jsonState as json
+end
+begin
+    jsonState.Set("state", stateId);
+    jsonState.Set("sname", stateName);
+    jsonState.Set("suppliers", CreateJSonSuppliersArrayFromState(stateId));
+    return jsonState;
+
+end
+
+private function CreateJSonSuppliersArrayFromState(stateId as char) return json
+objects begin
+    miCursor as SqlCursor
+    jsonSupplier as json
+    jsonSupplierArray as json
+    supplier as integer
+    company surname fname address1 address2 city zip phone as char
+    
+end
+begin
+    miCursor.Prepare("select * from suppliers where state = ?");
+    miCursor.Open(stateId);
+    miCursor.Into(supplier, company, surname, fname, address1, address2, city, zip, phone);
+
+    jsonSupplierArray.SetAsArray();
+    
+    while miCursor.Fetch.Found do
+    begin
+        jsonSupplier.Clear();
+        jsonSupplier.Set("supplier", supplier);
+        jsonSupplier.Set("company", company);
+        jsonSupplier.Set("surname", surname);
+        jsonSupplier.Set("fname", fname);
+        jsonSupplier.Set("address1", address1);
+        jsonSupplier.Set("city", city);
+        jsonSupplier.Set("zip", zip);
+        jsonSupplier.Set("phone",phone);
+        jsonSupplierArray.AddArrayElement(jsonSupplier);
+    end
+    
+    miCursor.Close().Free();
+    
+    return jsonSupplierArray;
+end
+
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+oCJSsonGrid as CJSsonGrid
+end
+begin
+    PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("Stock");
+    Sql.Connect("stock");
+    oCJSsonGrid.Run;
+end
+//{{CODEEND
+END
+

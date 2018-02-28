@@ -1,0 +1,235 @@
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+//Esta función crea el objeto que se usará para realizar la petición (request) al servidor.
+public dll "coshttpdll.dll" CosHttpNewRequest() return integer 
+// En esta función se indicará la url a la que se van a realizar las peticiones. 
+public dll "coshttpdll.dll" CosHttpRequestSetUrl(requestID as integer, url as char) return integer
+//En esta función se indicará el método que ejecutará la petición. 
+public dll "coshttpdll.dll" CosHttpRequestSetMethod(requestID as integer, method as char) return integer
+//Esta función permite añadir un parámetro a la cabecera de la petición http.
+public dll "coshttpdll.dll" CosHttpRequestAddHeaderStr(requestID as integer, headerStr as char) return integer
+// En esta función se indicará el texto del cuerpo que se enviará al servidor. Este texto se podrá enviar en un objeto char o en un fichero. 
+// El parámetro fromFile indica si el cuerpo va en un fichero o en un char
+public dll "coshttpdll.dll" CosHttpRequestSetBody(requestID as integer, bodyStr as char, fromFile as boolean) return integer
+//En esta función se indicará el fichero donde se retornará la respuesta del servidor al recurso solicitado al servidor.
+public dll "coshttpdll.dll" CosHttpSetResponseFile(requestID as integer, responseFile as char) return integer
+//Función en la que se indicará el fichero donde se retornará el encabezado de la respuesta del servidor.
+public dll "coshttpdll.dll" CosHttpSetResponseHeaderFile(requestID as integer, responseHeaderFile as char) return integer
+//Esta función envía al servidor la petición especificada en la función CosHttpRequestSetMethod. 
+//Será en este momento cuando el servidor responda y se creen los ficheros indicados en las funciones CosHttpSetResponseFile y CosHttpSetResponseHeaderFile. 
+public dll "coshttpdll.dll" CosHttpSendRequest(requestID as integer, onlyHeaders as boolean) return integer
+//Esta función retorna el código de estado del protocolo http.
+public dll "coshttpdll.dll" CosHttpGetReturnCode(requestID as integer) return integer
+// Libera la petición y toda la memoria que ha usado durante el proceso. Es obligatorio utilizarla cuando termina la conversación.  
+public dll "coshttpdll.dll" CosHttpFreeRequest(requestID as integer) return integer
+// Esta función indica a la DLL que en la petición pasada como parámetro se utilizará el protocolo SSL. 
+public dll "coshttpdll.dll" CosHttpUseSSL(requestID as integer, useSSL as boolean) return integer 
+// Esta función indica a la DLL que la cabecera de la respuesta del servidor se incluirá en el mismo fichero de respuesta del cuerpo. 
+public dll "coshttpdll.dll" CosHttpIncludeHeaderInResponse(requestID as integer, includeHeader as boolean) return integer 
+//Función en la que se indicará el usuario con el que se valida en el servidor al realizar la petición. 
+public dll "coshttpdll.dll" CosHttpSetAuthUser(requestID as integer, user as char) return integer 
+//Función en la que se especifica la contraseña con la que se identifica en el servidor el usuario indicado en la función CosHttpSetAuthUser.
+public dll "coshttpdll.dll" CosHttpSetAuthPasswd(requestID as integer, passwd as char) return integer
+// Esta función especifica el tipo de autenticación que se usará en la petición contra el servidor.
+public dll "coshttpdll.dll" CosHttpSetAuthMethod(requestID as integer, authMethod as integer) return integer
+// Esta función permite establecer un “timeout” de conexión.
+public dll "coshttpdll.dll" CosHttpSetTimeout(requestID as integer, secondsTimeout  as integer) return integer
+// Esta función retorna el texto del mensaje de error de la petición que se ha ejecutado con la función CosHttpSendRequest.
+public dll "coshttpdll.dll" CosHttpGetErrorStr(requestID as integer) return char
+
+public getTxtCodeHttp(pCode as integer) return char
+Objects begin
+    lChText as char
+    
+end
+begin
+    
+    switch pCode
+    begin
+    //Peticiones correctas
+        case 200:
+            lChText = 'OK';
+        case 201:
+            lChText = 'Creado';//La petición ha sido completada y ha resultado en la creación de un nuevo recurso.
+        case 202:
+            lChText = 'Aceptada';//La petición ha sido aceptada para procesamiento, pero este no ha sido completado. La petición eventualmente pudiere no ser satisfecha, ya que podría ser no permitida o prohibida cuando el procesamiento tenga lugar.
+        case 203:
+            lChText = 'Información no autoritativa (desde HTTP/1.1)';
+        case 204:
+            lChText = 'Sin contenido';
+        case 205 :
+            lChText = 'Recargar contenido';
+        case 206  :
+            lChText = 'Contenido parcial';//La petición servirá parcialmente el contenido solicitado. Esta característica es utilizada por herramientas de descarga como wget para continuar la transferencia de descargas anteriormente interrumpidas, o para dividir una descarga y procesar las partes simultáneamente.
+        case 207  :
+            lChText = ' Estado múltiple ';//El cuerpo del mensaje que sigue es un mensaje XML y puede contener algún número de códigos de respuesta separados, dependiendo de cuántas subpeticiones sean hechas.
+    //Redirecciones
+
+        case 300:
+             lChText = 'Múltiples opciones';
+            //Indica opciones múltiples para el URI que el cliente podría seguir. Esto podría ser utilizado, por ejemplo, para presentar distintas opciones de formato para video, listar archivos con distintas extensiones o word sense disambiguation.
+        
+        case 301:
+             lChText = 'Movido permanentemente';
+            //Esta y todas las peticiones futuras deberían ser dirigidas a la URI dada.
+        case 302:
+             lChText = 'Movido temporalmente';
+            // Este es el código de redirección más popular, pero también un ejemplo de las prácticas de la industria contradiciendo el estándar. La especificación HTTP/1.0 (RFC 1945) requería que el cliente realizara una redirección temporal (la frase descriptiva original fue "Moved Temporarily"), pero los navegadores populares lo implementaron como 303 See Other. Por tanto, HTTP/1.1 añadió códigos de estado 303 y 307 para eliminar la ambigüedad entre ambos comportamientos. Sin embargo, la mayoría de aplicaciones web y bibliotecas de desarrollo aún utilizan el código de respuesta 302 como si fuera el 303.
+        
+        case 303:
+             lChText = 'Vea otra (desde HTTP/1.1)';
+            //La respuesta a la petición puede ser encontrada bajo otra URI utilizando el método GET.
+        
+        case 304:
+             lChText = 'No modificado';
+            //Indica que la petición a la URL no ha sido modificada desde que fue requerida por última vez. Típicamente, el cliente HTTP provee un encabezado como If-Modified-Since para indicar una fecha y hora contra la cual el servidor pueda comparar. El uso de este encabezado ahorra ancho de banda y reprocesamiento tanto del servidor como del cliente.
+        
+        case 305:
+            lChText = 'Utilice un proxy (desde HTTP/1.1)';
+            //Muchos clientes HTTP (como Mozilla2 e Internet Explorer) no se apegan al estándar al procesar respuestas con este código, principalmente por motivos de seguridad.
+        
+        case 306 :
+            lChText = 'Cambie de proxy';
+            //Esta respuesta está descontinuada.
+        
+        case 307 :
+            lChText = 'Redirección temporal (desde HTTP/1.1)';
+            //Se trata de una redirección que debería haber sido hecha con otra URI, sin embargo aún puede ser procesada con la URI proporcionada. En contraste con el código 303, el método de la petición no debería ser cambiado cuando el cliente repita la solicitud. Por ejemplo, una solicitud POST tiene que ser repetida utilizando otra petición POST.             
+//Errores del cliente
+        case 400:
+            lChText = 'Solicitud incorrecta';
+        case 401:
+            lChText = 'No autorizado';//la autentificación es posible pero ha fallado o aún no ha sido provista
+        case 402:
+            lChText = 'Pago requerido';//La petición ha sido aceptada para procesamiento, pero este no ha sido completado. La petición eventualmente pudiere no ser satisfecha, ya que podría ser no permitida o prohibida cuando el procesamiento tenga lugar.
+        case 403:
+            lChText = 'Prohibido';
+        case 404:
+            lChText = 'No encontrado';
+        case 405 :
+            lChText = 'Método no permitido'; //Una petición fue hecha a una URI utilizando un método de solicitud no soportado por dicha URI. 
+                                             //Se utiliza GET en una forma que requiere que los datos sean presentados vía POST, o utilizando PUT en un recurso de solo lectura.
+        case 406  :
+            lChText = 'No aceptable';
+        case 407  :
+            lChText = 'Autenticación Proxy requerida';
+        case 408  :
+            lChText = 'Tiempo de espera agotado';
+        case 409  :
+            lChText = ' Conflicto';
+        case 410  :
+            lChText = 'Ya no está disponible';
+//........
+        default:
+            lChText = "Falta añadir texto del error para el código "+ pCode;
+    end
+    return lChText;
+end
+
+Public GetTxtErrSendRequest(pCodErr as integer) return char
+objects
+begin
+     lChText as char
+end
+begin
+    switch pCodErr
+    begin
+        case 0: lChText='No ha ocurrido ningún error';
+        case 1: lChText="Unsupported protocol";
+        case 2: lChText="Failed initialization";
+        case 3: lChText="RL using bad/illegal format or missing URL";
+        case 4: lChText="A requested feature, protocol or option was not found built-in in this libcurl due to a build-time decision";
+        case 5: lChText="Couldn't resolve proxy name";
+        case 6: lChText="Couldn't resolve host name";
+        case 7: lChText="Couldn't connect to server";
+        case 8: lChText="FTP: weird server reply ";
+        case 9: lChText="Access denied to remote resource";
+        case 10: lChText="FTP: The server failed to connect to data port  Fallo al conectar al puerto";
+        case 11: lChText="Password desconocida. FTP: unknown PASS reply";
+        case 12: lChText="Time out";
+        case 13: lChText="FTP: unknown PASV reply";
+        case 14: lChText="Formato 227 respuesta desconocida. FTP: unknown 227 response format";
+        case 15: lChText="FTP: can't figure out the host in the PASV response";
+        case 16: lChText="Error in the HTTP2 framing layer";
+        case 17: lChText="FTP: couldn't set file type";
+        case 18: lChText="Transferred a partial file";
+        case 19: lChText="FTP: couldn't retrieve (RETR failed) the specified file";
+        case 20: lChText="Código obsoleto";
+        case 21: lChText="Quote command returned error";
+        case 22: lChText="HTTP response code said error";
+        case 23: lChText="Failed writing received data to disk/application";
+        case 24: lChText="Código obsoleto";
+        case 25: lChText="Upload failed (at start/before it took off)";
+        case 26: lChText="Failed to open/read local data from file/application";
+        case 27: lChText="Out of memory";
+        case 28: lChText="Timeout was reached";
+        case 29: lChText="Código obsoleto";
+        case 30: lChText="FTP: command PORT failed";
+        case 31: lChText="FTP: command REST failed";
+        case 32: lChText="Código obsoleto";
+        case 33: lChText="Requested range was not delivered by the server";
+        case 34: lChText="Internal problem setting up the POST";
+        case 35: lChText="SSL connect error";
+        case 36: lChText="Couldn't resume download";
+        case 37: lChText="Couldn't read a file.";
+        case 38: lChText="LDAP: cannot bind";
+        case 39: lChText="LDAP: search failed";
+        case 40: lChText="Código obsoleto";
+        case 41: lChText="A required function in the library was not found";
+        case 42: lChText="Operation was aborted by an application callback";
+        case 43: lChText="A libcurl function was given a bad argumen";
+        case 44: lChText="Código obsoleto";
+        case 45: lChText="Failed binding local connection end";
+        case 46: lChText="Código obsoleto";
+        case 47: lChText="Number of redirects hit maximum amount";
+        case 48: lChText="An unknown option was passed in to libcurl";
+        case 49: lChText="Malformed telnet option";
+        case 50: lChText="Código obsoleto";
+        case 51: lChText="SSL peer certificate or SSH remote key was not OK";
+        case 52: lChText="Server returned nothing (no headers, no data)";
+        case 53: lChText="SSL crypto engine not found";
+        case 54: lChText="Can not set SSL crypto engine as default";
+        case 55: lChText="Failed sending data to the peer";
+        case 56: lChText="Failure when receiving data from the peer";
+        case 57: lChText="Código obsoleto";
+        case 58: lChText="Problem with the local SSL certificate";
+        case 59: lChText="Couldn't use specified SSL cipher";
+        case 60: lChText="Peer certificate cannot be authenticated with given CA certificates";
+        case 61: lChText="Unrecognized or bad HTTP Content or Transfer-Encoding";
+        case 62: lChText="Invalid LDAP URL";
+        case 63: lChText="Maximum file size exceeded";
+        case 64: lChText="Requested SSL level failed";
+        case 65: lChText="Send failed since rewinding of the data stream failed";
+        case 66: lChText="Failed to initialise SSL crypto engine";
+        case 67: lChText="Login denied";
+        case 68: lChText="TFTP: File Not Found";
+        case 69: lChText="TFTP: Access Violation";
+        case 70: lChText="Disk full or allocation exceeded";
+        case 71: lChText="TFTP: Illegal operation";
+        case 72: lChText="TFTP: Unknown transfer ID";
+        case 73: lChText="Remote file already exists";
+        case 74: lChText="TFTP: No such user";
+        case 75: lChText="Conversion failed";
+        case 76: lChText="Caller must register CURLOPT_CONV_ callback options";
+        case 77: lChText="Problem with the SSL CA cert (path? access rights?)";
+        case 78: lChText="Remote file not found";
+        case 79: lChText="Error in the SSH layer";
+        case 80: lChText="Failed to shut down the SSL connection";
+        case 81: lChText="Socket not ready for send/recv";
+        case 82: lChText="Failed to load CRL file (path? access rights?, format?)";
+        case 83: lChText="Issuer check against peer certificate failed";
+        case 84: lChText="FTP: The server did not accept the PRET command.";
+        case 85: lChText="RTSP CSeq mismatch or invalid CSeq";
+        case 86: lChText="RTSP session error";
+        case 87: lChText="Unable to parse FTP file list";
+        case 88: lChText="Chunk callback failed";
+        case 89: lChText="The max connection limit is reached";
+        case 90: lChText="SSL public key does not match pinned public key";
+    end
+    return lChText;
+end
+//{{CODEEND
+END
+

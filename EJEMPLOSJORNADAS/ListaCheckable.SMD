@@ -1,0 +1,148 @@
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	frm is Form begin
+		objects begin
+		end
+		INTERFACE
+			POSITION 0 0 603 274
+			LABEL "Tree List - Check box - On click event"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 587 235
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL mlist AS LIST
+					POSITION 9 8 427 187
+					ATTACH ALL
+					BORDER DOUBLE DOWN
+					ICON FILE "_MBSTDBMP_"
+					COLUMNS 1
+					CURSORTYPE TREEVIEW
+					SELECTTYPE SIMPLE
+					SCROLL VERTICAL
+				CONTROL btnChequear AS BUTTON
+					POSITION 448 17 132 38
+					ATTACH TOP RIGHT
+					LABEL "Check/Unckeck"
+				CONTROL ctrTxt AS PANEL
+					POSITION 5 205 582 22
+					ATTACH LEFT RIGHT BOTTOM
+					BORDER DOWN
+			END
+		END
+	end
+END
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+On Open 
+objects begin
+    root i as smallint
+end
+begin
+    mlist.SetListCheckable( TRUE , true);
+    mlist.IconFile="List Icons";
+    root=mlist.AddTreeString(0,"Root");
+    i=mlist.AddTreeString(1,"a1");
+    i=mlist.AddTreeString(2,"a11");
+    i=mlist.AddTreeString(2,"a12"); 
+    i=mlist.AddTreeString(2,"a13"); 
+    i=mlist.AddTreeString(3,"a111"); 
+    i=mlist.AddTreeString(3,"a112"); 
+    i=mlist.AddTreeString(4,"a121"); 
+    i=mlist.AddTreeString(1,"a2"); 
+end
+
+
+
+On event SelChange control mlist(e as event)
+objects begin
+    idx as integer
+end
+begin
+    idx = mlist.Selected;
+    
+    if idx >= 0 then begin
+        if mlist.IsNodeChecked(idx) then begin
+            ctrTxt.Text = "Checked";
+        end else begin
+            ctrTxt.Text = "Unchecked";
+        end
+    end
+end
+
+On Click btnChequear
+objects begin
+    idx as integer
+    status as boolean
+end
+begin
+    idx = mlist.Selected;
+    
+    if idx >= 0 then begin
+        status = mlist.IsNodeChecked(idx);
+        status = not status;
+        mlist.SetNodeChecked(idx, status);
+    end
+end
+
+On event ListRowChecked control mlist(e as event)
+objects begin
+    idx as integer
+end
+begin
+    idx = mlist.Selected;
+    
+    if idx >= 0 then begin
+        ctrTxt.Text = "Node " +  mlist.GetListText(idx) +" checked";
+    end
+end
+
+
+On event ListRowUnchecked control mlist(e as event)
+objects begin
+    idx as integer
+end
+begin
+    idx = mlist.Selected;
+    
+    if idx >= 0 then begin
+        ctrTxt.Text = "Node " + mlist.GetListText(idx) +" unchecked";
+    end
+end
+
+
+On event Click control mlist(e as event)
+objects begin
+    idx as integer
+end
+begin
+    idx = mlist.Selected;
+    
+    if idx >= 0 then begin
+        ctrTxt.Text = "on click " + mlist.GetListText(mlist.Selected) ;
+    end
+    
+end
+
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects begin
+    Miform as frm
+end
+begin
+    Miform.Run; 
+end
+//{{CODEEND
+END
+

@@ -1,0 +1,113 @@
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	cJson is JSON
+END
+objects begin
+	oCJson AS cJson
+end
+CODE CLASS cJson BEGIN
+//{{CODEBEGIN
+public function CreaJSon_Ejemplo1
+objects
+begin
+    mijson as json
+    charJson as char
+    charStr as char
+    fecha as date
+    otrojson as json
+end
+begin
+    charJson = '{ "employees" : [' +
+    '{ "firstName":"John" , "lastName":"Doe" },' +
+    '{ "firstName":"Anna" , "lastName":"Smith" },' +
+    '{ "firstName":"Peter" , "lastName":"Jones" } ]}';
+    
+    charJson.Trace();
+    mijson.LoadFromChar(charJson);
+    mijson.SaveToFile(ProjectDir() + "\salida.json");    
+    mijson.SaveToFile(ProjectDir() + "\salida_formateada.json", TRUE);
+    mijson.SaveToFile(ProjectDir() + "\salida_noformateada.json", FALSE);
+    mijson.Trace();    
+    
+    otrojson.LoadFromFile(ProjectDir() + "\salida_noformateada.json");
+    otrojson.Trace();
+    
+    charStr = mijson;
+    charStr.Trace();
+    
+    charStr = mijson.GetString(TRUE);
+    charStr.Trace();
+    charStr = mijson.GetString(FALSE);
+    charStr.Trace();
+    mijson.Trace();
+end
+
+
+
+Public CargarJsonDesdeFichero() 
+begin
+    LoadFromFile(ProjectDir()+"\\salida_noformateada.json");
+    Trace;
+    Clear();
+end    
+
+
+Public CreaFicheroJsonArray()
+Objects begin
+    jsonElement as json
+    jsonArray as json
+end
+Begin
+    jsonArray.SetAsArray();
+    jsonElement.Set("AMERICAN SOFTWARE DESIGN", "2356.23");
+    jsonElement.Set("CSP BUSINESS INC", "6354.20");
+    jsonArray.AddArrayElement(jsonElement);
+    jsonElement.Set("arrayClientes", jsonArray);
+    jsonElement.SaveToFile(ProjectDir + "\JsonArray.json");
+    OpenFileWithDefaultApp(ProjectDir + "\JsonArray.json");
+    jsonArray.GetType().Trace();
+    jsonArray.Clear();
+end
+Public CreaFicheroJson()
+Begin
+    Set("AMERICAN SOFTWARE DESIGN", "2356.23");
+    Set("CSP BUSINESS INC", "6354.20");
+    SaveToFile(ProjectDir + "\Json.json");
+    OpenFileWithDefaultApp(ProjectDir + "\Json.json");
+    Trace;
+    Clear();
+        
+end
+
+
+Public DeleteFicheroJson()
+Begin
+    Set("AMERICAN SOFTWARE DESIGN", "2356.23");
+    Set("CSP BUSINESS INC", "6354.20");
+    Trace;
+    Delete("CSP BUSINESS INC");
+    Trace;
+    Clear();
+    
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+
+main
+objects begin
+
+end
+begin
+    oCJson.CreaJSon_Ejemplo1();
+    oCJson.CreaFicheroJsonArray();
+    oCJson.CreaFicheroJson();
+    
+    oCJson.CargarJsonDesdeFichero();
+    oCJson.DeleteFicheroJson();
+end    
+//{{CODEEND
+END
+

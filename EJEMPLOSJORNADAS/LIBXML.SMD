@@ -1,0 +1,73 @@
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+//Esta función permite crear un nuevo documento XML
+public dll "ttxmldll.dll" TTXmlNewDoc(charset as integer) return integer
+//Esta función permite crea un nuevo nodo XML
+public dll "ttxmldll.dll" TTXmlNewNode(NodeName as Char) return integer
+//Esta función permite crea un nodo XML, indicando el nodo padre del documento XML al que pertenece
+public dll "ttxmldll.dll" TTXmlNewChild(Doc as integer, ParentNode as integer, NodeName as Char, NodeContent as Char) return integer
+//Esta función permite asignar un nodo raíz al documento XML
+public dll "ttxmldll.dll" TTXmlDocSetRootElement(Doc as integer, RootNode as integer)
+//Esta función permite añadir una propiedad a un nodo de un documento XML
+public dll "ttxmldll.dll" TTXmlNewEncodedProp(Doc as integer, Node as integer, PropName as Char, PropValue as Char, charset as integer)
+//Esta función permite salvar en un fichero de texto un documento XML
+public dll "ttxmldll.dll" TTXmlSaveFormatFileEnc(Doc as integer, OutputFileName as Char, charset as integer)
+//Esta función permite liberar de memoria el documento XML parsado como parámetro
+public dll "ttxmldll.dll" TTXmlFreeDoc(Doc as integer)
+//Esta función retorna el buffer con el contenido completo de un documento XML
+public dll "ttxmldll.dll" TTXmlGetDocBuffer(Doc as integer, charset as integer) return Char
+//Esta función permite añadir un nodo tipo comentario a un documento XML
+public dll "ttxmldll.dll" TTXmlNewComment(Doc as integer, ParentNode as integer, Comment as Char) return integer
+//Esta función permite crear un nuevo nodo XML de tipo texto, indicando el nodo padre del documento XML al que pertenece
+public dll "ttxmldll.dll" TTXmlNewTextChild(Doc as integer, ParentNode as integer, name as Char, Content as Char) return integer
+//Esta función permite abrir uin documento XML ya existente.
+public dll "ttxmldll.dll" TTXmlOpenDoc(docName as Char) return integer
+//Esta función retorna el identificador del nodo raíz de un documento XML.
+public dll "ttxmldll.dll" TTXmlGetDocRootNode(Doc as integer) return integer
+//Esta función retorna el identificador del primer nodo hijo de un nodo del documento XML
+public dll "ttxmldll.dll" TTXmlGetFirstChildNode(Doc as integer, node as integer) return integer
+//Esta función retorna el siguiente nodo hermano de un nodo del documento XML
+public dll "ttxmldll.dll" TTXmlGetNextNode(Doc as integer, node as integer) return integer
+//Esta función retorna el nombre del nodo de un documento XML
+public dll "ttxmldll.dll" TTXmlGetNodeName(Doc as integer, node as integer) return char
+//Esta función permite consultar el valor de una propiedad de un nodo del documento XML
+public dll "ttxmldll.dll" TTXmlGetEncodedProp(Doc as integer, node as integer, propName as Char, charset as integer) return char
+//Esta función permite consultar el tipo de un nodo documento XML
+public dll "ttxmldll.dll" TTXmlGetNodeType(Doc as integer, node as integer) return integer
+//Esta función permite consultar el texto asociado a un nodo del documento XML
+public dll "ttxmldll.dll" TTXmlGetNodeText(Doc as integer, node as integer) return char
+//Esta función permite eliminar un nodo de un documento XML. Elimia también sus hijos en cascada.
+public dll "ttxmldll.dll" TTXmlRemoveNode(Doc as integer, node as integer) return boolean
+//Esta función permite eliminar una propiedad de un nodo del documento XML
+public dll "ttxmldll.dll" TTXmlRemoveProperty(Doc as integer, node as integer, propName as Char) return boolean
+//Esta función permite modifcar el valor de un propiedad de un nodo del documento XML
+public dll "ttxmldll.dll" TTXmlUpdateEncodedProp(Doc as integer, Node as integer, PropName as Char, PropValue as Char, charset as integer) return boolean
+//Esta función permite crear un contexto para la craeción de una lista de nodos a través de XPATH
+public dll "ttxmldll.dll" TTXmlCreateXPathContext(Doc as integer) return integer
+//Esta función permite crear una lista de nodos a partir de una expresión. 
+public dll "ttxmldll.dll" TTXmlCreateXPathList(Doc as integer, xpathcontext as integer, expression as char) return integer
+//Esta función devuelve el enésimo nodo de una lista de nodos creada con la función TTXmlCreateXPathList
+public dll "ttxmldll.dll" TTXmlGetXPathListNode(Doc as integer, xpathlist as integer, nodeNumber as integer) return integer
+//Esta función permite consultar el nº de nodos existentes en una lista de nodos creados a partir de la función TTXmlCreateXPathList
+public dll "ttxmldll.dll" TTXmlGetXPathListNumNodes(Doc as integer, xpathlist as integer) return integer
+//Esta función permite liberar de memoria el contexto XPATH creado con la función TTXmlCreateXPathList
+public dll "ttxmldll.dll" TTXmlFreeXPathContext(Doc as integer, xpathcontext as integer)
+//Esta función permite liberar de memoria la lista de nodos creados con la función TTXmlCreateXPathList
+public dll "ttxmldll.dll" TTXmlFreeXPathList(Doc as integer, xpathlist as integer)
+//Esta dos funciones se han implementado en la versión 4.4.4
+//Esta función permite elegir el set de caracteres en el que se desea que se retorne el texto del nodo
+public dll "ttxmldll.dll" TTXmlGetEncodedNodeText(Doc as integer, Node as integer, Charset as integer) return char
+//Este método permite crear un nuevo nodo XML de tipo texto, indicando el nodo padre del documento XML al que pertenece, pero además permite pasarle como parámetro el charset.
+public dll "ttxmldll.dll" TTXmlNewEncodedTextChild(Doc as integer, ParentNode as integer, name as Char, Content as Char, charset as integer) return integer
+//Versión 5.6 de Cosmos. 
+//Esta función genera un fichero a partir de un fichero xml y una hoja de estilo.
+public dll "ttxmldll.dll" TTXmlApplyXSLTAndSave(xmlFileName as char, xsltFileName as char, outXmlFile as char, var bytes as integer) return integer
+//Esta función modifica el contenido de un nodo
+public dll "ttxmldll.dll" TTXmlUpdateNodeContent(Doc as integer, node as integer, Content as Char, charset as integer)
+//Esta función modifica el nombre de un nodo
+public dll "ttxmldll.dll" TTXmlUpdateNodeName(Doc as integer, node as integer, Content as Char, charset as integer)
+//{{CODEEND
+END
+

@@ -1,0 +1,132 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CGrid is Form begin
+		objects begin
+		end
+		Table customers is customers
+		begin
+			customer as column required
+			company as column
+			surname as column
+			fname as column
+		end
+		INTERFACE
+			POSITION 0 0 731 326
+			LABEL "Tooltip"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 715 287
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL AS BOX
+					POSITION 7 0 616 234
+					BOLD 
+					ATTACH ALL
+					LABEL "Table ..."
+					BORDER ETCHED
+				BEGIN
+					CONTROL id_grid AS GRID
+						POSITION 7 13 588 196
+						ATTACH ALL
+						BORDER DOUBLE DOWN
+						SCROLL VERTICAL HORIZONTAL
+						TABLE customers
+						PARENTGRID
+					BEGIN
+						CONTROL AS EDIT
+							POSITION 0 0 90 22
+							LABEL "Customer Code"
+							NOBORDER
+							VARIABLE customers.customer
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 91 0 126 22
+							LABEL "Company"
+							NOBORDER
+							VARIABLE customers.company
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 218 0 162 22
+							LABEL "Surname"
+							NOBORDER
+							VARIABLE customers.surname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 381 0 102 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE customers.fname
+							LIKEVAR
+					END
+				END
+				CONTROL AS BUTTON
+					POSITION 635 208 78 22
+					ATTACH RIGHT
+					LABEL "&Exit"
+					ICON 4 FILE "Small Buttons"
+					COMMAND Close
+				CONTROL p_coment AS PANEL
+					POSITION 0 261 715 22
+					FOREGROUND COLOR blue
+					ATTACH LEFT RIGHT BOTTOM
+					BORDER DOWN
+				CONTROL chkTooltip AS CHECK
+					POSITION 635 172 69 22
+					ATTACH RIGHT
+					LABEL "Tooltip"
+					NOBORDER
+			END
+		END
+	end
+END
+CODE CLASS CGrid BEGIN
+//{{CODEBEGIN
+
+On Open
+begin
+    SetEditMode(true);
+    Query();
+    SetOption("SHOWGRIDTOOLTIP" ,TRUE);
+    chkTooltip.Checked = TRUE;
+    p_coment.Text = "To see the full text place the mouse pointer in the cell.";
+end
+
+
+
+
+On event Click control chkTooltip(e as event)
+begin
+    if chkTooltip.Checked then begin
+        SetOption("SHOWGRIDTOOLTIP" ,TRUE);
+    end else begin
+        SetOption("SHOWGRIDTOOLTIP" ,FALSE);
+    end
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+oCAutoEditMode as CGrid
+end
+begin
+    PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("Stock");
+    oCAutoEditMode.Run;
+    Sql.Disconnect;
+    Sql.DettachConnection;
+end
+//{{CODEEND
+END
+

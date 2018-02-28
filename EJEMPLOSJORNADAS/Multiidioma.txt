@@ -1,0 +1,8 @@
+State|Customer  |Order date |Pay date |Status |Description|Price=Estado|Cliente  |Fecha pedido |Fecha pago |Estado |Descripción|Precio
+File=Archivo
+Open=Abrir
+Save=Guardar
+Exit=Salir
+Fichero Multiidoma=Multilanguage File
+List=Lista
+MULTI-IDIOMA=MULTILANGUAGE

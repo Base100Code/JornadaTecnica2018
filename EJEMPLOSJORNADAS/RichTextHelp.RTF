@@ -1,0 +1,124 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang3082{\fonttbl{\f0\fswiss\fprq2\fcharset0 Calibri;}{\f1\fmodern\fprq1\fcharset0 Courier New;}{\f2\froman\fprq2\fcharset0 Times New Roman;}{\f3\fnil\fcharset0 Segoe UI;}{\f4\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red51\green51\blue51;\red23\green54\blue93;\red128\green128\blue128;\red0\green0\blue255;\red166\green166\blue166;}
+{\stylesheet{ Normal;}{\s1 heading 1;}{\s2 heading 2;}}
+{\*\generator Riched20 10.0.16299}\viewkind4\uc1 
+\pard\brdrb\brdrs\brdrw20\brsp20 \keepn\pagebb\widctlpar\s1\fi-431\li431\sa240\sl276\slmult1\cf1\b\f0\fs32\lang1033 1.\tab Rich text in Edit Control\par
+
+\pard\widctlpar\sa200\sl276\slmult1\qj\cf0\b0\fs20 The possibility of using an editing control as an editing control with rich text has been implemented.\par
+To do this, you have to check the Check control \ldblquote Rich Text\rdblquote  in the properties dialog of the control in the General tab.\par
+
+\pard\keepn\widctlpar\s2\fi-578\li578\sb240\sa120\sl276\slmult1\qj\cf1\b 1.1\tab\fs24 Methods\par
+
+\pard\widctlpar\sa200\sl276\slmult1\qj\cf0\b0\fs20 All the methods listed below belong to the SimpleControl class, but are indicated in this section for clarity.\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-357\li357\sa200\sl276\slmult1\qj RichTextAddText\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj Add text to the end of the editor.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf2\b\f1\fs18 RichTextAddText (text as Char)\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-357\li357\sa200\sl276\slmult1\qj\cf0\b0\f0\fs20 RichTextGetProperty\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj Checks the value of a property of the selected text or the paragraph where the cursor is located.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf2\b\f1\fs18 RichTextGetProperty (name as Char ,VAR value as Object ,VAR indexes as ArgList OF Object)\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20 Parameters:\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119 Name\tab Property name.\par
+Value\tab Property value returned by the function.\par
+Indexes\tab Parameter reserved for future implementations.\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-357\li357\sa200\sl276\slmult1\qj RichTextSaveToFile\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj Saves the content of the rich text control in a file with the indicated format.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf2\b\f1\fs18 RichTextSaveToFile (fileName as Char ,fileFormat as Char) return\line Boolean\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20 Parameters:\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119 filename\tab File full path.\par
+fileFormat \tab\ldblquote RTF\rdblquote  or \ldblquote TXT\rdblquote .\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-357\li357\sa200\sl276\slmult1\qj RichTextSetProperty\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj Assigns property to the selected text of a rich text or to the paragraph where the cursor is located.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf2\b\f1\fs18 RichTextSetProperty(name as Char ,VAR value as Object ,VAR indexes as ArgList OF Object)\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20 Parameters:\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119 Name\tab Property name.\par
+Value\tab Property value.\par
+Indexes\tab Parameter reserved for future implementations.\par
+
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\widctlpar\fi-357\li357\sa200\sl276\slmult1\qj RichTextPrint.\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj Prints the contents of the control to the indicated printer.\par
+
+\pard\widctlpar\li567\sa200\sl276\slmult1\cf2\b\f1\fs18 RichTextPrint (printerName as Char ,showPrintDlg as Boolean default FALSE)\par
+
+\pard\widctlpar\li357\sa120\sl276\slmult1\qj\cf0\b0\f0\fs20 Parameters.\par
+
+\pard\hyphpar0\widctlpar\fi-1559\li2268\sa120\sl276\slmult1\qj\tx2268\tx3119 PrinterName\tab Name of the printer for which you want to print.\par
+showPrintDlg \tab If its value is TRUE, it will show the printer selection box.\par
+\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clcbpat5\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx1985\clcbpat5\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx4111\clcbpat5\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1\fs18 PrinterName parameter\cell showPrintDlg parameter\cell The content of the control will be printed by:\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NULL\cell FALSE\cell Default printer.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NULL\cell TRUE\cell A dialog box to select the printer will be displayed.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 Not Null\cell FALSE\cell Selecter printer.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx1985\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx4111\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 Not Null\cell TRUE\cell It will show the dialog box to select the printer and the value indicated in the first parameter will be ignored.\cell\row 
+\pard\keepn\widctlpar\s2\fi-578\li578\sb240\sa120\sl276\slmult1\qj\cf1\b\fs20 1.2\tab\fs24 Properties\par
+\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clcbpat5\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clcbpat5\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1\cf0\b0\fs18 Name\cell Description\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 ALIGNMENT\cell Indicates the alignment of the paragraph where the cursor is located:\par
+1: left, 2: right, 3: centered.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 BACKCOLOR\cell Background color.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 BOLD\cell The selected text will be shown in bold. If it is already in bold, the property will be removed.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 CARETPOSITION\cell Cursor position. The first character is 0.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 FILE\cell File assigned to the control.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 FONT\cell Text font.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 FORECOLOR\cell Text color.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 ITALIC\cell The selected text will be displayed in italics. If it is already in italics, the property will be removed.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 LEFTINDENT\cell Indicates the indentation of the paragraph where the cursor is located with respect to the current indentation of the paragraph.\par
+A negative indent indicates that it will be suppressed to the extent indicated in the parameter.\par
+The unit that is used is the \ldblquote twip\rdblquote . 1,440 twips correspond to 1 inch, or 57 twips to 1 mm.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 LINESPACING\cell Spacing between lines.\par
+Allowed values:\par
+
+\pard\intbl\widctlpar\li891\sb20\sa20\sl276\slmult1\tx1317 0\tab Simple spacing.\par
+1\tab 1,5 lines spacing.\par
+2\tab Double spacing.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGBULLET\cell Graphical point of enumeration of the paragraph where the cursor is located.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGLETTER\cell Lowercase letter for the enumeration of the paragraph where the cursor is located.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGNUMBER\cell Integer number for the enumeration of the paragraph where the cursor is located.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGROMAN\cell Roman numeral in lowercase letters for the enumeration of the paragraph where the cursor is located.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGULETTER\cell Capital letter for the enumeration of the paragraph where the cursor is located.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 NUMBERINGUROMAN\cell Roman numeral in capital letters for the enumeration of the paragraph where the cursor is located.\cell\row\trowd\trgaph108\trleft-108\trbrdrl\brdrs\brdrw10\brdrcf3 \trbrdrt\brdrs\brdrw10\brdrcf3 \trbrdrr\brdrs\brdrw10\brdrcf3 \trbrdrb\brdrs\brdrw10\brdrcf3 \trpaddl108\trpaddr108\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx2195\clbrdrl\brdrw10\brdrs\brdrcf3\clbrdrt\brdrw10\brdrs\brdrcf3\clbrdrr\brdrw10\brdrs\brdrcf3\clbrdrb\brdrw10\brdrs\brdrcf3 \cellx9214 
+\pard\intbl\widctlpar\sb20\sa20\sl276\slmult1 UNDERLINE\cell The selected text will be underlined. If it is already underlined, the property will be removed.\cell\row 
+\pard\f3\fs20\lang3082\par
+}
+ 

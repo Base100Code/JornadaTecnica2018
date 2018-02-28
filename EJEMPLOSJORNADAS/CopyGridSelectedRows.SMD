@@ -1,0 +1,175 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CGrid is Form begin
+		objects begin
+		end
+		Table states is states
+		begin
+			state as column required
+			sname as column
+			alias as Char (80)
+		end
+		INTERFACE
+			POSITION 0 0 717 562
+			LABEL "Grid Multiselection"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 701 523
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL AS BOX
+					POSITION 6 2 692 496
+					NOLABEL
+					NOBORDER
+				BEGIN
+					CONTROL id_grid AS GRID
+						POSITION 3 3 370 489
+						ATTACH TOP BOTTOM
+						BORDER DOUBLE DOWN
+						SCROLL VERTICAL
+						TABLE states
+						PARENTGRID
+					BEGIN
+						CONTROL AS EDIT
+							POSITION 0 0 46 22
+							LABEL "State"
+							NOBORDER
+							VARIABLE states.state
+							LIKEVAR
+						CONTROL ed_name AS EDIT
+							POSITION 47 0 153 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE states.sname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 201 0 107 22
+							LABEL "Alias"
+							NOBORDER
+							VARIABLE states.alias
+							LIKEVAR
+					END
+					CONTROL AS SPLIT
+						POSITION 373 0 7 492
+						ATTACH TOP BOTTOM
+						BORDER DOUBLE
+						VERTICAL
+					CONTROL AS BOX
+						POSITION 386 8 302 480
+						ATTACH ALL
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+						CONTROL edtPaste AS EDIT
+							POSITION 3 103 287 369
+							ATTACH ALL
+							BORDER DOUBLE DOWN
+							RICHTEXTEDIT
+							DATATYPE CHAR
+							SCROLL VERTICAL HORIZONTAL
+						CONTROL AS BUTTON
+							POSITION 10 65 115 28
+							ATTACH LEFT
+							LABEL "&Copy selection"
+							COMMAND CmdCopiar
+						CONTROL AS BUTTON
+							POSITION 10 32 116 28
+							ATTACH LEFT
+							LABEL "Change Alias"
+							COMMAND CmdChange
+						CONTROL chkActivar AS CHECK
+							POSITION 10 3 174 22
+							ATTACH LEFT
+							LABEL "Activate Multiselection"
+							NOBORDER
+					END
+				END
+				CONTROL p_coment AS PANEL
+					POSITION 0 500 701 22
+					FOREGROUND COLOR default
+					ATTACH LEFT RIGHT BOTTOM
+					BORDER DOWN
+			END
+		END
+	end
+END
+CODE CLASS CGrid BEGIN
+//{{CODEBEGIN
+On Open
+begin
+    Self.SetEditMode(TRUE);
+    Query();
+    id_grid.AllowGridMultiSelect(TRUE);
+    chkActivar.Checked = TRUE;
+    p_coment.Text = " Select a range of rows and press Copy";
+end
+
+On Command CmdChange
+objects begin
+    fromRow fromCol toRow toCol as integer
+end
+begin
+    Self.SetEditMode(FALSE);
+    id_grid.GetGridSelectedRows(fromRow, fromCol, toRow, toCol );
+    while fromRow <= toRow do
+    begin        
+        states.SetCurrentRow(fromRow);
+        states.alias = states.sname;
+        states.alias.Upcase();
+        states.Update();
+        ++fromRow;
+    end
+    Self.SetEditMode(TRUE);
+end
+
+
+On Command CmdCopiar
+begin
+    id_grid.CopyGridSelectedRows();
+    edtPaste.Text = "";
+    edtPaste.RichTextAddText(Module.GetClipboardText());
+end
+
+On event Click control chkActivar(e as event)
+begin
+    if chkActivar.Checked then begin
+        id_grid.AllowGridMultiSelect(TRUE);
+    end else begin
+        id_grid.AllowGridMultiSelect(FALSE);
+    end
+end
+
+On event Click control id_grid(e as event)
+begin
+    p_coment.Text = "Fila : <" +  id_grid.GetGridClickedRow() + "> Columna :<" + e.GetItem + ">" + now;
+
+end
+
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+oCAutoEditMode as CGrid
+end
+begin
+    PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("Stock");
+    oCAutoEditMode.Run;
+    Sql.Disconnect;
+    Sql.DettachConnection;
+end
+//{{CODEEND
+END
+

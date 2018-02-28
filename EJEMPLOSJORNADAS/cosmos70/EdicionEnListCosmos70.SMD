@@ -1,0 +1,394 @@
+REPOSITORY stock
+CONSTANTS  begin
+	SKIN_LIST_ITEM_HEADER = 1
+	SKIN_LIST_ITEM_SELECTED_ROW = 2
+	SKIN_LIST_ITEM_UNSELECTED_ROW = 3
+	SKIN_LIST_ITEM_SCROLL_BAR = 4
+	SKIN_LIST_ITEM_SEARCH_BAR = 5
+	SKIN_LIST_PART_BITMAP = 1
+	SKIN_LIST_PART_BORDER = 2
+	SKIN_LIST_PART_TEXT = 3
+	SKIN_LIST_STATUS_FOCUSED = 1
+	SKIN_LIST_STATUS_NORMAL = 2
+	SKIN_LIST_STATUS_DOWN = 3
+end
+CLASSES BEGIN
+	frm is Form begin
+		objects begin
+			InstruSelect as Char
+			bEditarCeldasConControles as Boolean
+		end
+		INTERFACE
+			POSITION 0 0 902 387
+			LABEL "Edit List"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL ctr_caja AS BOX
+				POSITION 0 0 886 348
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL lstStrings AS LIST
+					POSITION 13 17 667 319
+					ATTACH ALL
+					LABEL "State|Customer  |Order date |Pay date |Status |Nº line |Cod. Item |Description|Quantity|Discount|Price"
+					BORDER DOUBLE DOWN
+					ICON FILE "_MBSTDBMP_"
+					LISTTYPE LISTCOLS 11
+					SELECTTYPE SIMPLE
+					SCROLL VERTICAL HORIZONTAL
+				CONTROL AS BUTTON
+					POSITION 699 22 161 34
+					ATTACH TOP RIGHT
+					LABEL "BackupListRow"
+					COMMAND CmdBackupListRow
+				CONTROL AS BUTTON
+					POSITION 699 106 161 34
+					ATTACH TOP RIGHT
+					LABEL "UpdateBackupListRow"
+					COMMAND CmdUpdateBackupRow
+				CONTROL AS BUTTON
+					POSITION 699 64 161 34
+					ATTACH TOP RIGHT
+					LABEL "RestoreBackupListRow"
+					COMMAND CmdRestoreBackupListRow
+				CONTROL AS BOX
+					POSITION 699 191 161 134
+					ATTACH RIGHT
+					LABEL "Options"
+					BORDER ETCHED
+				BEGIN
+					CONTROL chkLockColumns AS CHECK
+						POSITION 8 29 139 22
+						LABEL "SetLockColumns 2"
+						NOBORDER
+					CONTROL chkEdit AS CHECK
+						POSITION 8 55 139 22
+						LABEL "SetListColumnEditType"
+						NOBORDER
+					CONTROL chkSpreadSheet AS CHECK
+						POSITION 8 81 139 22
+						LABEL "SpreadSheetNavigation"
+						NOBORDER
+				END
+			END
+		END
+	end
+	frmText is Form begin
+		objects begin
+			ChTexto as Char
+		end
+		INTERFACE
+			POSITION 0 0 452 139
+			LABEL "Text"
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 446 110
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL TextDes AS TEXT
+					POSITION 14 29 127 22
+					NOBORDER
+					DATATYPE CHAR
+					TAGS "Modify backup text"
+				CONTROL edtFieldTexto AS EDIT
+					POSITION 164 29 272 22
+					BORDER DOUBLE DOWN
+					DATATYPE CHAR
+				CONTROL AS BUTTON
+					POSITION 241 83 87 22
+					LABEL "Accept"
+					COMMAND CmdAceptar
+				CONTROL AS BUTTON
+					POSITION 353 82 87 22
+					LABEL "Cancel"
+					COMMAND Close
+			END
+		END
+	end
+END
+objects begin
+	gChBackup AS Char
+end
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+On Open begin
+    LoadList(lstStrings, "strings");
+    
+
+end  
+Private LoadList ( pList as SimpleFormControl, pType as char)
+    Objects Begin
+       
+        icon as integer default 0
+        texto as char
+        valor as decimal
+        InstruSelectString as char
+    End
+Begin
+    
+    pList.Reset();    
+    
+   // pList.AlternateBackColor( Rgb(216, 233, 209) , Rgb(255, 255, 255), 2);
+   
+ 
+   
+    
+    pList.IconFile = "listaiconosgif";
+
+
+    if bEditarCeldasConControles then begin
+        pList.SetListColumnEditType(1,4, "CA|MA|VA");        
+        pList.SetListColumnEditType(3,3, null);
+        pList.SetListColumnEditType(4,3, null);
+        pList.SetListColumnEditType(5,2, "Y|N"); //Check        
+    end else begin
+        pList.SetListColumnEditType(5,1, null); //Check
+        pList.SetListColumnEditType(1,1, null);        
+        pList.SetListColumnEditType(3,1, null);
+        pList.SetListColumnEditType(4,1, null);
+    end
+
+    
+    pList.FieldSeparator = "|";
+    
+    FormatListColumnChar(1, 15, pList); //State
+    FormatListColumnChar(2, 40, pList); //Customer
+    FormatListColumnDate(3, 15, pList);  //Date
+
+      
+    FormatListColumnDate(4, 15, pList);  //Date
+
+    FormatListColumnChar(5, 15, pList);  //Status
+    FormatListColumnNumeric(6,10, 0, pList); //Número de la linea
+    pList.SetColumnVisible(6, FALSE);
+   
+    FormatListColumnNumeric(7, 10,0, pList); //Cod item
+    FormatListColumnChar(8, 15, pList);  //Descripcion item
+
+    FormatListColumnNumeric(9, 15 ,0, pList); //Cantidad
+    FormatListColumnNumeric(10, 15,0, pList); //Descuento
+    FormatListColumnNumeric(11, 20, 2, pList); //Precio     
+    pList.SetColumnMask(11,12);
+
+
+    InstruSelect = "select customers.state, customers.company , order_date, pay_date , order_status , "+
+                    " line_nbr, orderlines.item, items.description,  quantity, discount, price " +
+                    
+                    " from orders, orderlines, items , customers"+
+                        " where orders.order_nbr = orderlines.order_nbr and orderlines.item = items.item " +
+                        " and orderlines.supplier = items.supplier and orders.customer = customers.customer order by line_nbr";
+
+    
+
+    if pType == "strings" then begin
+        LoadString( pList, InstruSelect );
+        pList.NumericColumnsFormattedToChar(true);
+    end // if
+    
+    if pType == "sql" then begin
+        pList.LoadSelect(InstruSelect);
+    end
+
+
+
+
+    
+End
+
+Private LoadString(pList as SimpleFormControl, pInstruSelect as char)
+Objects begin
+    c as SqlCursor
+    texto as Char
+    customer line_nbr as integer 
+    item  quantity discount as smallint
+    order_date pay_date as date
+    order_status   description as char
+    price price2 price3 as decimal (12,2)
+    company state as char
+    i as integer default 0
+    j as integer default 0
+    lChIndice as char
+    InstruSelectString as char
+end
+begin
+
+        c.Prepare(pInstruSelect);
+    
+        c.Open;
+        
+        While c.Fetch(state, company , order_date, pay_date , order_status , line_nbr, item, 
+                    description,  quantity, discount, price ).Found
+        Do begin
+
+            texto = state + "|" +company +"|"+ order_date.char +"|"+ pay_date.char +"|"+ order_status +"|"+ line_nbr.Using(2) +"|"+ 
+                    item.Using(5) +"|"+ description +"|"+  quantity +"|"+ discount +"|"+ 
+                price.Using(12) ;
+ 
+            j = pList.AddString(texto , Random(1,12));                        
+            ++i;
+            pList.SetListInfo(j, j);
+        end
+        c.Close.Free;
+ 
+end
+
+
+Private FormatListColumnChar(pNumColumn as smallint, pLengthChar as smallint, pList as SimpleFormControl)
+objects begin
+end
+Begin
+    pList.SetColumnType(pNumColumn,0);
+    pList.SetColumnAlign(pNumColumn,0);
+    pList.SetColumnChars(pNumColumn,pLengthChar);
+end
+
+Private FormatListColumnNumeric(pNumColumn as smallint, pLengthColumns as smallint, pNumDec as smallint , pList as SimpleFormControl)
+Objects begin
+end
+begin
+    pList.SetColumnType(pNumColumn ,1); //Numeric
+    if pNumDec > 0 then pList.SetColumnNumDec(pNumColumn, pNumDec); //DEcimales
+    pList.SetColumnAlign(pNumColumn,2);//Izda
+    pList.SetColumnChars(pNumColumn,pLengthColumns);
+end
+
+Private FormatListColumnDate(pNumColumn as smallint, pLengthColumns as smallint, pList as SimpleFormControl)
+Objects begin
+end
+begin
+    pList.SetColumnType(pNumColumn ,2); //Date
+    pList.SetColumnAlign(pNumColumn,2);//Dcha
+    pList.SetColumnChars(pNumColumn,pLengthColumns);
+
+end
+    
+On Command CmdBackupListRow
+begin
+    if lstStrings.Selected > 0 then begin
+        lstStrings.BackupListRow(lstStrings.Selected);
+    end
+    else "Select row to backup".Trace();    
+end
+
+On Command CmdRestoreBackupListRow
+begin
+    if lstStrings.Selected > 0 then begin
+        lstStrings.RestoreBackupListRow(lstStrings.Selected);
+    end
+    else "Select row to restore backup".Trace();    
+end
+
+On Command CmdGetBackupListRow
+Objects begin
+    lChBackup as char
+end
+begin
+    lChBackup = lstStrings.GetBackupListRow(lstStrings.Selected);
+    if lChBackup is null then "Selected row has no backup".Trace();
+    else lChBackup.Trace;
+end
+
+On Command CmdUpdateBackupRow
+Objects begin
+    o as frmText
+end
+begin
+    gChBackup = lstStrings.GetBackupListRow(lstStrings.Selected);
+    o.Run();
+    lstStrings.UpdateBackupListRow(lstStrings.Selected ,gChBackup);
+   
+end
+
+
+On event Click control chkEdit(e as event)
+begin
+    if chkEdit.Checked then begin
+         bEditarCeldasConControles = TRUE;
+    end else begin
+         bEditarCeldasConControles = FALSE;
+    end     
+
+    if bEditarCeldasConControles then begin
+        lstStrings.SetListColumnEditType(1,4, "CA|MA|VA");        
+        lstStrings.SetListColumnEditType(3,3, null);
+        lstStrings.SetListColumnEditType(4,3, null);
+        lstStrings.SetListColumnEditType(5,2, "Y|N"); //Check        
+    end else begin
+        lstStrings.SetListColumnEditType(5,1, null); //Check
+        lstStrings.SetListColumnEditType(1,1, null);        
+        lstStrings.SetListColumnEditType(3,1, null);
+        lstStrings.SetListColumnEditType(4,1, null);
+    end
+    
+    if Module.Version() >= "7.1" then begin
+       // lstStrings.Refresh();
+    end
+    else 
+        LoadList(lstStrings, "strings");
+end
+
+On event DblClick control lstStrings(e as event)
+begin
+    lstStrings.EditListColumn(lstStrings.Selected, lstStrings.GetCurrentItem());           
+end
+
+
+On event Click control chkSpreadSheet(e as event)
+begin
+    lstStrings.SetListSpreadSheetNavigation(chkSpreadSheet.Checked);
+end
+
+
+On event Click control chkLockColumns(e as event)
+begin
+    if chkLockColumns.Checked then begin
+        lstStrings.SetLockColumns(2);
+    end else begin
+        lstStrings.SetLockColumns(0);
+    end
+
+end
+//{{CODEEND
+END
+CODE CLASS frmText BEGIN
+//{{CODEBEGIN
+On Open begin
+    edtFieldTexto.Text = gChBackup;
+end
+
+On Command CmdAceptar
+begin
+    gChBackup = edtFieldTexto.Text ;    
+    Close();
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+      of as frm
+      i dafaultRGB as integer
+end
+begin
+    PutEnv("DRAWLISTLINES", "TRUE");
+
+   PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    
+    of.Run();
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

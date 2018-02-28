@@ -1,0 +1,235 @@
+REPOSITORY stock
+CONSTANTS  begin
+	SKIN_LIST_ITEM_HEADER = 1
+	SKIN_LIST_ITEM_SELECTED_ROW = 2
+	SKIN_LIST_ITEM_UNSELECTED_ROW = 3
+	SKIN_LIST_ITEM_SCROLL_BAR = 4
+	SKIN_LIST_ITEM_SEARCH_BAR = 5
+	SKIN_LIST_PART_BITMAP = 1
+	SKIN_LIST_PART_BORDER = 2
+	SKIN_LIST_PART_TEXT = 3
+	SKIN_LIST_STATUS_FOCUSED = 1
+	SKIN_LIST_STATUS_NORMAL = 2
+	SKIN_LIST_STATUS_DOWN = 3
+end
+CLASSES BEGIN
+	frm is Form begin
+		objects begin
+			gNumRows as Integer
+			InstruSelect as Char
+		end
+		INTERFACE
+			POSITION 0 0 994 450
+			LABEL "Calculated and Totalized Columns"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL ctr_caja AS BOX
+				POSITION 0 0 978 411
+				FOREGROUND RGB 0 0 0
+				BACKGROUND COLOR white
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL lstStrings AS LIST
+					POSITION 7 37 963 332
+					ATTACH ALL
+					LABEL "State|Customer  |Order date |Pay date |Status |Nº line |C. Item |Description|Quantity|Discount|Price|Total Calculated|Total  Calculated2"
+					BORDER DOUBLE DOWN
+					ICON FILE "_MBSTDBMP_"
+					SORTONCLICK
+					LISTTYPE LISTCOLS 13
+					SELECTTYPE SIMPLE
+					SCROLL VERTICAL HORIZONTAL
+				CONTROL btnStyle AS BUTTON
+					POSITION 872 376 89 22
+					ATTACH RIGHT BOTTOM
+					LABEL "Graphical Style"
+				CONTROL btnAddTotals AS BUTTON
+					POSITION 779 376 89 22
+					ATTACH RIGHT BOTTOM
+					LABEL "Add Total Line"
+				CONTROL AS TEXT
+					POSITION 9 9 368 22
+					NOBORDER
+					DATATYPE CHAR
+					TAGS "SetComputedColumn / TotalizeColumn / SetListTotalsCellStyle"
+			END
+		END
+	end
+END
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+On Open 
+objects begin
+    skindir as char
+end
+begin
+    InitList();
+end  
+
+On event Click control btnAddTotals(e as event)
+begin
+    AddTotals();
+end
+
+private function AddTotals
+begin
+    // Columns to be totalized
+    lstStrings.TotalizeColumn(12 ,2 ,null ,"Min ");
+    lstStrings.TotalizeColumn(12 ,1 ,null ,"Total ");
+    lstStrings.TotalizeColumn(13 ,1 ,null ,"Total ");
+    lstStrings.ComputeListColumnTotals();
+end
+
+On event Click control btnStyle(e as event)
+objects begin
+    style as integer
+end
+begin
+    style = lstStrings.CreateListCellStyle("Verdana;Size=10", Module.Rgb(255,255,255), Module.Rgb(95,95,95), 2);
+    lstStrings.SetListTotalsCellStyle(style);
+end
+
+
+private function InitList
+begin
+    // formula to calculate column 12
+    lstStrings.SetComputedColumn(12 ,"$11$ * (1 - $10$/100)* $9$");
+    
+    //Load list
+    CargaLista(lstStrings, "strings");    
+    
+end
+
+
+Private CargaLista ( pList as SimpleFormControl, pType as char)
+    Objects Begin
+       
+        icon as integer default 0
+        texto as char
+        valor as decimal
+        InstruSelectString as char
+    End
+Begin
+    
+    pList.Reset();    
+    
+    pList.AlternateBackColor( Rgb(255, 255, 210) , Rgb(255, 255, 255), 2);
+    pList.SetLockColumns(1);
+    
+    pList.IconFile = "listaiconosgif";
+
+    pList.FieldSeparator = "|";
+   
+    FormatListColumnNumeric(9, 10 ,0, pList); //Quantity
+    FormatListColumnNumeric(10, 10,0, pList); //Discount
+    FormatListColumnNumeric(11, 15, 2, pList); //Price     
+
+    InstruSelect = "select customers.state, customers.company , order_date, pay_date , order_status , "+
+                    " line_nbr, orderlines.item, items.description,  quantity, discount, price " +
+                    
+                    " from orders, orderlines, items , customers"+
+                        " where orders.order_nbr = orderlines.order_nbr and orderlines.item = items.item " +
+                        " and orderlines.supplier = items.supplier and orders.customer = customers.customer order by line_nbr";
+   FormatListColumnNumeric(12, 30, 2, pList); 
+   pList.SetColumnMask(12,4);
+
+   FormatListColumnNumeric(13, 20, 2, pList); 
+   pList.SetColumnMask(13,4);
+
+
+   LoadString( pList, InstruSelect );
+  
+    
+End
+
+Private LoadString(pList as SimpleFormControl, pInstruSelect as char)
+Objects begin
+    c as SqlCursor
+    texto as Char
+    customer line_nbr as integer 
+    item  quantity discount as smallint
+    order_date pay_date as date
+    order_status   description as char
+    price total_line as decimal (12,5)
+    company state as char
+    j as integer default 0
+    lChIndice as char
+    InstruSelectString as char
+end
+begin
+
+        c.Prepare(pInstruSelect);
+    
+        c.Open;
+        
+        While c.Fetch(state, company , order_date, pay_date , order_status , line_nbr, item, 
+                    description,  quantity, discount, price ).Found
+        Do begin
+            price = price + 1; 
+            total_line = price * (1 - discount / 100 ) * quantity;
+            texto = state + "|" +company +"|"+ order_date.char +"|"+ pay_date.char +"|"+ order_status +"|"+ line_nbr.Using(2) +"|"+ 
+                    item.Using(5) +"|"+ description +"|"+  quantity +"|"+ discount +"|"+ 
+                 price + "|AAA|" + total_line  ;
+ 
+            j = pList.AddString(texto ,0);                        
+        end
+        c.Close.Free;
+ 
+end
+
+
+Private FormatListColumnChar(pNumColumn as smallint, pLengthChar as smallint, pList as SimpleFormControl)
+objects begin
+end
+Begin
+    pList.SetColumnType(pNumColumn,0);
+    pList.SetColumnAlign(pNumColumn,0);
+    pList.SetColumnChars(pNumColumn,pLengthChar);
+end
+
+Private FormatListColumnNumeric(pNumColumn as smallint, pLengthColumns as smallint, pNumDec as smallint , pList as SimpleFormControl)
+Objects begin
+end
+begin
+    pList.SetColumnType(pNumColumn ,1); //Numeric
+    if pNumDec > 0 then pList.SetColumnNumDec(pNumColumn, pNumDec); //Decimals
+    pList.SetColumnAlign(pNumColumn,2);//Right
+    pList.SetColumnChars(pNumColumn,pLengthColumns);
+end
+
+Private FormatListColumnDate(pNumColumn as smallint, pLengthColumns as smallint, pList as SimpleFormControl)
+Objects begin
+end
+begin
+    pList.SetColumnType(pNumColumn ,2); //Date
+    pList.SetColumnAlign(pNumColumn,2);//Right
+    pList.SetColumnChars(pNumColumn,pLengthColumns);
+
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+      of as frm
+      i dafaultRGB as integer
+end
+begin
+    PutEnv("DRAWLISTLINES", "TRUE");
+
+   PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    
+    of.Run();
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

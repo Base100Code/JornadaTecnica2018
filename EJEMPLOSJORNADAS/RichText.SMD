@@ -1,0 +1,818 @@
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	frmRoman is Form begin
+		objects begin
+		end
+		INTERFACE
+			POSITION 0 0 177 269
+			LABEL "Nº Romanos"
+			NOLABEL
+			NOBORDER
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 175 267
+				FOREGROUND RGB 0 0 0
+				BACKGROUND COLOR white
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL text_RomanMay_0 AS TEXT
+					POSITION 7 13 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "I)" "II)" "III)"
+				CONTROL text_RomanMin_0 AS TEXT
+					POSITION 98 13 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "i)" "ii)" "iiii)"
+				CONTROL text_RomanMay_256 AS TEXT
+					POSITION 7 78 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "(I)" "(II)" "(III)"
+				CONTROL text_RomanMay_512 AS TEXT
+					POSITION 7 143 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "I." "II." "III."
+				CONTROL text_RomanMay_768 AS TEXT
+					POSITION 7 208 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "I" "II" "III"
+				CONTROL text_RomanMin_256 AS TEXT
+					POSITION 98 78 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "(i)" "(ii)" "(iiii)"
+				CONTROL text_RomanMin_512 AS TEXT
+					POSITION 98 143 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "i." "ii." "iiii."
+				CONTROL text_RomanMin_768 AS TEXT
+					POSITION 98 208 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "i" "ii" "iiii"
+			END
+		END
+	end
+	frm is Form begin
+		objects begin
+			vInLineSpacing as Integer default 0
+		end
+		INTERFACE
+			POSITION 0 0 1253 826
+			LABEL "Rich Text"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 1237 787
+				FOREGROUND RGB 0 0 0
+				BACKGROUND COLOR white
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL edtMultiline AS EDIT
+					POSITION 0 110 1237 677
+					ATTACH ALL
+					BORDER ETCHED
+					RICHTEXTEDIT
+					WRAP
+					DATATYPE CHAR
+					SCROLL VERTICAL
+				CONTROL tab_ribbon AS TAB
+					POSITION 0 4 1237 102
+					BACKGROUND COLOR white
+					FONT "Verdana" 10  CHARSET Ansi 
+					ATTACH LEFT TOP RIGHT
+					CURRENT PAGE 2
+					BORDER DOUBLE
+					NUMBER 2
+						TAB LABEL "MENU"
+						TAB LABEL "RICH TEXT"
+				BEGIN
+					CONTROL btnAddText AS BUTTON
+						POSITION 229 12 72 59
+						LABEL "AddText"
+						BORDER HILIGHT
+						ICON 21 FILE "Cosmos 32" CENTER VERTICAL
+					CONTROL btnPrint AS BUTTON
+						POSITION 159 12 72 59
+						LABEL "Printer"
+						BORDER HILIGHT
+						ICON 20 FILE "Cosmos 32" CENTER VERTICAL
+					CONTROL btnSaveAs AS BUTTON
+						POSITION 19 13 72 58
+						LABEL "Save"
+						BORDER HILIGHT
+						ICON 18 FILE "Cosmos 32" CENTER VERTICAL
+					CONTROL btnFile AS BUTTON
+						POSITION 89 12 72 59
+						LABEL "File"
+						BORDER HILIGHT
+						ICON 19 FILE "Cosmos 32" CENTER VERTICAL
+					CONTROL btnFont AS BUTTON
+						POSITION 185 16 41 41
+						BACKGROUND COLOR transparent
+						FONT "Tahoma" 16  CHARSET Ansi 
+						PAGE 2
+						LABEL "Fuente"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 2 FILE "Cosmos 32" CENTER
+						AUTOSIZE
+					CONTROL ed_interlineas AS EDIT
+						POSITION 787 25 41 26
+						PAGE 2
+						BORDER DOUBLE DOWN
+						SPIN BUTTON
+						DATATYPE CHAR
+					CONTROL AS TEXT
+						POSITION 717 16 69 41
+						PAGE 2
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Interlineado: "
+					CONTROL btnBold AS BUTTON
+						POSITION 229 16 41 41
+						BACKGROUND COLOR transparent
+						FONT "Tahoma" 16  CHARSET Ansi 
+						PAGE 2
+						LABEL "Negrita"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 3 FILE "Cosmos 32" CENTER
+						AUTOSIZE
+					CONTROL btnItalic AS BUTTON
+						POSITION 277 16 41 41
+						BACKGROUND COLOR transparent
+						FONT "Tahoma" 16 BOLD ITALIC  CHARSET Ansi 
+						PAGE 2
+						LABEL "Cursiva"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 4 FILE "Cosmos 32" CENTER
+					CONTROL btnUnderline AS BUTTON
+						POSITION 324 16 41 41
+						BACKGROUND COLOR transparent
+						FONT "Calibri" 18 BOLD  CHARSET Ansi 
+						PAGE 2
+						LABEL "Subrayado"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 5 FILE "Cosmos 32" CENTER
+					CONTROL btnColorTexto AS BUTTON
+						POSITION 375 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Color Texto"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 9 FILE "Cosmos 32" CENTER
+					CONTROL btnColorFondo AS BUTTON
+						POSITION 424 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Color Fondo"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 10 FILE "Cosmos 32" CENTER
+					CONTROL btnBullet AS BUTTON
+						POSITION 494 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Punto"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 6 FILE "Cosmos 32" CENTER
+					CONTROL btnNumber AS BUTTON
+						POSITION 543 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Número"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 7 FILE "Cosmos 32" CENTER
+					CONTROL btnLetter AS BUTTON
+						POSITION 587 16 43 41
+						BACKGROUND COLOR transparent
+						FONT "Calibri" 16  CHARSET Ansi 
+						PAGE 2
+						LABEL "A"
+						BORDER HILIGHT
+					CONTROL btnRoman AS BUTTON
+						POSITION 625 16 57 41
+						BACKGROUND COLOR transparent
+						FONT "Calibri" 16  CHARSET Ansi 
+						PAGE 2
+						COMMENT "Numeros\nromanos"
+						LABEL "I, II"
+						BORDER HILIGHT
+					CONTROL btnLeftIndentPlus AS BUTTON
+						POSITION 872 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Sangría +"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 14 FILE "Cosmos 32" CENTER
+					CONTROL btnLeftIndentMinus AS BUTTON
+						POSITION 923 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Sangría -"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 15 FILE "Cosmos 32" CENTER
+					CONTROL btnLeftAlignment AS BUTTON
+						POSITION 1025 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Alin Izq"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 11 FILE "Cosmos 32" CENTER
+					CONTROL btnCenterAlignment AS BUTTON
+						POSITION 1071 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Alin Centrado"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 12 FILE "Cosmos 32" CENTER
+					CONTROL btnRightAlignment AS BUTTON
+						POSITION 1118 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Alin Der"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 13 FILE "Cosmos 32" CENTER
+					CONTROL btnCopy AS BUTTON
+						POSITION 19 7 41 59
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Copiar"
+						BORDER HILIGHT
+						ICON 16 FILE "Cosmos 32" CENTER
+					CONTROL btnPaste AS BUTTON
+						POSITION 68 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Pegar"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 17 FILE "Cosmos 32" CENTER
+					CONTROL btnCut AS BUTTON
+						POSITION 121 16 41 41
+						BACKGROUND COLOR transparent
+						PAGE 2
+						LABEL "Cortar"
+						NOLABEL
+						BORDER HILIGHT
+						ICON 8 FILE "Cosmos 32" CENTER
+					CONTROL AS BOX
+						POSITION 171 9 2 65
+						PAGE 2
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+					END
+					CONTROL AS BOX
+						POSITION 487 7 2 65
+						PAGE 2
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+					END
+					CONTROL AS BOX
+						POSITION 696 7 2 65
+						PAGE 2
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+					END
+					CONTROL AS BOX
+						POSITION 853 7 2 65
+						PAGE 2
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+					END
+					CONTROL AS BOX
+						POSITION 992 6 2 65
+						PAGE 2
+						NOLABEL
+						BORDER ETCHED
+					BEGIN
+					END
+					CONTROL AS BUTTON
+						POSITION 0 0 0 0
+						FOREGROUND RGB 0 0 0
+						BACKGROUND RGB 0 0 0
+				END
+			END
+		END
+	end
+	frmLetter is Form begin
+		objects begin
+		end
+		INTERFACE
+			POSITION 0 0 177 269
+			LABEL "Nº Romanos"
+			NOLABEL
+			NOBORDER
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 175 267
+				FOREGROUND RGB 0 0 0
+				BACKGROUND COLOR white
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL text_LetterMay_0 AS TEXT
+					POSITION 7 13 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "A)" "B)" "C)"
+				CONTROL text_LetterMin_0 AS TEXT
+					POSITION 98 13 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "a)" "b)" "c)"
+				CONTROL text_LetterMay_256 AS TEXT
+					POSITION 7 78 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "(A)" "(B)" "(C)"
+				CONTROL text_LetterMay_512 AS TEXT
+					POSITION 7 143 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "A." "B." "C."
+				CONTROL text_LetterMay_768 AS TEXT
+					POSITION 7 208 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "A" "B" "C"
+				CONTROL text_LetterMin_256 AS TEXT
+					POSITION 98 78 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "(a)" "(b)" "(c)"
+				CONTROL text_LetterMin_512 AS TEXT
+					POSITION 98 143 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "a." "b." "c."
+				CONTROL text_LetterMin_768 AS TEXT
+					POSITION 98 208 70 52
+					FOREGROUND COLOR blue
+					BACKGROUND COLOR white
+					FONT "Calibri" 8  CHARSET Ansi 
+					BORDER ETCHED
+					MULTILINE
+					DATATYPE CHAR
+					TAGS "a" "b" "c"
+			END
+		END
+	end
+END
+objects begin
+	f AS frm
+	f2 AS frmRoman
+	f3 AS frmLetter
+end
+CODE CLASS frmRoman BEGIN
+//{{CODEBEGIN
+
+On event Click control text_RomanMay_0(e as event)
+begin
+    f.edtMultiline.RichTextSetProperty("NUMBERINGUROMAN", 0);
+end
+
+On event Click control text_RomanMay_256(e as event)
+begin
+    f.edtMultiline.RichTextSetProperty("NUMBERINGUROMAN", 256);
+end
+
+On Click (a as char)
+begin
+    f.edtMultiline.SetFocus();
+    if a.Locate("May") != 0 then begin
+        f.edtMultiline.RichTextSetProperty("NUMBERINGUROMAN", a.GetWord("_", 3).Integer);
+    end   
+    if a.Locate("Min") != 0 then begin
+        
+        f.edtMultiline.RichTextSetProperty("NUMBERINGROMAN", a.GetWord("_", 3).Integer);
+    end    
+
+end
+//{{CODEEND
+END
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+public dll "user32.dll" SendMessageA(HWND as integer, msg as integer, wparam as integer, lparam as integer) return integer
+{
+WINUSERAPI
+LRESULT
+WINAPI
+SendMessageA(
+    __in HWND hWnd,
+    __in UINT Msg,
+    __in WPARAM wParam,
+    __in LPARAM lParam);
+}
+
+On Open
+Objects begin
+    lChFont as char
+    
+end
+begin
+    tab_ribbon.Page = 2;
+    btnUnderline.GetProperty("Font", lChFont);
+    btnUnderline.SetProperty("Font", lChFont + ";underline");
+    edtMultiline.RichTextSetProperty("FILE", ProjectDir()+"\RichTextHelp.RTF" );    
+    btnRoman.SetSplitButton(NULL, f2, 0);
+    btnLetter.SetSplitButton(NULL, f3, 0);
+    ed_interlineas.Text = vInLineSpacing;
+    edtMultiline.RichTextSetProperty("LINESPACING", 3);
+end
+
+
+
+On Click btnCopy
+objects begin
+    msg as integer
+end
+begin
+    msg = 769;
+    SendMessageA(edtMultiline.Hwnd(), msg, 0, 0);
+    edtMultiline.SetFocus();
+end
+On Click btnPaste
+objects begin
+    msg as integer
+end
+begin
+    msg = 770;
+    SendMessageA(edtMultiline.Hwnd(), msg, 0, 0);
+    edtMultiline.SetFocus();
+end
+On Click btnCut
+objects begin
+    msg as integer
+end
+begin
+    msg = 768;
+    SendMessageA(edtMultiline.Hwnd(), msg, 0, 0);
+    edtMultiline.SetFocus();
+end
+
+On Click btnFont
+objects begin
+    fontName fontNameCurrent as char
+end
+begin
+    edtMultiline.RichTextGetProperty("FONT", fontNameCurrent);
+    fontName = Module.ShowFontDialog(Self.Hwnd(), fontNameCurrent);
+    
+    if fontName is not null then begin
+        edtMultiline.RichTextSetProperty("FONT", fontName);
+    end
+    edtMultiline.SetFocus();
+end
+On Click btnColorTexto
+objects begin
+    retColor currentColor as Integer
+end
+begin
+    edtMultiline.RichTextGetProperty("FORECOLOR", currentColor);
+    
+    if Module.ShowColorDialog(Self.Hwnd(), currentColor,retColor) then begin
+        edtMultiline.RichTextSetProperty("FORECOLOR", retColor);
+    end
+    edtMultiline.SetFocus();
+end
+
+
+On Click btnColorFondo
+objects begin
+    retColor currentColor as Integer
+end
+begin
+    edtMultiline.RichTextGetProperty("BACKCOLOR", currentColor);
+    if Module.ShowColorDialog(Self.Hwnd(), currentColor,retColor) then begin
+        edtMultiline.RichTextSetProperty("BACKCOLOR", retColor);
+    end
+    edtMultiline.SetFocus();
+end
+
+On Click btnFile
+objects begin
+    fileName as char
+end
+begin
+    fileName = TreeWalk(ProjectDir(), "RTF");
+    if fileName is not null then begin
+        edtMultiline.RichTextSetProperty("FILE", fileName);
+    end
+    edtMultiline.SetFocus();
+
+end
+
+On Click btnSaveAs
+objects begin
+    fichero as char
+end
+begin
+    fichero = TreeWalk(ProjectDir(), "RTF");
+    if fichero is not null then begin
+        edtMultiline.RichTextSaveToFile(fichero, "RTF");
+    end
+end
+
+On Click btnBullet
+objects begin
+    retbullet as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("NUMBERINGBULLET", retbullet);
+    edtMultiline.RichTextSetProperty("NUMBERINGBULLET", 256);
+    edtMultiline.SetFocus();
+end
+
+On Click btnNumber
+objects begin
+    retbullet as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("NUMBERINGNUMBER", retbullet);
+    edtMultiline.RichTextSetProperty("NUMBERINGNUMBER", 256);
+    edtMultiline.SetFocus();
+end
+
+On Click btnLetter
+objects begin
+    retbullet as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("NUMBERINGULETTER", retbullet);
+
+    edtMultiline.RichTextSetProperty("NUMBERINGULETTER", 256);
+    edtMultiline.SetFocus();
+end
+
+On Click btnRoman
+objects begin
+    retbullet as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("NUMBERINGUROMAN", retbullet);
+    edtMultiline.RichTextSetProperty("NUMBERINGUROMAN", 256);
+    edtMultiline.SetFocus();
+end
+
+private function mysetalignament(alignmenttype as integer)
+objects begin
+    alignmenttypeold as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("ALIGNMENT", alignmenttypeold);
+    edtMultiline.RichTextSetProperty("ALIGNMENT", alignmenttype);
+    edtMultiline.SetFocus();
+end
+
+On Click btnLeftAlignment
+begin
+    mysetalignament(1);
+    edtMultiline.SetFocus();
+end
+
+On Click btnRightAlignment
+begin
+    mysetalignament( 2);
+    edtMultiline.SetFocus();
+end
+
+On Click btnCenterAlignment
+begin
+   mysetalignament( 3);
+    edtMultiline.SetFocus();
+end
+
+
+On Click btnLeftIndentPlus
+begin
+    edtMultiline.RichTextSetProperty("LEFTINDENT", 200);
+    edtMultiline.SetFocus();
+end
+
+On Click btnLeftIndentMinus
+begin
+    edtMultiline.RichTextSetProperty("LEFTINDENT", -200.Integer);
+    edtMultiline.SetFocus();
+end
+
+On Click btnBold
+objects begin
+    isbold as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("BOLD", isbold);
+    edtMultiline.RichTextSetProperty("BOLD");
+    edtMultiline.SetFocus();
+end
+On Click btnItalic
+objects begin
+    isitalic as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("ITALIC", isitalic);
+    edtMultiline.RichTextSetProperty("ITALIC");
+    edtMultiline.SetFocus();
+end
+On Click btnUnderline
+objects begin
+    isunderline as integer
+end
+begin
+    edtMultiline.RichTextGetProperty("UNDERLINE", isunderline);
+    edtMultiline.RichTextSetProperty("UNDERLINE");
+    edtMultiline.SetFocus();
+end
+
+
+On Click btnAddText
+objects begin
+    newLineStr as char
+    pos as integer
+end
+begin
+    newLineStr = 13.Character() + 10.Character() ;
+
+    edtMultiline.RichTextSetProperty("FONT", "Arial;Size=26.5");
+    edtMultiline.RichTextSetProperty("FORECOLOR", Rgb(229, 24, 15) );
+    edtMultiline.RichTextSetProperty("ALIGNMENT", 3);
+    edtMultiline.RichTextAddText("Herramienta de programación visual de máxima productividad").RichTextAddText(newLineStr).RichTextAddText(newLineStr);
+
+
+    edtMultiline.RichTextSetProperty("LINESPACING", 1);
+    edtMultiline.RichTextSetProperty("FONT", "Arial;Size=11;");
+    edtMultiline.RichTextSetProperty("ALIGNMENT", 1);
+    edtMultiline.RichTextSetProperty("NUMBERINGBULLET", 256);
+    edtMultiline.RichTextSetProperty("LEFTINDENT", 400);
+    edtMultiline.RichTextAddText("Cosmos está constituido por un conjunto de herramientas de programación especializadas en aplicaciones de negocio, orientadas tanto a soluciones corporativas como a instalaciones departamentales y personales.")
+        .RichTextAddText(newLineStr);
+
+
+    edtMultiline.RichTextAddText("");
+
+    edtMultiline.RichTextSetProperty("FONT", "Arial;Size=11;");
+    edtMultiline.RichTextAddText("Cosmos incluye un entorno RAD (Rapid Application Development) de gran productividad para la generación de formatos de pantalla, menús e informes; un lenguaje de cuarta generación orientado a objetos, y un gestor de base de datos relacional con interfaz SQL, todo ello acompañado de un poderoso conjunto de herramientas auxiliares.")
+        .RichTextAddText(newLineStr);
+
+    edtMultiline.RichTextSetProperty("NUMBERINGBULLET", 256);
+    edtMultiline.RichTextSetProperty("LEFTINDENT", -400.Integer);
+    edtMultiline.RichTextGetProperty("CARETPOSITION", pos);
+
+    edtMultiline.SetFocus();
+    edtMultiline.RichTextSetProperty("CARETPOSITION", 0.Integer);
+    edtMultiline.SetFocus();
+    edtMultiline.RichTextSetProperty("CARETPOSITION", -1.Integer);
+    edtMultiline.SetFocus();
+    
+end
+
+
+On Click btnPrint
+begin
+    edtMultiline.RichTextPrint("Microsoft XPS Document Writer", FALSE); //Indicamos impresora
+end
+
+
+//Interlineado
+
+On event SpinDown control ed_interlineas(e as event)
+begin
+    if vInLineSpacing > 0  and vInLineSpacing <= 2 then begin
+         --vInLineSpacing;
+    end
+    edtMultiline.RichTextSetProperty("LINESPACING", vInLineSpacing);
+    ed_interlineas.Text = vInLineSpacing;
+    edtMultiline.SetFocus();
+end
+
+On event SpinUp control ed_interlineas(e as event)
+begin
+    if vInLineSpacing >= 0 and vInLineSpacing <2 then begin
+        ++vInLineSpacing;
+    end
+    edtMultiline.RichTextSetProperty("LINESPACING", vInLineSpacing);
+    ed_interlineas.Text = vInLineSpacing;
+    edtMultiline.SetFocus();
+    
+end
+//{{CODEEND
+END
+CODE CLASS frmLetter BEGIN
+//{{CODEBEGIN
+
+On Click (a as char)
+begin
+    f.edtMultiline.SetFocus();
+    if a.Locate("May") != 0 then begin
+        f.edtMultiline.RichTextSetProperty("NUMBERINGULETTER", a.GetWord("_", 3).Integer);
+    end   
+    if a.Locate("Min") != 0 then begin
+        
+        f.edtMultiline.RichTextSetProperty("NUMBERINGLETTER", a.GetWord("_", 3).Integer);
+    end    
+
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+    f3 as frm
+end
+begin
+    
+     f.Run;
+    
+end
+//{{CODEEND
+END
+

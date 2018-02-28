@@ -1,0 +1,120 @@
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	frm is Form begin
+		objects begin
+		end
+		INTERFACE
+			POSITION 0 0 639 405
+			LABEL "CTSQL Statistics"
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 633 376
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL btnRunPhrase_1 AS BUTTON
+					POSITION 504 26 87 22
+					LABEL "Run Phrase 1"
+				CONTROL btnRunPhrase_2 AS BUTTON
+					POSITION 511 208 87 22
+					LABEL "Run Phrase 2"
+				CONTROL edtPhrase_1 AS EDIT
+					POSITION 35 39 406 130
+					FOREGROUND COLOR blue
+					FONT "Calibri" 12  CHARSET Ansi 
+					BORDER DOUBLE DOWN
+					MULTILINE
+					WRAP
+					DATATYPE CHAR
+					SCROLL VERTICAL
+				CONTROL edtPhrase_2 AS EDIT
+					POSITION 35 208 406 130
+					FOREGROUND COLOR blue
+					FONT "Calibri" 12  CHARSET Ansi 
+					BORDER DOUBLE DOWN
+					MULTILINE
+					WRAP
+					DATATYPE CHAR
+					SCROLL VERTICAL
+				CONTROL AS TEXT
+					POSITION 35 13 189 22
+					FOREGROUND RGB 0 128 128
+					FONT "MS Sans Serif" 12 BOLD  CHARSET Ansi 
+					NOBORDER
+					DATATYPE CHAR
+					TAGS "Not Optimized Query"
+				CONTROL AS TEXT
+					POSITION 35 182 189 22
+					FOREGROUND RGB 0 128 128
+					FONT "MS Sans Serif" 12 BOLD  CHARSET Ansi 
+					NOBORDER
+					DATATYPE CHAR
+					TAGS "Optimized Query"
+			END
+		END
+	end
+END
+objects begin
+	f AS frm
+end
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+On Open
+begin
+    edtPhrase_1.Text = "select * from orderlines where price > 0";
+    edtPhrase_2.Text = "select * from orderlines where order_nbr > 0";
+end
+
+On event Click control btnRunPhrase_1(e as event)
+objects begin
+    stmt as char
+    localCursor as SqlCursor
+end
+begin
+    stmt = edtPhrase_1.Text;
+    Sql.SqlExec("set statistics to 1");
+    Sql.Select(stmt);
+    Sql.SqlExec("set statistics to 0");
+    ShowMsg("Successfull execution. Open CTSQLSTAT*.html file in c:\tmp folder");
+end
+
+On event Click control btnRunPhrase_2(e as event)
+objects begin
+    stmt as char
+end
+begin
+    stmt = edtPhrase_2.Text;
+    Sql.SqlExec("set statistics to 1");
+    Sql.Select(stmt);
+    Sql.SqlExec("set statistics to 0");
+    ShowMsg("Successfull execution. Open CTSQLSTAT*.html file in c:\tmp folder");
+end
+
+Private function ShowMsg(msg as char)
+objects begin
+end
+begin
+    MessageBox(msg , "Successfull Execution");
+end
+
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+end
+begin
+    Module.PutEnv("DBPATH", ProjectDir);
+    Sql.Connect("stock");
+    f.Run;
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

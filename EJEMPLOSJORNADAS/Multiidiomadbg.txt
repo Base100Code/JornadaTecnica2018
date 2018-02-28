@@ -1,0 +1,30 @@
+/*
+* Lista de etiquetas no presentes en el fichero de traducción:
+* Multiidioma_stock_german.txt 
+* Proyecto:
+* C:\Jornadas\EJEMPLOSJORNADAS_71\EJEMPLOSJORNADAS.PRJ 
+* Fecha de ejecución: 26/02/2018 12:24:38
+*/
+
+&Add
+&Delete
+&Cancel
+&Update
+&Query
+Acc&ept
+Add Line
+Date pay
+Customer Code
+Debug ON
+Debug OFF
+Delete Line
+E&xit
+Invoiced
+Order number
+Order Date
+Pay Form
+Update Line
+/*
+* Fin de la lista de etiquetas no presentes en el fichero de traducción:
+* Multiidioma_stock_german.txt 
+*/

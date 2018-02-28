@@ -1,0 +1,265 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CAutoEditMode is Form begin
+		objects begin
+		end
+		Table customers is customers
+		begin
+			customer as column required
+			company as column
+			surname as column
+			fname as column
+			address1 as column
+			address2 as column
+			city as column
+			zip as column
+			phone as column
+			payform as column
+			total_invoice as column
+			state as column required
+			for2_cli_description as payforms.description
+				join for2_cli lookup "description"
+			for1_cli_sname as states.sname
+				join for1_cli lookup "sname"
+		end
+		INTERFACE
+			POSITION 0 0 1113 542
+			LABEL "Automatic cell edit"
+			RESIZING
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 1097 503
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL AS BOX
+					POSITION 14 13 982 474
+					BOLD 
+					ATTACH ALL
+					LABEL "AUTOEDITMODE"
+					BORDER ETCHED
+				BEGIN
+					CONTROL dl_inf AS LIST
+						POSITION 9 314 927 145
+						FOREGROUND COLOR blue
+						ATTACH LEFT RIGHT BOTTOM
+						LABEL "List"
+						BORDER DOUBLE DOWN
+						ICON FILE "_MBSTDBMP_"
+						COLUMNS 1
+						SELECTTYPE SIMPLE
+						SCROLL VERTICAL
+					CONTROL AS GRID
+						POSITION 9 11 927 273
+						ATTACH ALL
+						BORDER DOUBLE DOWN
+						SCROLL VERTICAL HORIZONTAL
+						TABLE customers
+						PARENTGRID
+					BEGIN
+						CONTROL AS EDIT
+							POSITION 0 0 90 22
+							LABEL "Customer Code"
+							NOBORDER
+							VARIABLE customers.customer
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 91 0 162 22
+							LABEL "Company"
+							NOBORDER
+							VARIABLE customers.company
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 254 0 162 22
+							LABEL "Surname"
+							NOBORDER
+							VARIABLE customers.surname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 417 0 102 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE customers.fname
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 520 0 252 22
+							LABEL "Address1"
+							NOBORDER
+							VARIABLE customers.address1
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 773 0 252 22
+							LABEL "Address2"
+							NOBORDER
+							VARIABLE customers.address2
+							LIKEVAR
+						CONTROL AS TEXT
+							POSITION 1026 0 132 22
+							LABEL "Name"
+							NOBORDER
+							VARIABLE customers.for1_cli_sname
+							LIKEVAR
+							TAGS "Name"
+						CONTROL AS TEXT
+							POSITION 1159 0 132 22
+							LABEL "Form of Payment"
+							NOBORDER
+							VARIABLE customers.for2_cli_description
+							LIKEVAR
+							TAGS "Form of Payment"
+						CONTROL AS EDIT
+							POSITION 1292 0 24 22
+							LABEL "State"
+							NOBORDER
+							VARIABLE customers.state
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 1317 0 102 22
+							LABEL "Total Invoiced"
+							NOBORDER
+							VARIABLE customers.total_invoice
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 1420 0 30 22
+							LABEL "Form of Payment"
+							NOBORDER
+							VARIABLE customers.payform
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 1451 0 96 22
+							LABEL "Phone"
+							NOBORDER
+							VARIABLE customers.phone
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 1548 0 90 22
+							LABEL "Zip Code"
+							NOBORDER
+							VARIABLE customers.zip
+							LIKEVAR
+						CONTROL AS EDIT
+							POSITION 1639 0 102 22
+							LABEL "City"
+							NOBORDER
+							VARIABLE customers.city
+							LIKEVAR
+					END
+					CONTROL AS TEXT
+						POSITION 9 288 70 22
+						ATTACH BOTTOM
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Events"
+				END
+				CONTROL AS BUTTON
+					POSITION 1007 7 78 22
+					ATTACH RIGHT
+					LABEL "&Query"
+					ICON 6 FILE "Small Buttons"
+					COMMAND QueryByForm
+				CONTROL AS BUTTON
+					POSITION 1007 33 78 22
+					ATTACH RIGHT
+					LABEL "&Add"
+					ICON 157 FILE "Small Buttons"
+					COMMAND EditNew
+				CONTROL AS BUTTON
+					POSITION 1007 59 78 22
+					ATTACH RIGHT
+					LABEL "&Delete"
+					ICON 159 FILE "Small Buttons"
+					COMMAND Delete
+				CONTROL AS BUTTON
+					POSITION 1007 85 78 22
+					ATTACH RIGHT
+					LABEL "&Update"
+					ICON 158 FILE "Small Buttons"
+					COMMAND EditUpdate
+				CONTROL AS BUTTON
+					POSITION 1007 111 78 22
+					ATTACH RIGHT
+					LABEL "Acce&pt"
+					ICON 2 FILE "_MBSTDBMP_"
+					COMMAND AcceptEdit
+				CONTROL AS BUTTON
+					POSITION 1007 137 78 22
+					ATTACH RIGHT
+					LABEL "&Cancel"
+					ICON 3 FILE "_MBSTDBMP_"
+					COMMAND CancelEdit
+				CONTROL AS BUTTON
+					POSITION 1007 329 78 22
+					ATTACH RIGHT
+					LABEL "Clear Events"
+					COMMAND ClearEvents
+			END
+		END
+	end
+END
+CODE CLASS CAutoEditMode BEGIN
+//{{CODEBEGIN
+
+On Open
+begin
+    SetEditMode(true);
+    SetOption("AUTOEDITMODE", TRUE);
+    Query();
+end
+
+On Command AcceptEdit
+begin
+   dl_inf.Selected = dl_inf.AddString("Comando AcceptEdit");
+    AcceptEdit();
+end
+
+On Command CancelEdit
+begin
+    dl_inf.Selected = dl_inf.AddString("Comando CancelEdit");
+    CancelEdit();
+    
+end
+On Command EditUpdate
+begin
+    dl_inf.Selected = dl_inf.AddString("Comando EditUpdate");
+    MasterTable().EditUpdate();
+end
+
+On Command EditNew
+begin
+    dl_inf.Selected = dl_inf.AddString("Comando EditNew");
+    MasterTable().EditNew();
+end
+
+On Edit Table customers
+begin
+   dl_inf.Selected = dl_inf.AddString("on Edit"); 
+end
+
+On Command ClearEvents
+begin
+    dl_inf.Reset();
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+oCAutoEditMode as CAutoEditMode
+end
+begin
+    PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("Stock");
+    oCAutoEditMode.Run;
+    Sql.Disconnect;
+    Sql.DettachConnection;
+end
+//{{CODEEND
+END
+

@@ -1,0 +1,368 @@
+REPOSITORY stock
+CONSTANTS  begin
+	SKIN_LIST_ITEM_HEADER = 1
+	SKIN_LIST_ITEM_SELECTED_ROW = 2
+	SKIN_LIST_ITEM_UNSELECTED_ROW = 3
+	SKIN_LIST_ITEM_SCROLL_BAR = 4
+	SKIN_LIST_ITEM_SEARCH_BAR = 5
+	SKIN_LIST_PART_BITMAP = 1
+	SKIN_LIST_PART_BORDER = 2
+	SKIN_LIST_PART_TEXT = 3
+	SKIN_LIST_STATUS_FOCUSED = 1
+	SKIN_LIST_STATUS_NORMAL = 2
+	SKIN_LIST_STATUS_DOWN = 3
+end
+CLASSES BEGIN
+	frm is Form begin
+		objects begin
+			InstruSelect as Char
+			bEditarCeldasConControles as Boolean
+			groupId as Integer default 0
+			groups as Char
+		end
+		INTERFACE
+			POSITION 0 0 955 373
+			LABEL "Group Column Headers"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL ctr_caja AS BOX
+				POSITION 0 0 939 334
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL lstStrings AS LIST
+					POSITION 13 17 750 305
+					ATTACH ALL
+					LABEL "State|Customer  |Order date |Pay date |Status |Nº line |Cod. Item |Description|Quantity|Discount|Price"
+					BORDER DOUBLE DOWN
+					ICON FILE "_MBSTDBMP_"
+					LISTTYPE LISTCOLS 11
+					SELECTTYPE SIMPLE
+					SCROLL VERTICAL HORIZONTAL
+				CONTROL btnAgrupar AS BUTTON
+					POSITION 785 22 127 34
+					ATTACH TOP RIGHT
+					LABEL "Group Columns"
+				CONTROL btnDesagrupar AS BUTTON
+					POSITION 785 64 127 34
+					ATTACH TOP RIGHT
+					LABEL "Delete Groups"
+			END
+		END
+	end
+	frmTexto is Form begin
+		objects begin
+			varDesde as Integer
+			varNum as Integer
+			varAceptado as Boolean
+			varLabel as Char
+		end
+		INTERFACE
+			POSITION 0 0 362 178
+			LABEL "Select Columns"
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 356 149
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL edtFrom AS EDIT
+					POSITION 116 30 75 22
+					BORDER DOUBLE DOWN
+					VARIABLE varDesde
+					LIKEVAR
+				CONTROL AS EDIT
+					POSITION 116 56 75 22
+					BORDER DOUBLE DOWN
+					VARIABLE varNum
+					LIKEVAR
+				CONTROL AS EDIT
+					POSITION 116 82 229 22
+					BORDER DOUBLE DOWN
+					VARIABLE varLabel
+					LIKEVAR
+				CONTROL btnAceptar AS BUTTON
+					POSITION 144 117 87 22
+					ATTACH BOTTOM
+					LABEL "Accept"
+					DEFPUSH
+				CONTROL btnCancelar AS BUTTON
+					POSITION 256 117 87 22
+					ATTACH BOTTOM
+					LABEL "Cancel"
+				CONTROL AS TEXT
+					POSITION 14 30 60 22
+					NOBORDER
+					AUTOSIZE
+					DATATYPE CHAR
+					TAGS "Start Column"
+				CONTROL AS TEXT
+					POSITION 14 56 92 22
+					NOBORDER
+					AUTOSIZE
+					DATATYPE CHAR
+					TAGS "Number of Columns"
+				CONTROL AS TEXT
+					POSITION 14 82 26 22
+					NOBORDER
+					AUTOSIZE
+					DATATYPE CHAR
+					TAGS "Label"
+			END
+		END
+	end
+END
+objects begin
+	gChBackup AS Char
+end
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+On Open begin
+    CargaLista(lstStrings, "strings");
+
+end  
+Private CargaLista ( pList as SimpleFormControl, pType as char)
+    Objects Begin
+       
+        icon as integer default 0
+        texto as char
+        valor as decimal
+        InstruSelectString as char
+    End
+Begin
+    
+    pList.Reset();    
+    
+    pList.AlternateBackColor( Rgb(207, 247, 254) , Rgb(254, 247, 224), 2);
+    pList.SetLockColumns(1);
+
+    pList.IconFile = "listaiconosgif";
+
+
+    if bEditarCeldasConControles then begin
+        pList.SetListColumnEditType(1,4, "CA|MA|VA");        
+        pList.SetListColumnEditType(3,3, null);
+        pList.SetListColumnEditType(4,3, null);
+        pList.SetListColumnEditType(5,2, "Y|N"); //Check        
+    end else begin
+        pList.SetListColumnEditType(5,1, null); //Check
+        pList.SetListColumnEditType(1,1, null);        
+        pList.SetListColumnEditType(3,1, null);
+        pList.SetListColumnEditType(4,1, null);
+    end
+
+    
+    pList.FieldSeparator = "|";
+    
+    FormatListColumnChar(1, 15, pList); //State
+    FormatListColumnChar(2, 40, pList); //Customer
+    FormatListColumnDate(3, 15, pList);  //Date
+
+      
+    FormatListColumnDate(4, 15, pList);  //Date
+
+    FormatListColumnChar(5, 15, pList);  //Status
+    FormatListColumnNumeric(6,10, 0, pList); //Número de la linea
+//    pList.SetColumnVisible(6, FALSE);
+   
+    FormatListColumnNumeric(7, 10,0, pList); //Cod item
+    FormatListColumnChar(8, 15, pList);  //Descripcion item
+
+    FormatListColumnNumeric(9, 15 ,0, pList); //Cantidad
+    FormatListColumnNumeric(10, 15,0, pList); //Descuento
+    FormatListColumnNumeric(11, 20, 2, pList); //Precio     
+    pList.SetColumnMask(11,12);
+
+
+    InstruSelect = "select customers.state, customers.company , order_date, pay_date , order_status , "+
+                    " line_nbr, orderlines.item, items.description,  quantity, discount, price " +
+                    
+                    " from orders, orderlines, items , customers"+
+                        " where orders.order_nbr = orderlines.order_nbr and orderlines.item = items.item " +
+                        " and orderlines.supplier = items.supplier and orders.customer = customers.customer order by line_nbr";
+
+    
+
+    if pType == "strings" then begin
+        LoadString( pList, InstruSelect );
+        pList.NumericColumnsFormattedToChar(true);
+    end // if
+    
+    if pType == "sql" then begin
+        pList.LoadSelect(InstruSelect);
+    end
+    
+End
+
+Private LoadString(pList as SimpleFormControl, pInstruSelect as char)
+Objects begin
+    c as SqlCursor
+    texto as Char
+    customer line_nbr as integer 
+    item  quantity discount as smallint
+    order_date pay_date as date
+    order_status   description as char
+    price price2 price3 as decimal (12,2)
+    company state as char
+    i as integer default 0
+    j as integer default 0
+    lChIndice as char
+    InstruSelectString as char
+end
+begin
+
+        c.Prepare(pInstruSelect);
+    
+        c.Open;
+        
+        While c.Fetch(state, company , order_date, pay_date , order_status , line_nbr, item, 
+                    description,  quantity, discount, price ).Found
+        Do begin
+
+            texto = state + "|" +company +"|"+ order_date.char +"|"+ pay_date.char +"|"+ order_status +"|"+ line_nbr.Using(2) +"|"+ 
+                    item.Using(5) +"|"+ description +"|"+  quantity +"|"+ discount +"|"+ 
+                price.Using(12) ;
+ 
+            j = pList.AddString(texto , Random(1,12));                        
+            ++i;
+            pList.SetListInfo(j, j);
+        end
+        c.Close.Free;
+ 
+end
+
+
+Private FormatListColumnChar(pNumColumn as smallint, pLengthChar as smallint, pList as SimpleFormControl)
+objects begin
+end
+Begin
+    pList.SetColumnType(pNumColumn,0);
+    pList.SetColumnAlign(pNumColumn,0);
+    pList.SetColumnChars(pNumColumn,pLengthChar);
+end
+
+Private FormatListColumnNumeric(pNumColumn as smallint, pLengthColumns as smallint, pNumDec as smallint , pList as SimpleFormControl)
+Objects begin
+end
+begin
+    pList.SetColumnType(pNumColumn ,1); //Numeric
+    if pNumDec > 0 then pList.SetColumnNumDec(pNumColumn, pNumDec); //DEcimales
+    pList.SetColumnAlign(pNumColumn,2);//Izda
+    pList.SetColumnChars(pNumColumn,pLengthColumns);
+end
+
+Private FormatListColumnDate(pNumColumn as smallint, pLengthColumns as smallint, pList as SimpleFormControl)
+Objects begin
+end
+begin
+    pList.SetColumnType(pNumColumn ,2); //Date
+    pList.SetColumnAlign(pNumColumn,2);//Dcha
+    pList.SetColumnChars(pNumColumn,pLengthColumns);
+
+end
+    
+
+On event DblClick control lstStrings(e as event)
+begin
+    SendCommand("EditaLista");
+end
+On Command EditaLista
+begin
+    Yield;
+    lstStrings.EditListColumn(lstStrings.Selected, lstStrings.GetCurrentItem());           
+end
+
+On event Click control btnAgrupar(e as event)
+objects begin
+    f as frmTexto
+    numero as integer
+end
+begin
+//    lstStrings.GroupListColumns("Company",1 , 2 );
+//    return;
+    f.Run();
+    numero = f.varNum;
+    if numero < 1 then
+        numero = 1;
+    if f.varAceptado then begin
+        if numero == 1 then
+            groupId = lstStrings.GroupListColumns(f.varLabel, f.varDesde  );
+        else if numero == 2 then
+             groupId = lstStrings.GroupListColumns(f.varLabel, f.varDesde , f.varDesde + 1);
+       else if numero == 3 then
+            groupId = lstStrings.GroupListColumns(f.varLabel, f.varDesde , f.varDesde + 1, f.varDesde + 2 );
+        else if numero == 4 then
+            groupId = lstStrings.GroupListColumns(f.varLabel, f.varDesde , f.varDesde + 1, f.varDesde + 2, f.varDesde + 3 );
+        else if numero == 5 then
+            groupId = lstStrings.GroupListColumns(f.varLabel, f.varDesde , f.varDesde + 1, f.varDesde + 2, f.varDesde + 3, f.varDesde + 4 );
+        else if numero == 6 then
+            groupId = lstStrings.GroupListColumns(f.varLabel, f.varDesde , f.varDesde + 1, f.varDesde + 2, f.varDesde + 3, f.varDesde + 4, f.varDesde + 5 );
+    end
+    groups = (groups + groupId) + "|";
+end
+
+On event Click control btnDesagrupar(e as event)
+objects begin
+    i num as integer
+    
+end
+begin
+    num = groups.NumWords("|");
+    for i = 1  to num step 1 do
+    begin
+        groupId = groups.GetWord("|" ,i);
+        lstStrings.RemoveGroupListColumns(groupId);
+    end
+    groups = "";
+end
+//{{CODEEND
+END
+CODE CLASS frmTexto BEGIN
+//{{CODEBEGIN
+On Open begin
+    varDesde = 1;
+    varLabel = "";
+    varAceptado = FALSE;
+end
+
+On Click btnAceptar
+begin
+    varAceptado = TRUE;
+    if varLabel == "" then varLabel = "Etiqueta";
+    Close();
+end
+
+On Click btnCancelar
+begin
+    varAceptado = FALSE;
+    Close();
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+      of as frm
+      i dafaultRGB as integer
+end
+begin
+    PutEnv("DRAWLISTLINES", "TRUE");
+
+   PutEnv("DBPATH", ProjectDir());
+    Sql.Connect("stock");
+    
+    of.Run();
+    Sql.Disconnect();
+end
+//{{CODEEND
+END
+

@@ -1,0 +1,277 @@
+LIBRARIES BEGIN
+	libCoshttpdll
+	LIBXML
+END
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	frm is Form begin
+		objects begin
+			ChProvin as Char
+			outFile as Char
+		end
+		INTERFACE
+			POSITION 0 0 793 515
+			FONT "MS Sans Serif" 8  CHARSET Ansi 
+			LABEL "CosHttpDll - Catastro - Query Provinces"
+			RESIZING
+			MAXIMIZE
+			MINIMIZE
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 777 477
+				FOREGROUND RGB 0 0 0
+				BACKGROUND COLOR white
+				FONT "Arial Narrow" 14  CHARSET Ansi 
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL AS BOX
+					POSITION 7 13 738 440
+					FOREGROUND RGB 0 128 128
+					BACKGROUND COLOR white
+					FONT "Arial Narrow" 10  CHARSET Ansi 
+					ATTACH ALL
+					LABEL "http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCallejero.asmx?WSDl"
+					BORDER ETCHED
+				BEGIN
+					CONTROL AS TEXT
+						POSITION 28 13 70 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Province"
+					CONTROL AS EDIT
+						POSITION 119 13 112 22
+						DISABLED
+						FOREGROUND COLOR blue
+						BORDER DOUBLE DOWN
+						VARIABLE ChProvin
+						UPSHIFT
+						DATATYPE CHAR
+					CONTROL AS TEXT
+						POSITION 258 13 126 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Select province"
+					CONTROL lstProvincias AS DROPLIST
+						POSITION 398 13 105 22
+						BORDER DOUBLE DOWN
+						AUTOSIZE
+						TAGS "A CORUÑA" "ALACANT" "ALBACETE" "ALMERIA" "ASTURIAS" "AVILA" "BADAJOZ" "BARCELONA" "BURGOS" "CACERES" "CADIZ" "CANTABRIA" "CASTELLO" "CEUTA" "CIUDAD REAL" "CORDOBA" "CUENCA" "GIRONA" "GRANADA" "GUADALAJARA" "HUELVA" "HUESCA" "ILLES BALEARS" "JAEN" "LA RIOJA" "LAS PALMAS" "LEON" "LLEIDA" "LUGO" "MADRID" "MALAGA" "MELILLA" "MURCIA" "NAVARRA" "OURENSE" "PALENCIA" "PONTEVEDRA" "S.C. TENERIFE" "SALAMANCA" "SEGOVIA" "SEVILLA" "SORIA" "TARRAGONA" "TERUEL" "TOLEDO" "VALENCIA" "VALLADOLID" "ZAMORA" "ZARAGOZA"
+						SHOW 20 LINES
+						COLUMNS 1
+						SELECTTYPE SIMPLE
+						SCROLL VERTICAL
+					CONTROL brnBuscar AS BUTTON
+						POSITION 564 11 87 22
+						LABEL "Search"
+					CONTROL list_municipios AS LIST
+						POSITION 14 48 687 353
+						ATTACH ALL
+						LABEL "List"
+						BORDER DOUBLE DOWN
+						ICON FILE "_MBSTDBMP_"
+						COLUMNS 1
+						SELECTTYPE SIMPLE
+						SCROLL VERTICAL
+				END
+			END
+		END
+	end
+END
+objects begin
+	oFrm AS frm
+end
+CODE CLASS frm BEGIN
+//{{CODEBEGIN
+On Open
+begin
+    list_municipios.Reset;
+end
+
+private function CallServioWebMinucipios(provin as char)
+objects
+begin
+    httpreq as integer
+    httpres as integer
+    bodyStr as char
+    serverUrl as Char
+    useSSL as boolean
+    bodyFile as char
+
+end
+begin
+    list_municipios.Reset();
+    Module.Delete(ProjectDir() + "\bodyResponse.xml");
+    Module.Delete(ProjectDir() + "\headerResponse.txt");
+    useSSL = FALSE;
+    //oFrm.ChProvin = 'madrid';
+    
+    bodyStr = '  <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:q0="http://www.catastro.meh.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> '+
+        '  <soapenv:Body> '+
+        '  <q0:Provincia>'+ provin + '</q0:Provincia>  '+
+        '  <q0:Municipio></q0:Municipio>  '+ //sin valor consulta todos los municipios de la provincia
+        '  </soapenv:Body> '+
+        '  </soapenv:Envelope> ';
+
+    
+    httpreq = CosHttpNewRequest(); //Crea la petición en el servidor
+
+    CosHttpSetTimeout(httpreq,10);
+    
+    serverUrl = "http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCallejero.asmx?WSDL";
+    CosHttpRequestSetUrl(httpreq, serverUrl);//En esta función se indicará la url a la que se van a realizar las peticiones.
+
+    
+    CosHttpRequestAddHeaderStr(httpreq, "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/msword, application/vnd.ms-powerpoint, */*");
+    CosHttpRequestAddHeaderStr(httpreq, "Accept-Language: en-us"); //Esta función permite añadir un parámetro a la cabecera de la petición http.
+
+    CosHttpRequestAddHeaderStr(httpreq, "Accept-Encoding: gzip, deflate"); //Esta función permite añadir un parámetro a la cabecera de la petición http.
+    CosHttpRequestAddHeaderStr(httpreq, "User-Agent: Mozilla/4.0"); //Esta función permite añadir un parámetro a la cabecera de la petición http.
+    CosHttpRequestAddHeaderStr(httpreq, "Content-Length: "+bodyStr.Length);
+    CosHttpRequestAddHeaderStr(httpreq, 'SOAPAction: "http://tempuri.org/OVCServWeb/OVCCallejero/ConsultaMunicipio"');
+    CosHttpRequestAddHeaderStr(httpreq, 'Host: OVC.CATASTRO.MEH.ES');
+    CosHttpRequestAddHeaderStr(httpreq, 'Content-Type: text/xml; charset=utf-8');
+    
+    CosHttpRequestSetBody(httpreq, bodyStr, FALSE); //En esta función se indicará el cuerpo que se enviará al servidor. En este ejemplo será un objeto char
+    
+    CosHttpRequestSetMethod(httpreq, "POST"); //En esta función se indicará el método que ejecutará la petición.
+    
+    CosHttpSetResponseFile(httpreq, ProjectDir() + "\bodyResponse.xml"); //Esta función se indica el fichero donde se dejará el cuerpo de la respuesta del servidor.
+    
+    CosHttpSetResponseHeaderFile(httpreq,ProjectDir() + "\headerResponse.txt");//Esta función se indica el fichero donde se dejará la cabecera de la respuesta del servidor.
+
+    CosHttpSendRequest(httpreq, false); //Envía la petición al servidor. Se craen el/los fichero/s donde se podrá leer la respuesta del servidor.
+
+    httpres = CosHttpGetReturnCode(httpreq); // Esta función retorna el código de estado del protocolo http.
+ 
+    if httpres == 200 then begin
+        RecorreXml(ProjectDir() + "\bodyResponse.xml");   
+    end    
+    else begin
+        getTxtCodeHttp(httpres).Trace;
+        CosHttpFreeRequest(httpreq); //Libera la petición
+        return;
+    end
+    CosHttpFreeRequest(httpreq);
+    Delete(ProjectDir() + "\bodyResponse.xml");
+    Delete(ProjectDir() + "\headerResponse.txt");
+ 
+end
+
+private function RecorreXml(outFile as char) return integer
+objects begin
+    doc as integer
+end
+begin
+    //apertura de fichero y recorrido de nodos
+    doc = TTXmlOpenDoc(outFile);
+    if doc == 0 then begin
+        "No se puede abrir el fichero".Trace();
+        return 0;
+    end
+    NavigateTree(doc);
+    return 1;
+end
+private function NavigateTree(doc as integer)
+objects begin
+    rootnode as integer
+    node as integer
+    curnode as integer
+end
+begin
+    rootnode = TTXmlGetDocRootNode(doc);
+    curnode = rootnode;
+    NavigateElement(doc, curnode, 0);
+end
+private function NavigateElement(doc as integer, node as integer, level as integer)
+objects begin
+    curnode as integer
+    nodeName as Char
+    propValue as Char
+    nodeType as integer
+    nodeText as Char
+end
+begin
+
+    curnode = node;
+    while TRUE do
+    begin
+        if curnode == 0 then begin
+            break;
+        end else begin
+
+            nodeType = TTXmlGetNodeType(doc, curnode);
+            switch nodeType begin
+                case 1: begin //elemento
+                    nodeName = TTXmlGetNodeName(doc, curnode);
+                    if nodeName == 'nm' then begin
+                        list_municipios.AddString(TTXmlGetEncodedNodeText(doc, curnode, 10)) ;
+                    end
+                    if nodeName == 'err' then begin
+                        RecorrerNodoErr(doc, curnode);
+                    end
+                end   //case elemento             
+            end//Switch
+        end //else 
+        NavigateElement(doc, TTXmlGetFirstChildNode(doc, curnode), level + 1);    
+        curnode = TTXmlGetNextNode(doc, curnode);
+    end //while
+    
+    
+end
+private RecorrerNodoErr(doc as integer, curnode as integer) 
+Objects begin
+    nodeName as Char
+    nodeType as integer
+end
+begin
+    while TRUE do
+    begin
+        if curnode == 0 then begin
+            break;
+        end else begin
+
+            nodeType = TTXmlGetNodeType(doc, curnode);
+            switch nodeType begin
+                case 1: begin //elemento
+                    nodeName = TTXmlGetNodeName(doc, curnode);
+                    if nodeName == 'des' then begin
+                        list_municipios.AddString(TTXmlGetEncodedNodeText(doc, curnode, 10));     
+                    end
+                end   //case elemento             
+            end//Switch
+        end //else 
+        RecorrerNodoErr(doc, TTXmlGetFirstChildNode(doc, curnode));    
+        curnode = TTXmlGetNextNode(doc, curnode);
+    end //while
+end
+
+On event Click control brnBuscar(e as event)
+begin
+    if ChProvin != "" and ChProvin is not null then begin
+        CallServioWebMinucipios(ChProvin);
+    end
+end
+
+On event SelChange control lstProvincias(e as event)
+objects begin
+    provin as char
+end
+begin
+    lstProvincias.GetListColumnInto(lstProvincias.Selected, 1, ChProvin);
+end
+//{{CODEEND
+END
+CODE BEGIN
+//{{CODEBEGIN
+main begin
+    //CallServioWebMinucipios();
+    oFrm.Run();
+end 
+
+//{{CODEEND
+END
+

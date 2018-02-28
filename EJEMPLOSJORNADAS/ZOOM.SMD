@@ -1,0 +1,252 @@
+REPOSITORY stock
+CONSTANTS  begin
+end
+CLASSES BEGIN
+	CZoom is Form begin
+		objects begin
+		end
+		Table items is items
+		begin
+			item as column required
+			supplier as column required
+			description as column
+			retail_price as column
+			cost_price as column
+			stock as column
+			over_stock as column
+			under_stock as column
+			last_entry_date as column
+			last_exit_date as column
+			fk1_items_company as suppliers.company
+				join fk1_items lookup "company"
+		end
+		INTERFACE
+			POSITION 0 0 513 286
+			LABEL "ZOOMFORM"
+			SYSMENU
+		BEGIN
+			CONTROL AS BOX
+				POSITION 0 0 507 235
+				FOREGROUND RGB 0 0 0
+				ATTACH ALL
+				NOLABEL
+				NOBORDER
+			BEGIN
+				CONTROL IDMASTER AS BOX
+					POSITION 4 4 383 221
+					ATTACH ALL
+					NOLABEL
+					BORDER DOUBLE DOWN
+					TABLE items
+				BEGIN
+					CONTROL AS TEXT
+						POSITION 7 13 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Item Code"
+					CONTROL AS EDIT
+						POSITION 85 13 52 22
+						LABEL "Item Code"
+						BORDER DOUBLE DOWN
+						VARIABLE items.item
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 39 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Supplier Code"
+					CONTROL AS EDIT
+						POSITION 85 39 94 22
+						LABEL "Supplier Code"
+						BORDER DOUBLE DOWN
+						VARIABLE items.supplier
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 65 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Description"
+					CONTROL AS EDIT
+						POSITION 85 65 106 22
+						LABEL "Description"
+						BORDER DOUBLE DOWN
+						VARIABLE items.description
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 91 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Retail Price"
+					CONTROL AS EDIT
+						POSITION 85 91 94 22
+						LABEL "Retail Price"
+						BORDER DOUBLE DOWN
+						VARIABLE items.retail_price
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 117 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Cost Price"
+					CONTROL AS EDIT
+						POSITION 85 117 94 22
+						LABEL "Cost Price"
+						BORDER DOUBLE DOWN
+						VARIABLE items.cost_price
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 143 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Stocks"
+					CONTROL AS EDIT
+						POSITION 85 143 52 22
+						LABEL "Stocks"
+						BORDER DOUBLE DOWN
+						VARIABLE items.stock
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 169 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Over Stock"
+					CONTROL AS EDIT
+						POSITION 85 169 52 22
+						LABEL "Over Stock"
+						BORDER DOUBLE DOWN
+						VARIABLE items.over_stock
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 7 195 66 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Under Stock"
+					CONTROL AS EDIT
+						POSITION 85 195 52 22
+						LABEL "Under Stock"
+						BORDER DOUBLE DOWN
+						VARIABLE items.under_stock
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 198 13 73 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Last Entry Date"
+					CONTROL AS EDIT
+						POSITION 286 13 82 22
+						LABEL "Last Entry Date"
+						BORDER DOUBLE DOWN
+						VARIABLE items.last_entry_date
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 198 39 73 22
+						NOBORDER
+						DATATYPE CHAR
+						TAGS "Last Exit Date"
+					CONTROL AS EDIT
+						POSITION 286 39 82 22
+						LABEL "Last Exit Date"
+						BORDER DOUBLE DOWN
+						VARIABLE items.last_exit_date
+						LIKEVAR
+					CONTROL AS TEXT
+						POSITION 198 65 162 22
+						LABEL "Company"
+						NOBORDER
+						VARIABLE items.fk1_items_company
+						LIKEVAR
+						TAGS "Company"
+				END
+				CONTROL AS BUTTON
+					POSITION 418 13 76 22
+					ATTACH RIGHT
+					LABEL "&Query"
+					ICON 6 FILE "Small Buttons"
+					COMMAND QueryByForm
+				CONTROL AS BUTTON
+					POSITION 418 39 76 22
+					ATTACH RIGHT
+					LABEL "&Add"
+					ICON 157 FILE "Small Buttons"
+					COMMAND EditNew
+				CONTROL AS BUTTON
+					POSITION 418 65 76 22
+					ATTACH RIGHT
+					LABEL "&Update"
+					ICON 158 FILE "Small Buttons"
+					COMMAND EditUpdate
+				CONTROL AS BUTTON
+					POSITION 418 91 76 22
+					ATTACH RIGHT
+					LABEL "&Delete"
+					ICON 159 FILE "Small Buttons"
+					COMMAND Delete
+				CONTROL AS BUTTON
+					POSITION 418 117 76 22
+					ATTACH RIGHT
+					LABEL "Acce&pt"
+					ICON 2 FILE "_MBSTDBMP_"
+					COMMAND AcceptEdit
+				CONTROL AS BUTTON
+					POSITION 418 143 76 22
+					ATTACH RIGHT
+					LABEL "&Cancel"
+					ICON 3 FILE "_MBSTDBMP_"
+					COMMAND CancelEdit
+				CONTROL AS BUTTON
+					POSITION 418 195 76 22
+					ATTACH RIGHT
+					LABEL "&Exit"
+					ICON 4 FILE "Small Buttons"
+					COMMAND Close
+				CONTROL AS SPIN
+					POSITION 387 4 20 221
+					ATTACH TOP RIGHT BOTTOM
+					BORDER DOUBLE DOWN
+					VERTICAL
+					QUADRUPLE
+					COMMAND
+			END
+			CONTROL AS BAR
+				POSITION 0 235 507 22
+				FOREGROUND RGB 0 0 0
+				ATTACH LEFT RIGHT BOTTOM
+				BORDER ETCHED EXTRA 3
+				BARTYPE STATUS
+			BEGIN
+				CONTROL AS PANEL
+					POSITION 3 0 457 14
+					FOREGROUND RGB 0 0 0
+					ATTACH ALL
+					NOBORDER
+					PANELTYPE COMMENT
+				CONTROL AS PANEL
+					POSITION 463 0 35 14
+					FOREGROUND RGB 0 0 0
+					ATTACH TOP RIGHT BOTTOM
+					BORDER DOWN
+					PANELTYPE EDITMODE
+			END
+		END
+	end
+END
+CODE BEGIN
+//{{CODEBEGIN
+main
+objects
+begin
+oCZoom as CZoom
+oSql as SqlServer
+end
+begin
+    Module.PutEnv("DBPATH", ProjectDir());
+    oSql.Connect("stock");
+  
+    oCZoom.AttachServer(oSql);
+    oCZoom.Run;
+    oSql.Disconnect;
+    oSql.DettachConnection;
+end
+//{{CODEEND
+END
+
