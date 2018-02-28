@@ -1,0 +1,52 @@
+
+<form name="statesForm" class="form-horizontal" role="form">
+<fieldset>
+	<legend>
+		<i class="glyphicon glyphicon-file"></i> {{vm.isNew ? ('Añadir States'): ('Editar States')}}
+	</legend>
+	<p></p>
+
+
+	<!-- group default -->
+	<section name="default" class="panel panel-default Auto">
+	<div class="panel-body" >
+
+
+		<div class="form-group" ng-class="{'has-error': statesForm.state.$invalid}">
+			<label for="state" class="col-sm-2 control-label">State</label>
+	        <div id="stateControls" class="col-sm-10">
+			<div ng-show="vm.isNew">
+            <input id="state" name="state" type="text" class="form-control" ng-model="vm.instance.state" placeholder="State"
+				ng-required="true"
+			></input>
+            <span class="help-block error" ng-show="statesForm.state.$error.required">es un valor requerido</span> 
+
+			</div>
+			<div class="control-value"  ng-show="!vm.isNew">
+						{{vm.instance.state}}
+			</div>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': statesForm.sname.$invalid}">
+			<label for="sname" class="col-sm-2 control-label">Name</label>
+	        <div id="snameControls" class="col-sm-10">
+            <input id="sname" name="sname" type="text" class="form-control" ng-model="vm.instance.sname" placeholder="Name"
+			></input>
+            <span class="help-block error" ng-show="statesForm.sname.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+	</div>
+	</section>
+	<!-- end group default -->
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button id="save" name="save" class="btn btn-primary" ng-disabled="statesForm.$invalid" ng-click="vm.doSave()"><span class="glyphicon glyphicon-ok-sign"></span>Guardar</button> 
+            <button id="cancel" name="cancel" class="btn btn-default" ng-click="vm.doCancel()">Cancelar</button>            
+            <button id="delete" name="delete" class="btn btn-danger" ng-show="!vm.isNew" ng-click="vm.doDelete()">Borrar</button>
+        </div>
+    </div>
+</fieldset>
+</form>
+	<div>
+	</div>

@@ -1,0 +1,430 @@
+LIBRARIES BEGIN
+	utilslib
+END
+INCLUDES BEGIN
+	UTILINCL
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+public function resultList(firstResult as integer, maxResults as integer, orderBy as char, filter as char) return char
+objects begin
+    retStr stmtStr as char
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+//    stmtStr = "select * from suppliers ";
+    stmtStr = "select suppliers.*, states.sname from suppliers, outer states where suppliers.state = states.state";
+    
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " and " + pf;
+        end
+    end
+
+    if orderBy is not null then begin
+        stmtStr = stmtStr + " order by " + orderBy;
+    end
+
+    if maxResults is not null then begin
+        stmtStr = stmtStr + " limit " + maxResults;
+    end
+    
+    if  firstResult is not null then begin
+        stmtStr = stmtStr + "  offset " +  firstResult;
+    end
+ 
+
+    retStr = processQuery(stmtStr);    
+    
+    //SetExecStatus(415);
+
+    Desconecta();    
+    return retStr;
+end
+
+public function resultCount(filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retCount as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select count(*) from suppliers ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+
+    retCount = processQueryCount(stmtStr);
+    Desconecta();
+    retStr = retCount;
+    return retStr;
+end
+
+public function findByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    //stmtStr = "select items.*, suppliers.company from items, suppliers where items.supplier = suppliers.supplier";
+    stmtStr = "select suppliers.*, states.sname from suppliers, states where suppliers.state = states.state ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " and supplier = " + key;
+        retStr = processQuerySingleResult(stmtStr);
+    end
+
+    Desconecta();
+    return retStr;
+end
+
+public function create(entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    supplier company surname fname address1 address2 city zip phone state as char
+
+    retJson as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+
+    supplier = js.Get("supplier");
+    company = js.Get("company");
+    surname = js.Get("surname");
+    fname = js.Get("fname");
+    address1 = js.Get("address1");
+    address2 = js.Get("address2");
+    city = js.Get("city");
+    zip = js.Get("zip");
+    phone = js.Get("phone");
+    state = js.Get("states.state");
+    
+    if supplier is null then begin
+        retStatus = BAD_REQUEST;
+       
+    end else begin
+        stmtStr = "insert into suppliers(supplier, company, surname, fname, address1, address2, city, zip, phone, state) values(?,?,?,?,?,?,?,?,?,?)";
+        Sql.SqlExec(stmtStr, supplier, company, surname, fname, address1, address2, city, zip, phone, state);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_CONFLICT;
+        end else begin
+            retStatus = STATUS_CREATED;
+        end
+    end
+  
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function update(supplier as char, entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    company surname fname address1 address2 city zip phone state as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+    
+   
+    company = js.Get("company");
+    surname = js.Get("surname");
+    fname = js.Get("fname");
+    address1 = js.Get("address1");
+    address2 = js.Get("address2");
+    city = js.Get("city");
+    zip = js.Get("zip");
+    phone = js.Get("phone");
+    //state = js.Get("states.state");
+    state = js.Get("state");
+
+    if supplier is null then begin
+        retStatus = BAD_REQUEST;
+    end else begin
+        stmtStr = "update suppliers set company = ?, surname = ?, fname = ?, address1 = ?, address2 = ?, city = ?, zip = ?, phone = ?, state = ? where supplier = ?";
+        Sql.SqlExec(stmtStr,company, surname, fname, address1, address2, city, zip, phone, state, supplier );
+
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_NOCONTENT;
+        end else if Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin            
+            retStatus = STATUS_OK;
+        end
+    end
+
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function deleteByKey(supplier as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "delete from suppliers where ";
+
+    if supplier is not null then begin
+        stmtStr = stmtStr + " supplier = "  + supplier;
+        Sql.SqlExec(stmtStr);
+        if Sql.Error() != 0 or Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin
+            retStatus = STATUS_OK;
+        end
+    end else begin
+        retStatus = STATUS_NOTFOUND;
+    end
+    
+
+    Desconecta();
+
+    Module.SetExecStatus(retStatus);
+    
+    return retStr;
+end
+
+private function processQuery(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    jsonArray as json
+    jsonRecord as json
+//    id as json
+    
+    supplier as char
+    company as char
+    surname as char
+    fname as char
+    address1 as char
+    address2 as char
+    city as char
+    zip as integer
+    phone as char
+    state as char
+    stateName as char
+
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+    retStatus = STATUS_OK;
+
+    jsonArray.SetAsArray();
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        
+        while miCursor.Fetch(supplier, company, surname, fname, address1, address2, city, zip, phone, state, stateName).Found() do begin
+        
+            jsonRecord.Clear();
+            jsonRecord.Set("supplier", supplier);
+            jsonRecord.Set("company", company);
+            jsonRecord.Set("surname", surname);
+            jsonRecord.Set("fname", fname);
+            jsonRecord.Set("address1", address1);
+            jsonRecord.Set("address2", address2);
+            jsonRecord.Set("city", city);
+            jsonRecord.Set("zip", zip);
+            jsonRecord.Set("phone", phone);
+            jsonRecord.Set("state", state);
+            jsonRecord.Set("states.sname", stateName);
+            jsonArray.AddArrayElement(jsonRecord);
+            
+            found = TRUE;
+        end
+        
+        miCursor.Close();
+        
+        if not found then retStatus = getNoRecorsStatusCode();
+        
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+
+    Module.SetExecStatus(retStatus);
+    
+    retStr = jsonArray;
+    return retStr;
+end
+
+private function processQueryCount(stmtStr as char) return integer
+objects begin
+    retCount as integer
+end
+begin
+    Sql.Select(stmtStr , retCount);
+    return retCount;
+end
+
+private function processQuerySingleResult(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+//    id as json
+    supplier as char
+    company as char
+    surname as char
+    fname as char
+    address1 as char
+    address2 as char
+    city as char
+    zip as integer
+    phone as char
+    state as char
+    stateName as char
+
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        if miCursor.Fetch(supplier, company, surname, fname, address1, address2, city, zip, phone, state, stateName).Found() then begin
+            jsonRecord.Clear();
+            jsonRecord.Set("supplier", supplier);
+            jsonRecord.Set("company", company);
+            jsonRecord.Set("surname", surname);
+            jsonRecord.Set("fname", fname);
+            jsonRecord.Set("address1", address1);
+            jsonRecord.Set("address2", address2);
+            jsonRecord.Set("city", city);
+            jsonRecord.Set("zip", zip);
+            jsonRecord.Set("phone", phone);
+            jsonRecord.Set("state", state);
+            jsonRecord.Set("states.sname", stateName);
+            jsonArray.AddArrayElement(jsonRecord);
+
+            found = TRUE;
+        end
+
+        miCursor.Close();
+
+        if not found then retStatus = getNoRecorsStatusCode();
+
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+    Module.SetExecStatus(retStatus);
+
+    retStr = jsonRecord;
+    return retStr;
+end
+
+private function processFilterStr (filter as char) return char
+objects begin
+    js as json
+    company surname fname address1 address2 city zip phone payform total_invoice state as char
+    retStr as char default ""
+    addAnd as boolean default false
+    andStr as char default ""
+end
+begin
+    if filter is not null then begin
+        js.LoadFromChar(filter);
+        
+        company = js.Get("company");
+        if company is not null and company != "" then begin
+            retStr = retStr + " suppliers.company matches '*" + company + "*'";
+            andStr =  " and " ;
+        end
+
+        surname = js.Get("surname");
+        if surname is not null and surname != "" then begin
+            retStr = retStr + andStr + " suppliers.surname matches '*" + surname + "*'";
+            andStr =  " and " ;
+        end
+
+        fname = js.Get("fname");
+        if fname is not null and fname != "" then begin
+            retStr = retStr + andStr + " suppliers.fname matches '*" + fname + "*'";
+            andStr =  " and " ;
+        end
+
+        address1 = js.Get("address1");
+        if address1 is not null and address1 != "" then begin
+            retStr = retStr + andStr + " suppliers.address1 matches '*" + address1 + "*'";
+            andStr =  " and " ;
+        end
+
+        address2 = js.Get("address2");
+        if address2 is not null and address2 != "" then begin
+            retStr = retStr + andStr + " suppliers.address2 matches '*" + address2 + "*'";
+            andStr =  " and " ;
+        end
+
+        city = js.Get("city");
+        if city is not null and city != "" then begin
+            retStr = retStr + andStr + " suppliers.city matches '*" + city + "*'";
+            andStr =  " and " ;
+        end
+
+        phone = js.Get("phone");
+        if phone is not null and phone != "" then begin
+            retStr = retStr + andStr + " suppliers.phone matches '*" + phone + "*'";
+            andStr =  " and " ;
+        end
+
+        payform = js.Get("payform");
+        if payform is not null and payform != "" then begin
+            retStr = retStr + andStr + " suppliers.payform matches '*" + payform + "*'";
+            andStr =  " and " ;
+        end
+
+
+        state = js.Get("states.state");
+        if state is null or state == "" then begin
+            state = js.Get("state");
+        end
+        if state is not null and state != "" then begin
+            retStr = retStr + andStr + " suppliers.state matches '*" + state + "*'";
+            andStr =  " and " ;
+        end
+    end
+
+    return retStr;
+end
+//{{CODEEND
+END
+

@@ -1,0 +1,118 @@
+
+<form name="statesListForm" class="form-horizontal" role="form">
+<fieldset>
+	<legend>
+		<i class="glyphicon glyphicon-th-list"></i> {{'Charts'}}
+	</legend>
+
+	<div class="row">
+		<div ng-controller="BarCtrl" class="col-md-6">
+			<div class=" panel panel-default">
+				<div class="panel-heading">
+				
+				</div>
+				<div class="panel-body">
+					<canvas id="bar" class="chart chart-bar"
+		 			 chart-data="data" chart-labels="labels"> chart-series="series"
+					</canvas>
+				</div>
+			</div>
+		</div>
+		<div ng-controller="LineCtrl" class="col-md-6">
+		<div class=" panel panel-default"> 
+			<div class="panel-heading">
+				
+			</div>
+			<div class="panel-body">
+				<canvas id="line" class="chart chart-line" chart-data="data"
+					chart-labels="labels" chart-series="series" chart-options="options"
+					chart-dataset-override="datasetOverride" chart-click="onClick">
+				</canvas>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	<div class="row">
+		<div ng-controller="DoughnutCtrl" class="col-md-6">
+			<div class=" panel panel-default">
+				<div class="panel-heading">
+					
+				</div>
+				<div class="panel-body">
+					<canvas id="doughnut" class="chart chart-doughnut"
+  						chart-data="data" chart-labels="labels">
+					</canvas> 
+					</div>
+			</div>
+		</div>
+		<div ng-controller="RadarCtrl" class="col-md-6">
+		<div class=" panel panel-default">
+			<div class="panel-heading">
+				
+			</div>
+			<div class="panel-body">
+					<canvas id="radar" class="chart chart-radar"
+  						chart-data="data" chart-options="options" chart-labels="labels">
+					</canvas> 
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	<div class="row">
+		<div ng-controller="PieCtrl" class="col-md-6">
+			<div class=" panel panel-default">
+				<div class="panel-heading">
+					
+				</div>
+				<div class="panel-body">
+					<canvas id="pie" class="chart chart-pie"
+				  		chart-data="data" chart-labels="labels" chart-options="options">
+					</canvas> 
+				</div>
+			</div>
+		</div>
+		<div ng-controller="PolarAreaCtrl" class="col-md-6">
+		<div class=" panel panel-default">
+			<div class="panel-heading">
+				
+			</div>
+			<div class="panel-body">
+				<canvas id="polar-area" class="chart chart-polar-area"
+			  		chart-data="data" chart-labels="labels" chart-options="options">
+				</canvas> 
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	<div class="row">
+		<div ng-controller="BarCtrl2" class="col-md-6">
+			<div class=" panel panel-default">
+				<div class="panel-heading">
+					
+				</div>
+				<div class="panel-body">
+					<canvas id="base" class="chart-horizontal-bar"
+				 		 chart-data="data" chart-labels="labels" >
+					</canvas>
+				</div>
+			</div>
+		</div>
+		<div ng-controller="BubbleCtrl" class="col-md-6">
+		<div class=" panel panel-default">
+			<div class="panel-heading">
+				 
+			</div>
+			<div class="panel-body">
+				<canvas id="base" class="chart-bubble" chart-data="data"
+			  		chart-series="series" >
+				</canvas> 
+			</div>
+		</div>
+	</div>
+	</div>
+	
+</fieldset>
+</form>

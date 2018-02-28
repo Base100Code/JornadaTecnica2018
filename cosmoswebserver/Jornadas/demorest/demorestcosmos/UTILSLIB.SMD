@@ -1,0 +1,31 @@
+INCLUDES BEGIN
+	utilincl
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+public function Conecta
+objects begin
+end
+begin
+    PutEnv("DBPATH" ,ProjectDir());
+    Sql.Connect("stockres");
+end
+
+public function Desconecta
+objects begin
+end
+begin
+    Sql.Disconnect();
+end
+
+public function getNoRecorsStatusCode() return integer
+objects begin
+end
+begin
+    return STATUS_OK;
+end
+//{{CODEEND
+END
+

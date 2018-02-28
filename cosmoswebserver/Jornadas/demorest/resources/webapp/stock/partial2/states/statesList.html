@@ -1,0 +1,81 @@
+
+<form name="statesListForm" class="form-horizontal" role="form">
+<fieldset>
+	<legend>
+		<i class="glyphicon glyphicon-th-list"></i> {{'States'}}
+	</legend>
+
+	<section name="filter-header" class="filter-header" ng-click="vm.toggleFilter()">	
+		<i class="glyphicon {{vm.showFilter ? 'glyphicon-triangle-bottom' : 'glyphicon-triangle-right'}}" ></i>
+		{{vm.showFilter ? ('Ocultar filtros') : ('Mostrar filtros')}}
+	</section>
+	<p></p>
+	<div uib-collapse="!vm.showFilter">
+		<div class="well">
+			<div class="form-group">
+				<label for="stateFilter" class="control-label col-sm-1 small">State</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="stateFilter" placeholder="State" ng-model="vm.searchInfo.state"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="snameFilter" class="control-label col-sm-1 small">Name</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="snameFilter" placeholder="Name" ng-model="vm.searchInfo.sname"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-10 col-sm-2">
+					<button ng-click="vm.doSearch()" class="btn btn-primary">Buscar</button>
+					<button ng-click="vm.doClean()" class="btn btn-default">Limpiar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section name="statesTableList" class="panel panel-default table-list">
+	<div ng-show="vm.paginator.resultList.length == 0">
+		No hay States
+	</div>
+	<table class="table table-striped table-bordered table-condensed" ng-show="vm.paginator.resultList.length > 0">
+		<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th class="sortable" ng-click="vm.sort('state')">
+				State
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('state'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('state')}"></span>
+			</th>
+			<th class="sortable" ng-click="vm.sort('sname')">
+				Name
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('sname'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('sname')}"></span>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+ 		<tr ng-repeat="item in vm.paginator.resultList">
+ 			<td width="1" class="column-selector"><a ng-click="vm.doSelect(item, true)" href><i class="glyphicon {{vm.isLookupMode() ? 'glyphicon-expand' : 'glyphicon-edit'}}"></i></a></td> 
+			
+		<td>
+						{{item.state}}
+		</td>
+
+		<td>
+						{{item.sname}}
+		</td>
+
+		</tr>
+		</tbody>
+	</table>
+	</section>
+	<section name="low-buttons" class="low-buttons">
+	<button ng-if="!vm.isLookupMode()" ng-click="vm.doAdd()" class="btn btn-primary" class="btn btn-xs">Crear States</button>
+	<button ng-if="vm.isLookupMode()" ng-click="vm.doCancelLookup()" class="btn btn-default" >Cancelar</button>
+	</section>
+	<section name="table-paginator" class="table-paginator" ng-show="numPages > 1">
+	<div>
+		Página {{vm.paginator.currentPage}} de {{numPages}}, en total {{vm.paginator.resultCount}} States
+	</div>
+	<uib-pagination boundary-links="true" ng-model="vm.paginator.currentPage" total-items="vm.paginator.resultCount" max-size="5" items-per-page="vm.paginator.pageSize" ng-change="vm.paginator.pageChanged()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" num-pages="numPages"></uib-pagination>
+	</section>
+</fieldset>
+</form>

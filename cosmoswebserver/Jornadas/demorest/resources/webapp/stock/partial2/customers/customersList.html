@@ -1,0 +1,202 @@
+<form name="customersListForm" class="form-horizontal" role="form">
+<fieldset>
+	<legend>
+		<i class="glyphicon glyphicon-th-list"></i> {{'Customers'}}
+	</legend>
+
+	<section name="filter-header" class="filter-header" ng-click="vm.toggleFilter()">	
+		<i class="glyphicon {{vm.showFilter ? 'glyphicon-triangle-bottom' : 'glyphicon-triangle-right'}}" ></i>
+		{{vm.showFilter ? ('Ocultar filtros') : ('Mostrar filtros')}}
+	</section>
+	<p></p>
+	<div uib-collapse="!vm.showFilter">
+		<div class="well">
+			<div class="form-group">
+				<label for="companyFilter" class="control-label col-sm-1 small">Company</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="companyFilter" placeholder="Company" ng-model="vm.searchInfo.company"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="surnameFilter" class="control-label col-sm-1 small">Surname</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="surnameFilter" placeholder="Surname" ng-model="vm.searchInfo.surname"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="fnameFilter" class="control-label col-sm-1 small">Name</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="fnameFilter" placeholder="Name" ng-model="vm.searchInfo.fname"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="address1Filter" class="control-label col-sm-1 small">Address1</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="address1Filter" placeholder="Address1" ng-model="vm.searchInfo.address1"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="address2Filter" class="control-label col-sm-1 small">Address2</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="address2Filter" placeholder="Address2" ng-model="vm.searchInfo.address2"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="cityFilter" class="control-label col-sm-1 small">City</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="cityFilter" placeholder="City" ng-model="vm.searchInfo.city"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="phoneFilter" class="control-label col-sm-1 small">Phone</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="phoneFilter" placeholder="Phone" ng-model="vm.searchInfo.phone"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="payformFilter" class="control-label col-sm-1 small">Form of Payment</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="payformFilter" placeholder="Form of Payment" ng-model="vm.searchInfo.payform"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="stateFilter" class="control-label col-sm-1 small">State</label>
+				<div class="col-sm-11">
+				<input class="form-control input-sm" id="stateFilter" placeholder="State" ng-model="vm.searchInfo.state"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-10 col-sm-2">
+					<button ng-click="vm.doSearch()" class="btn btn-primary">Buscar</button>
+					<button ng-click="vm.doClean()" class="btn btn-default">Limpiar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section name="customersTableList" class="panel panel-default table-list">
+	<div ng-show="vm.paginator.resultList.length == 0">
+		No hay Customers
+	</div>
+	<table class="table table-striped table-bordered table-condensed" ng-show="vm.paginator.resultList.length > 0">
+		<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th class="sortable" ng-click="vm.sort('customer')">
+				Code
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('customer'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('customer')}"></span>
+			</th>
+			<th class="sortable" ng-click="vm.sort('company')">
+				Company
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('company'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('company')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('surname')">
+				Surname
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('surname'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('surname')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('fname')">
+				Name
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('fname'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('fname')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('address1')">
+				Address1
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('address1'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('address1')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('address2')">
+				Address2
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('address2'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('address2')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('city')">
+				City
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('city'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('city')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('zip')">
+				Zip Code
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('zip'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('zip')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('phone')">
+				Phone
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('phone'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('phone')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('payform')">
+				Form of Payment
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('payform'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('payform')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('totalInvoice')">
+				Total Invoiced
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('totalInvoice'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('totalInvoice')}"></span>
+			</th>
+			<th class="sortable hidden-xs hidden-sm" ng-click="vm.sort('state')">
+				State
+				<span ng-class="{'glyphicon glyphicon-triangle-bottom':vm.sortDescend('state'), 'glyphicon glyphicon-triangle-top':vm.sortAscend('state')}"></span>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+ 		<tr ng-repeat="item in vm.paginator.resultList">
+ 			<td width="1" class="column-selector"><a ng-click="vm.doSelect(item, true)" href><i class="glyphicon {{vm.isLookupMode() ? 'glyphicon-expand' : 'glyphicon-edit'}}"></i></a></td> 
+			
+		<td align="right">
+						{{item.customer}}
+		</td>
+
+		<td>
+						{{item.company}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.surname}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.fname}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.address1}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.address2}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.city}}
+		</td>
+
+		<td class="hidden-xs hidden-sm" align="right">
+						{{item.zip}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.phone}}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.payform}}
+		</td>
+
+		<td class="hidden-xs hidden-sm" align="right">
+						{{item.totalInvoice | number }}
+		</td>
+
+		<td class="hidden-xs hidden-sm">
+						{{item.state}}
+		</td>
+
+		</tr>
+		</tbody>
+	</table>
+	</section>
+	<section name="low-buttons" class="low-buttons">
+	<button ng-if="!vm.isLookupMode()" ng-click="vm.doAdd()" class="btn btn-primary" class="btn btn-xs">Crear Customers</button>
+	<button ng-if="vm.isLookupMode()" ng-click="vm.doCancelLookup()" class="btn btn-default" >Cancelar</button>
+	</section>
+	<section name="table-paginator" class="table-paginator" ng-show="numPages > 1">
+	<div>
+		Página {{vm.paginator.currentPage}} de {{numPages}}, en total {{vm.paginator.resultCount}} Customers
+	</div>
+	<uib-pagination boundary-links="true" ng-model="vm.paginator.currentPage" total-items="vm.paginator.resultCount" max-size="5" items-per-page="vm.paginator.pageSize" ng-change="vm.paginator.pageChanged()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" num-pages="numPages"></uib-pagination>
+	</section>
+</fieldset>
+</form>

@@ -1,0 +1,335 @@
+LIBRARIES BEGIN
+	utilslib
+END
+INCLUDES BEGIN
+	utilincl
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+//POST http://localhost:8080/stock/rest/states/resultList?offset=0&limit=10&orderBy=sname
+//Body
+//    filter -> {"state" = "ZL" }
+public function resultList(firstResult as integer, maxResults as integer, orderBy as char, filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retStatus as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select * from states ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+    
+    if orderBy is not null then begin
+        stmtStr = stmtStr + " order by " + orderBy;
+    end
+
+       
+    if maxResults is not null then begin
+        stmtStr = stmtStr + " limit " + maxResults;
+    end
+    
+      
+    if  firstResult is not null then begin
+        stmtStr = stmtStr + "  offset " +  firstResult;
+    end
+    
+    
+
+    retStr = processQuery(stmtStr);    
+
+
+    Desconecta();    
+
+
+    return retStr;
+end
+
+//URL -> http://localhost:8080/stock/rest/states/resultCount
+public function resultCount(filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retCount as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select count(*) from states ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+
+    retCount = processQueryCount(stmtStr);
+    Desconecta();
+    retStr = retCount;
+    return retStr;
+end
+
+//URL -> http://localhost:8080/stock/rest/state/HI
+public function findByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select * from states ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " where state = '" + key + "'";
+        retStr = processQuerySingleResult(stmtStr);
+    end
+
+    Desconecta();
+    return retStr;
+end
+
+public function deleteByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "delete from states where ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " state = '" + key + "'";
+        Sql.SqlExec(stmtStr);
+        if Sql.Error() != 0 or Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;            
+        end else begin
+            retStatus = STATUS_OK;
+        end
+    end else begin
+        retStatus = STATUS_NOTFOUND;
+    end
+
+    Desconecta();
+    
+    Module.SetExecStatus(retStatus);
+    
+    return retStr;
+end
+
+
+{
+PUT http:/localhost:8080/stock/rest/states/ZL
+Body
+        "sname":"AAA"
+
+}
+public function update(key as char, entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    state sname as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+
+    state = key;
+    sname = js.Get("sname");
+
+    if state is null or sname is null then begin
+        retStatus = BAD_REQUEST;
+    end else begin
+        stmtStr = "update states set sname = ? where state = ?";
+        Sql.SqlExec(stmtStr, sname, state);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_NOCONTENT;
+        end else if Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin            
+            retStatus = STATUS_OK;
+        end
+    end
+
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+// http://localhost:8080/stock/rest/states -> POST
+//Body
+//{
+//        "state":"ZL",
+//        "sname":"Alabamaz"
+//}
+public function create(entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    state sname as char
+    retJson as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+    state = js.Get("state");
+    sname = js.Get("sname");
+
+    if state is null or sname is null then begin
+        retStatus = BAD_REQUEST;
+       
+    end else begin
+        stmtStr = "insert into states(state, sname) values(?,?)";
+        Sql.SqlExec(stmtStr, state, sname);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_CONFLICT;
+        end else begin
+            retStatus = STATUS_CREATED;
+        end
+    end
+  
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+
+private function processQuery(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+    stateStr nameStateStr as char
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+    retStatus = STATUS_OK;
+    
+    jsonArray.SetAsArray();
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        while miCursor.Fetch(stateStr, nameStateStr).Found() do begin
+            jsonRecord.Clear();
+            jsonRecord.Set("state", stateStr);
+            jsonRecord.Set("sname", nameStateStr);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+    
+        miCursor.Close();
+        
+        if not found then retStatus = getNoRecorsStatusCode();
+        
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+
+    Module.SetExecStatus(retStatus);
+    
+    retStr = jsonArray;
+    return retStr;
+end
+
+private function processQuerySingleResult(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    jsonArray as json
+    jsonRecord as json
+    stateStr nameStateStr as char
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        if miCursor.Fetch(stateStr, nameStateStr).Found() then begin
+            jsonRecord.Clear();
+            jsonRecord.Set("state", stateStr);
+            jsonRecord.Set("sname", nameStateStr);
+            found = TRUE;
+        end
+        miCursor.Close();
+        if not found then retStatus = getNoRecorsStatusCode();
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+    miCursor.Free();
+    Module.SetExecStatus(retStatus);
+    retStr = jsonRecord;
+    return retStr;
+end
+
+private function processQueryCount(stmtStr as char) return integer
+objects begin
+    retCount as integer
+end
+begin
+    Sql.Select(stmtStr , retCount);
+    return retCount;
+end
+
+
+private function processFilterStr (filter as char) return char
+objects begin
+    js as json
+    state sname as char
+    retStr as char default ""
+    addAnd as boolean default false
+    andStr as char default ""
+end
+begin
+    if filter is not null then begin
+        js.LoadFromChar(filter);
+        
+        state = js.Get("state");
+        if state is not null and state != "" then begin
+            retStr = retStr + " state matches '*" + state + "*'";
+            andStr =  " and " ;
+        end
+
+        sname = js.Get("sname");
+        if sname is not null and sname != "" then begin
+            retStr = retStr + andStr + " sname matches '*" + sname + "*'";
+            andStr =  " and " ;
+        end
+
+    end
+
+    return retStr;
+end
+
+
+//{{CODEEND
+END
+

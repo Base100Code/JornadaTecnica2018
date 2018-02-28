@@ -1,0 +1,347 @@
+LIBRARIES BEGIN
+	utilslib
+END
+INCLUDES BEGIN
+	UTILINCL
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+public function resultList(firstResult as integer, maxResults as integer, orderBy as char, filter as char) return char
+objects begin
+    retStr stmtStr as char
+    orderNbr as char
+    retStatus as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+   
+
+//    stmtStr = "select orderlines.*, items.description from orderlines, items where orderlines.item = items.item ";
+
+    stmtStr = "select orderlines.*, items.description from orderlines, outer items where orderlines.item = items.item and orderlines.supplier = items.supplier";
+    
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " and " + pf;
+        end
+    end
+
+    if orderBy is not null then begin
+        stmtStr = stmtStr + " order by " + orderBy;
+    end
+
+    if maxResults is not null then begin
+        stmtStr = stmtStr + " limit " + maxResults;
+    end
+    
+    if  firstResult is not null then begin
+        stmtStr = stmtStr + "  offset " +  firstResult;
+    end
+
+    retStr = processQuery(stmtStr);    
+    
+    Desconecta();    
+    return retStr;
+end
+
+
+
+public function resultCount(filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retCount as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select count(*) from orderlines ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " and " + pf;
+        end
+    end
+
+    retCount = processQueryCount(stmtStr);
+    Desconecta();
+    retStr = retCount;
+    return retStr;
+end
+
+public function findByKey(ordernbr as char, linenbr as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+//    stmtStr = "select * from orderlines ";
+//    stmtStr = "select orderlines.*, items.description from orderlines, items where orderlines.item = items.item ";
+    stmtStr = "select orderlines.*, items.description from orderlines, outer items where orderlines.item = items.item and orderlines.supplier = items.supplier";
+
+    
+    if ordernbr is not null and linenbr is not null then begin
+        stmtStr = stmtStr + " and order_nbr = " + ordernbr + " and line_nbr = " + linenbr;
+        retStr = processQuerySingleResult(stmtStr);
+    end
+
+    Desconecta();
+    return retStr;
+end
+
+public function create(entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    order_nbr line_nbr item supplier quantity discount price as char
+    retJson as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+    
+    order_nbr = js.Get("orders.orderNbr");
+    line_nbr = js.Get("id.lineNbr");
+    item = js.Get("items.id.item");
+    supplier = js.Get("items.id.supplier");
+    quantity = js.Get("quantity");
+    discount = js.Get("discount");
+    price = js.Get("price");
+    
+    if order_nbr is null or line_nbr is null then begin
+        retStatus = BAD_REQUEST;
+       
+    end else begin
+        stmtStr = "insert into orderlines(order_nbr, line_nbr, item, supplier, quantity, discount, price) values(?,?,?,?,?,?,?)";
+        Sql.SqlExec(stmtStr, order_nbr, line_nbr, item, supplier, quantity, discount, price);
+
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_CONFLICT;
+        end else begin
+            retStatus = STATUS_CREATED;
+        end
+    end
+
+  
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function update(ordernbr as char, linenbr as char, entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    order_nbr line_nbr item supplier quantity discount price as char
+    retStatus as integer
+end
+begin
+
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+    
+    
+
+    order_nbr = ordernbr;
+    line_nbr = linenbr;
+    
+    order_nbr = js.Get("orders.orderNbr");
+    line_nbr = js.Get("id.lineNbr");
+    item = js.Get("items.id.item");
+    supplier = js.Get("items.id.supplier");
+    quantity = js.Get("quantity");
+    discount = js.Get("discount");
+    price = js.Get("price");
+    
+    if ordernbr is null or linenbr is null then begin
+        retStatus = BAD_REQUEST;
+    end else begin
+        stmtStr = "update orderlines set item = ?, supplier = ?, quantity = ?, discount = ?, price = ? where order_nbr = ? and line_nbr = ?";
+        Sql.SqlExec(stmtStr, item, supplier, quantity, discount, price, order_nbr, line_nbr);
+
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_NOCONTENT;
+        end else if Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin            
+            retStatus = STATUS_OK;
+        end
+    end
+
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function deleteByKey(linenbr as char, ordernbr as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "delete from orderlines where ";
+
+    if ordernbr is not null  and linenbr is not null then begin
+        stmtStr = stmtStr + " order_nbr = " + ordernbr + " and line_nbr = " + linenbr;
+        Sql.SqlExec(stmtStr);
+        if Sql.Error() != 0 or Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;            
+        end else begin
+            retStatus = STATUS_OK;
+        end
+    end else begin
+        retStatus = STATUS_NOTFOUND;
+    end
+
+    Desconecta();
+    
+    Module.SetExecStatus(retStatus);
+    
+    return retStr;
+end
+
+private function processQuery(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    jsonArray as json
+    jsonRecord as json
+    order_nbr line_nbr item supplier quantity discount price itemdesc as char
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+    retStatus = STATUS_OK;
+    
+    jsonArray.SetAsArray();
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        while miCursor.Fetch(order_nbr, line_nbr, item, supplier, quantity, discount, price, itemdesc).Found() do begin
+            jsonRecord.Clear();
+            jsonRecord.Set("id.lineNbr", line_nbr);
+            jsonRecord.Set("id.orderNbr", order_nbr);
+            jsonRecord.Set("quantity", quantity);
+            jsonRecord.Set("discount", discount);
+            jsonRecord.Set("price", price);
+            jsonRecord.Set("items.description", itemdesc);
+            jsonRecord.Set("orders.orderNbr", order_nbr);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+    
+        miCursor.Close();
+        
+        if not found then retStatus = getNoRecorsStatusCode();
+        
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+
+    Module.SetExecStatus(retStatus);
+    
+    retStr = jsonArray;
+
+    return retStr;
+end
+
+private function processQueryCount(stmtStr as char) return integer
+objects begin
+    retCount as integer
+end
+begin
+    Sql.Select(stmtStr , retCount);
+    return retCount;
+end
+
+
+private function processQuerySingleResult(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+    order_nbr line_nbr item supplier quantity discount price itemdesc as char
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        if miCursor.Fetch(order_nbr, line_nbr, item, supplier, quantity, discount, price, itemdesc).Found() then begin
+            jsonRecord.Clear();
+            jsonRecord.Set("id.lineNbr", line_nbr);
+            jsonRecord.Set("id.orderNbr", order_nbr);
+            jsonRecord.Set("quantity", quantity);
+            jsonRecord.Set("discount", discount);
+            jsonRecord.Set("price", price);
+            jsonRecord.Set("items.description", itemdesc);
+            jsonRecord.Set("orders.orderNbr", order_nbr);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+
+        miCursor.Close();
+
+        if not found then retStatus = getNoRecorsStatusCode();
+
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+    Module.SetExecStatus(retStatus);
+
+    retStr = jsonRecord;
+    return retStr;
+end
+
+private function processFilterStr (filter as char) return char
+objects begin
+    js as json
+    orderNbr as char
+    retStr as char default ""
+end
+begin
+    if filter is not null then begin
+        js.LoadFromChar(filter);
+        orderNbr = js.Get("orders.orderNbr");
+        if orderNbr is null or orderNbr == "" then begin
+            orderNbr = js.Get("orderNbr");
+        end
+        if orderNbr is not null and orderNbr != "" then begin
+            retStr = " order_nbr = " + orderNbr;
+        end
+    end
+    
+    
+    return retStr;
+end
+//{{CODEEND
+END
+

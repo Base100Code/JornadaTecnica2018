@@ -1,0 +1,394 @@
+LIBRARIES BEGIN
+	utilslib
+END
+INCLUDES BEGIN
+	UTILINCL
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+//URL -> http://localhost:8081/stock/rest/items/resultList?firstResult=0&maxResults=10&orderBy=description
+public function resultList(firstResult as integer, maxResults as integer, orderBy as char, filter as char) return char
+objects begin
+    retStr stmtStr as char
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    stmtStr = "select items.*, suppliers.company from items, outer suppliers where items.supplier = suppliers.supplier";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " and " + pf;
+        end
+    end
+
+    if orderBy is not null and orderBy != "" then begin
+        stmtStr = stmtStr + " order by " + orderBy;
+    end
+
+    if maxResults is not null then begin
+        stmtStr = stmtStr + " limit " + maxResults;
+    end
+    
+    if  firstResult is not null then begin
+        stmtStr = stmtStr + "  offset " +  firstResult;
+    end
+    
+    retStr = processQuery(stmtStr);    
+    
+    //SetExecStatus(415);
+
+    Desconecta();    
+    return retStr;
+end
+
+public function create(entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    item supplier description retailPrice costPrice stock overStock underStock lastEntryDate lastExitDate as char
+    retJson as char
+    retStatus as integer
+end
+begin
+
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+
+    item = js.Get("item");
+    supplier = js.Get("supplier");
+    description = js.Get("description");
+    retailPrice = js.Get("retailPrice");
+    costPrice = js.Get("costPrice");
+    stock = js.Get("stock");
+    overStock = js.Get("overStock");
+    underStock = js.Get("underStock");
+    lastEntryDate = js.Get("lastEntryDate");
+    lastExitDate = js.Get("lastExitDate");
+    
+    if item is null or supplier is null then begin
+        retStatus = BAD_REQUEST;
+       
+    end else begin
+        stmtStr = "insert into items(item, supplier, description, retail_price, cost_price, stock, over_stock, under_stock, last_entry_date, last_exit_date) values(?,?,?,?,?,?,?,?,?,?)";
+        Sql.SqlExec(stmtStr, item, supplier, description, retailPrice, costPrice, stock, overStock, underStock, lastEntryDate, lastExitDate);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_CONFLICT;
+        end else begin
+            retStatus = STATUS_CREATED;
+        end
+    end
+  
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function update(item as char, supplier as char, entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    description retailPrice costPrice stock overStock underStock lastEntryDate lastExitDate as char
+    retStatus as integer
+    lastEntryDate_date as date
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+    
+
+    description = js.Get("description");
+    retailPrice = js.Get("retailPrice");
+    costPrice = js.Get("costPrice");
+    stock = js.Get("stock");
+    overStock = js.Get("overStock");
+    underStock = js.Get("underStock");
+    lastEntryDate = js.Get("lastEntryDate");
+    lastExitDate = js.Get("lastExitDate");
+
+    //lastEntryDate = lastEntryDate_date.FromChar(lastEntryDate , "");
+    
+    if item is null or supplier is null then begin
+        retStatus = BAD_REQUEST;
+    end else begin
+        stmtStr = "update items set description = ?, retail_price = ?, cost_price = ?, stock = ?, over_stock = ?, under_stock = ?, last_entry_date = ?, last_exit_date = ? where item = ? and supplier = ?";
+        Sql.SqlExec(stmtStr,description, retailPrice, costPrice, stock, overStock, underStock, lastEntryDate, lastExitDate, item, supplier );
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_NOCONTENT;
+        end else if Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin            
+            retStatus = STATUS_OK;
+        end
+    end
+
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function deleteByKey(item as char, supplier as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "delete from items where ";
+
+    if item is not null and supplier is not null then begin
+        stmtStr = stmtStr + " item = " + item + " and " + " supplier = "  + supplier;
+        Sql.SqlExec(stmtStr);
+        if Sql.Error() != 0 or Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin
+            retStatus = STATUS_OK;
+        end
+    end else begin
+        retStatus = STATUS_NOTFOUND;
+    end
+    
+
+    Desconecta();
+
+    Module.SetExecStatus(retStatus);
+    
+    return retStr;
+end
+
+private function processQuery(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    jsonArray as json
+    jsonRecord as json
+//    id as json
+    
+    itemValue as integer
+    supplierValue as char
+    descriptionValue as char
+    retailPriceValue as integer
+    costPriceValue as integer
+    stockValue as integer
+    overStockValue as integer
+    underStockValue as integer
+    lastEntryDateValue as date
+    lastExitDate as date
+    retStatus as integer
+    companyValue as char
+    found as boolean default FALSE
+end
+begin
+    retStatus = STATUS_OK;
+
+    jsonArray.SetAsArray();
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        
+        while miCursor.Fetch(itemValue, supplierValue, descriptionValue, retailPriceValue, costPriceValue, stockValue, overStockValue, underStockValue, lastEntryDateValue, lastExitDate, companyValue).Found() do begin
+            jsonRecord.Clear();
+            jsonRecord.Set("id.item", itemValue);
+            jsonRecord.Set("id.supplier", supplierValue);
+//            id.Clear();
+//            id.Set("item", itemValue);
+//            id.Set("supplier", supplierValue);
+//            jsonRecord.Set("id", id);
+            jsonRecord.Set("description", descriptionValue);
+            jsonRecord.Set("retailPrice", retailPriceValue);
+            jsonRecord.Set("costPrice", costPriceValue);
+            jsonRecord.Set("stock", stockValue);
+            jsonRecord.Set("overStock", overStockValue);
+            jsonRecord.Set("underStock", underStockValue);
+            jsonRecord.Set("lastEntryDate", lastEntryDateValue.ToChar("YYYY/MM/DD"));
+            jsonRecord.Set("lastExitDate", lastExitDate.ToChar("YYYY/MM/DD"));
+            jsonRecord.Set("suppliers.company", companyValue); 
+            jsonArray.AddArrayElement(jsonRecord);
+            
+            found = TRUE;
+        end
+        
+        miCursor.Close();
+        
+        if not found then retStatus = getNoRecorsStatusCode();
+        
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+
+    Module.SetExecStatus(retStatus);
+    
+    retStr = jsonArray;
+    return retStr;
+end
+
+public function resultCount(filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retCount as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select count(*) from items ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+
+    retCount = processQueryCount(stmtStr);
+    Desconecta();
+    retStr = retCount;
+    return retStr;
+end
+
+public function findByKey(item as char, supplier as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select items.*, suppliers.company from items, suppliers where items.supplier = suppliers.supplier";
+
+    if item is not null and supplier is not null then begin
+        stmtStr = stmtStr + " and item = " + item + " and items.supplier = " + supplier;
+        retStr = processQuerySingleResult(stmtStr);
+    end
+
+    Desconecta();
+    return retStr;
+end
+
+private function processQueryCount(stmtStr as char) return integer
+objects begin
+    retCount as integer
+end
+begin
+    Sql.Select(stmtStr , retCount);
+    return retCount;
+end
+
+
+private function processQuerySingleResult(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+//    id as json
+    stateStr nameStateStr as char
+
+    itemValue as integer
+    supplierValue as char
+    descriptionValue as char
+    retailPriceValue as integer
+    costPriceValue as integer
+    stockValue as integer
+    overStockValue as integer
+    underStockValue as integer
+    lastEntryDateValue as date
+    lastExitDateValue as date
+    companyValue as char
+
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        if miCursor.Fetch(itemValue, supplierValue, descriptionValue, retailPriceValue, costPriceValue, stockValue, overStockValue, underStockValue, lastEntryDateValue, lastExitDateValue, companyValue).Found() then begin
+            jsonRecord.Clear();
+            jsonRecord.Set("id.item", itemValue);
+            jsonRecord.Set("id.supplier", supplierValue);
+//            id.Clear();
+//            id.Set("item", itemValue);
+//            id.Set("supplier", supplierValue);
+//            jsonRecord.Set("id", id);
+            jsonRecord.Set("description", descriptionValue);
+            jsonRecord.Set("retailPrice", retailPriceValue);
+            jsonRecord.Set("costPrice", costPriceValue);
+            jsonRecord.Set("stock", stockValue);
+            jsonRecord.Set("overStock", overStockValue);
+            jsonRecord.Set("underStock", underStockValue);
+            jsonRecord.Set("lastEntryDate", lastEntryDateValue.ToChar("YYYY/MM/DD"));
+            jsonRecord.Set("lastExitDate", lastExitDateValue.ToChar("YYYY/MM/DD"));
+            jsonRecord.Set("suppliers.company", companyValue);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+
+        miCursor.Close();
+
+        if not found then retStatus = getNoRecorsStatusCode();
+
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+    Module.SetExecStatus(retStatus);
+
+    retStr = jsonRecord;
+    return retStr;
+end
+
+private function processFilterStr (filter as char) return char
+objects begin
+    js as json
+    description supplier as char
+    retStr as char default ""
+    addAnd as boolean default false
+    andStr as char default ""
+end
+begin
+    if filter is not null then begin
+        js.LoadFromChar(filter);
+        
+        description = js.Get("description");
+        if description is not null and description != "" then begin
+            retStr = retStr + " items.description matches '*" + description + "*'";
+            andStr =  " and " ;
+        end
+
+        supplier = js.Get("suppliers.supplier");
+        if supplier is null or supplier == "" then begin
+            supplier = js.Get("supplier");
+        end
+        if supplier is not null and supplier != "" then begin
+            retStr = retStr + andStr + " items.supplier = " + supplier;
+            andStr =  " and " ;
+        end
+
+    end
+
+    return retStr;
+end
+//{{CODEEND
+END
+

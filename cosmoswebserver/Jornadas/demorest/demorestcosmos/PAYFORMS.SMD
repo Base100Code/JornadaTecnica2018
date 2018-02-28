@@ -1,0 +1,320 @@
+LIBRARIES BEGIN
+	utilslib
+END
+INCLUDES BEGIN
+	UTILINCL
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+public function resultList(firstResult as integer, maxResults as integer, orderBy as char, filter as char) return char
+objects begin
+    retStr stmtStr as char
+    orderNbr as char
+    retStatus as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+   
+
+//    stmtStr = "select orderlines.*, items.description from orderlines, items where orderlines.item = items.item ";
+
+    stmtStr = "select * from payforms ";
+    
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+
+    if orderBy is not null then begin
+        stmtStr = stmtStr + " order by " + orderBy;
+    end
+
+    if maxResults is not null then begin
+        stmtStr = stmtStr + " limit " + maxResults;
+    end
+    
+    if  firstResult is not null then begin
+        stmtStr = stmtStr + "  offset " +  firstResult;
+    end
+
+    retStr = processQuery(stmtStr);    
+    
+    Desconecta();    
+    return retStr;
+end
+
+public function findByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select * from payforms ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " where payform = '" + key + "'";
+        retStr = processQuerySingleResult(stmtStr);
+    end
+
+    Desconecta();
+    return retStr;
+end
+
+
+public function create(entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    payform description as char
+    retJson as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+    
+    payform = js.Get("payform");
+    description = js.Get("description");
+
+    if payform is null or description is null then begin
+        retStatus = BAD_REQUEST;
+       
+    end else begin
+        stmtStr = "insert into payforms(payform, description) values(?,?)";
+        Sql.SqlExec(stmtStr, payform, description);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_CONFLICT;
+        end else begin
+            retStatus = STATUS_CREATED;
+        end
+    end
+    
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function update(key as char, entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    payform description as char
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+
+    payform = key;
+    description = js.Get("description");
+
+    if payform is null or description is null then begin
+        retStatus = BAD_REQUEST;
+    end else begin
+        stmtStr = "update payforms set description = ? where payform = ?";
+        Sql.SqlExec(stmtStr, description, payform);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_NOCONTENT;
+        end else if Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin            
+            retStatus = STATUS_OK;
+        end
+    end
+
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function deleteByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "delete from payforms where ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " payform = '" + key + "'";
+        Sql.SqlExec(stmtStr);
+        if Sql.Error() != 0 or Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;            
+        end else begin
+            retStatus = STATUS_OK;
+        end
+    end else begin
+        retStatus = STATUS_NOTFOUND;
+    end
+
+    Desconecta();
+    
+    Module.SetExecStatus(retStatus);
+    
+    return retStr;
+end
+
+private function processQuery(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    jsonArray as json
+    jsonRecord as json
+    payform description as char
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+    retStatus = STATUS_OK;
+    
+    jsonArray.SetAsArray();
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        while miCursor.Fetch(payform, description).Found() do begin
+            jsonRecord.Clear();
+            jsonRecord.Set("payform", payform);
+            jsonRecord.Set("description", description);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+    
+        miCursor.Close();
+        
+        if not found then retStatus = getNoRecorsStatusCode();
+        
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+
+    Module.SetExecStatus(retStatus);
+    
+    retStr = jsonArray;
+
+    return retStr;
+end
+
+public function resultCount(filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retCount as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "select count(*) from payforms ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+
+    retCount = processQueryCount(stmtStr);
+    Desconecta();
+    retStr = retCount;
+    return retStr;
+end
+
+private function processQueryCount(stmtStr as char) return integer
+objects begin
+    retCount as integer
+end
+begin
+    Sql.Select(stmtStr , retCount);
+    return retCount;
+end
+
+private function processQuerySingleResult(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+    payform description as char
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        if miCursor.Fetch(payform, description).Found() then begin
+            jsonRecord.Clear();
+            jsonRecord.Set("payform", payform);
+            jsonRecord.Set("description", description);
+            found = TRUE;
+        end
+
+        miCursor.Close();
+
+        if not found then retStatus = getNoRecorsStatusCode();
+
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+    Module.SetExecStatus(retStatus);
+
+    retStr = jsonRecord;
+    return retStr;
+end
+
+private function processFilterStr (filter as char) return char
+objects begin
+    js as json
+    payform description as char
+    retStr as char default ""
+    addAnd as boolean default false
+    andStr as char default ""
+end
+begin
+    if filter is not null then begin
+        js.LoadFromChar(filter);
+        
+        payform = js.Get("payform");
+        if payform is not null and payform != "" then begin
+            retStr = retStr + " payforms.payform matches '*" + payform + "*'";
+            andStr =  " and " ;
+        end
+
+        description = js.Get("description");
+        if description is not null and description != "" then begin
+            retStr = retStr + andStr + " payforms.description matches '*" + description + "*'";
+            andStr =  " and " ;
+        end
+
+    end
+
+    return retStr;
+end
+//{{CODEEND
+END
+

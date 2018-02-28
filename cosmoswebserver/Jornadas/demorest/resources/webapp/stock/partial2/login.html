@@ -1,0 +1,40 @@
+<div>
+    <script type="text/ng-template" id="myWaitModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Autenticando ...</h3>
+        </div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
+					<uib-progressbar class="progress-striped active" max="200" value="200" ></uib-progressbar>
+				</div>
+			</div>
+		</div>
+    </script>
+</div>
+<form id="LoginForm" name="LoginForm" class="form-horizontal" role="form">
+  <fieldset>
+    <legend>Acceso</legend>
+    <div class="form-group" ng-class="{'has-error': LoginForm.username.$invalid}">
+        <label for="username" class="col-sm-2 control-label">Usuario</label>
+        <div id="usernameControls" class="col-sm-10">
+            <input id="username" name="username" type="text" required class="form-control" ng-model="vm.username" placeholder="Introducir nombre de usuario"></input>
+            <span class="help-block error" ng-show="LoginForm.username.$error.required">requerido</span> 
+        </div>
+    </div>
+ 
+    <div class="form-group" ng-class="{'has-error': LoginForm.password.$invalid}">
+        <label for="password" class="col-sm-2 control-label">Password</label>
+        <div id="passwordControls" class="col-sm-10">
+            <input id="password" name="password" type="password" required class="form-control" ng-model="vm.password" placeholder="Introducir clave de acceso"></input>
+            <span class="help-block error" ng-show="LoginForm.password.$error.required">requerido</span> 
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button id="login" name="login" class="btn btn-primary" ng-disabled="LoginForm.$invalid" ng-click="vm.login()"><span class="glyphicon glyphicon-ok-sign"></span> Aceptar</button>
+        </div>
+    </div>
+  </fieldset>
+</form>

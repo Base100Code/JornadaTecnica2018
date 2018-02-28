@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<project name="stock" path="stock/rest" dirPath="c:\Jornadas\demorest\demorestcosmos\DEMORESTCOSMOS.PRJ">
+		<module name="security" path="security">
+			<method name="authenticate" path="authenticate" http="GET">
+				<queryParameter name="username" defaultValue = ""/>
+				<queryParameter name="password" defaultValue=""/>
+				<queryParameter name="domain"/>
+			</method>
+		</module>
+		<module name="states" path="states">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{key}" http="GET">
+				<urlParameter name="key"/>
+			</method>
+			<method name="deleteByKey" path="{key}" http="DELETE">
+				<urlParameter name="key"/>
+			</method>
+			<method name="update" path="{key}" http="PUT">
+				<urlParameter name="key"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+		</module>
+
+		<module name="customers" path="customers">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{key}" http="GET">
+				<urlParameter name="key"/>
+			</method>
+			<method name="deleteByKey" path="{key}" http="DELETE">
+				<urlParameter name="key"/>
+			</method>
+			<method name="update" path="{key}" http="PUT">
+				<urlParameter name="key"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+		</module>
+
+		<module name="items" path="items">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{item}/{supplier}" http="GET">
+				<urlParameter name="item"/>
+				<urlParameter name="supplier"/>
+			</method>
+			<method name="deleteByKey" path="{item}/{supplier}" http="DELETE">
+				<urlParameter name="item"/>
+				<urlParameter name="supplier"/>
+			</method>
+			<method name="update" path="{item}/{supplier}" http="PUT">
+				<urlParameter name="item"/>
+				<urlParameter name="supplier"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+		</module>
+		<module name="suppliers" path="suppliers">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{key}" http="GET">
+				<urlParameter name="key"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="update" path="{supplier}" http="PUT">
+				<urlParameter name="supplier"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="deleteByKey" path="{supplier}" http="DELETE">
+				<urlParameter name="supplier"/>
+			</method>
+		</module>
+		<module name="orders" path="orders">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{key}" http="GET">
+				<urlParameter name="key"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="update" path="{key}" http="PUT">
+				<urlParameter name="key"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="deleteByKey" path="{key}" http="DELETE">
+				<urlParameter name="key"/>
+			</method>
+		</module>
+		<module name="orderlines" path="orderlines">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{ordernbr}/{linenbr}" http="GET">
+				<urlParameter name="ordernbr"/>
+				<urlParameter name="linenbr"/>
+			</method>
+			<method name="deleteByKey" path="{linenbr}/{ordernbr}" http="DELETE">
+				<urlParameter name="linenbr"/>
+				<urlParameter name="ordernbr"/>
+			</method>
+			<method name="update" path="{ordernbr}/{linenbr}" http="PUT">
+				<urlParameter name="ordernbr"/>
+				<urlParameter name="linenbr"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+		</module>
+		<module name="payforms" path="payforms">
+			<method name="resultList" path="resultList" http="POST">
+				<queryParameter name="firstResult" defaultValue="0"/>
+				<queryParameter name="maxResults" defaultValue="10"/>
+				<queryParameter name="orderBy"/>
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="resultCount" path="resultCount" http="POST">
+				<bodyParameter name="filter"/>
+			</method>
+			<method name="findByKey" path="{key}" http="GET">
+				<urlParameter name="key"/>
+			</method>
+			<method name="deleteByKey" path="{key}" http="DELETE">
+				<urlParameter name="key"/>
+			</method>
+			<method name="update" path="{key}" http="PUT">
+				<urlParameter name="key"/>
+				<bodyParameter name="entity"/>
+			</method>
+			<method name="create" http="POST">
+				<bodyParameter name="entity"/>
+			</method>
+		</module>
+	</project>
+	
+
+</configuration>

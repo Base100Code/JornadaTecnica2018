@@ -1,0 +1,21 @@
+INCLUDES BEGIN
+	UTILINCL
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+public function authenticate(username as char, password as char, domain as char) return char
+objects begin
+    retStr as char default null
+    retStatus as integer
+end
+begin
+    retStatus = STATUS_OK;
+    SetExecStatus(retStatus);
+    retStr = " ";
+    return retStr;
+end
+//{{CODEEND
+END
+

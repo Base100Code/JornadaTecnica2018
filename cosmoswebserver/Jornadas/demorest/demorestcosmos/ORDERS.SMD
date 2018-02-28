@@ -1,0 +1,415 @@
+LIBRARIES BEGIN
+	utilslib
+END
+INCLUDES BEGIN
+	utilincl
+END
+CONSTANTS  begin
+end
+CODE BEGIN
+//{{CODEBEGIN
+private function Traza(firstResult as integer, maxResults as integer, orderBy as char, filter as char)
+objects begin
+    trazaStream as Stream
+end
+begin
+    trazaStream.Open("c:\tmp\orders.log", 2);
+    
+    trazaStream.Write("firstResult:");
+    trazaStream.Write(firstResult).NewLine();
+
+    trazaStream.Write("maxResults:");
+    trazaStream.Write(maxResults).NewLine();
+
+    trazaStream.Write("orderBy").NewLine();
+    if orderBy is not null then begin
+        trazaStream.Write(orderBy).NewLine();
+    end
+
+    trazaStream.Write("filter").NewLine();
+    if filter is not null then begin
+        trazaStream.Write(filter).NewLine();
+    end
+
+end
+
+public function resultList(firstResult as integer, maxResults as integer, orderBy as char, filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retStatus as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    
+    Traza(firstResult, maxResults, orderBy, filter);
+//    stmtStr = "select * from orders ";
+    stmtStr = "select orders.*, customers.company, payforms.description from orders, outer customers, outer payforms where orders.customer = customers.customer and orders.payform = payforms.payform ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " and " + pf;
+        end
+    end
+    
+    if orderBy is not null then begin
+        stmtStr = stmtStr + " order by " + orderBy;
+    end
+
+    if maxResults is not null then begin
+        stmtStr = stmtStr + " limit " + maxResults;
+    end
+    
+    if  firstResult is not null then begin
+        stmtStr = stmtStr + "  offset " +  firstResult;
+    end
+ 
+
+    //Hace el SetExecStatus dentro de processQuery
+    retStr = processQuery(stmtStr);    
+    
+    
+    //SetExecStatus(415);
+
+    Desconecta();    
+    return retStr;
+end
+
+public function resultCount(filter as char) return char
+objects begin
+    retStr stmtStr as char
+    retCount as integer
+    pf as char
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+
+    stmtStr = "select count(*) from orders ";
+
+    if filter is not null then begin
+        pf = processFilterStr(filter);
+        if pf is not null and pf != "" then begin
+            stmtStr = stmtStr + " where " + pf;
+        end
+    end
+
+    retCount = processQueryCount(stmtStr);
+    Desconecta();
+    retStr = retCount;
+    return retStr;
+end
+
+public function findByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    //stmtStr = "select items.*, suppliers.company from items, suppliers where items.supplier = suppliers.supplier";
+    stmtStr = "select orders.*, customers.company, payforms.description from orders, customers, payforms where orders.customer = customers.customer and orders.payform = payforms.payform ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " and order_nbr = " + key;
+        retStr = processQuerySingleResult(stmtStr);
+    end
+
+    Desconecta();
+    return retStr;
+end
+
+private function processQuery(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+    order_nbr customer order_date pay_date payform order_status customerCompany payformDescrition as char
+    orderDateValue as date
+    payDateValue as date
+
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+    retStatus = STATUS_OK;
+    
+    jsonArray.SetAsArray();
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        while miCursor.Fetch(order_nbr, customer, orderDateValue, payDateValue, payform, order_status, customerCompany, payformDescrition).Found() do begin
+            jsonRecord.Clear();
+            jsonRecord.Set("orderNbr", order_nbr);
+//            jsonRecord.Set("orderDate", orderDateValue.ToChar("YYYY/MM/DD"));
+//            jsonRecord.Set("payDate", payDateValue.ToChar("YYYY/MM/DD"));
+            jsonRecord.Set("orderDate", orderDateValue.ToChar("MM/DD/YYYY"));
+            jsonRecord.Set("payDate", payDateValue.ToChar("MM/DD/YYYY"));
+            jsonRecord.Set("orderStatus", order_status);
+            
+            jsonRecord.Set("customers.company", customerCompany);
+            jsonRecord.Set("payforms.description", payformDescrition);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+    
+        miCursor.Close();
+        
+        if not found then retStatus = getNoRecorsStatusCode();
+        
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+
+    Module.SetExecStatus(retStatus);
+        
+    retStr = jsonArray;
+    
+    return retStr;
+end
+
+public function create(entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    order_nbr customer order_date pay_date payform order_status as char
+    payDateDate as date
+    orderDateDate as date
+    retJson as char
+    retStatus as integer
+end
+begin
+
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+
+    order_nbr = js.Get("orderNbr");
+    customer = js.Get("customers.customer");
+    order_date = js.Get("orderDate");
+    pay_date = js.Get("payDate");
+    payform = js.Get("payforms.payform");
+    order_status = js.Get("orderStatus");
+    
+    
+    payDateDate.FromChar(pay_date, "YYYY-MM-DDTAA:AA:AA.AAAZ");
+    orderDateDate.FromChar(order_date, "YYYY-MM-DDTAA:AA:AA.AAAZ");
+    
+    if order_nbr is null then begin
+        retStatus = BAD_REQUEST;
+       
+    end else begin
+    
+        stmtStr = "insert into orders(order_nbr, customer, order_date, pay_date, payform, order_status) values(?,?,?,?,?,?)";
+        Sql.SqlExec(stmtStr,  order_nbr, customer, orderDateDate, payDateDate, payform, order_status);
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_CONFLICT;
+        end else begin
+            retStatus = STATUS_CREATED;
+        end
+    
+    end
+  
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function update(key as char, entity as char) return char
+objects begin
+    js as JSon
+    retStr stmtStr as char
+    order_nbr customer order_date pay_date payform order_status as char
+    customercompany as char
+    retStatus as integer
+    payDateDate as date
+    orderDateDate as date
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+    
+    js.LoadFromChar(entity);
+
+    order_nbr = key;
+    customercompany = js.Get("customers.company");
+    order_date = js.Get("orderDate");
+    pay_date = js.Get("payDate");
+    payform = js.Get("payforms.payform");
+
+    order_status = js.Get("orderStatus");
+
+    payDateDate.FromChar(pay_date, "YYYY-MM-DDTAA:AA:AA.AAAZ");
+    orderDateDate.FromChar(order_date, "YYYY-MM-DDTAA:AA:AA.AAAZ");
+
+    if key is null then begin
+        retStatus = BAD_REQUEST;
+    end else begin
+        //obtenemos id de la compañía a partir del nombre de la compañia
+        Sql.Select("select customer from customers where company = '" + customercompany + "'", customer);
+        stmtStr = "update orders set customer = ?, order_date = ?, pay_date = ?, payform = ?, order_status = ? where order_nbr= ?";
+        Sql.SqlExec(stmtStr, customer, orderDateDate, payDateDate, payform, order_status, order_nbr);
+        
+        if Sql.Error() != 0 then begin
+            retStatus = STATUS_NOCONTENT;
+        end else if Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;
+        end else begin            
+            retStatus = STATUS_OK;
+        end
+    end
+
+    Module.SetExecStatus(retStatus);
+    Desconecta();
+    return retStr;
+end
+
+public function deleteByKey(key as char) return char
+objects begin
+    retStr stmtStr as char default NULL
+    retStatus as integer
+end
+begin
+    ErrorLevel(0);
+    Conecta();
+
+    stmtStr = "delete from orders where ";
+
+    if key is not null then begin
+        stmtStr = stmtStr + " order_nbr = " + key;
+        Sql.SqlExec(stmtStr);
+        if Sql.Error() != 0 or Sql.Rows() == 0 then begin
+            retStatus = STATUS_NOTFOUND;            
+        end else begin
+            retStatus = STATUS_OK;
+        end
+    end else begin
+        retStatus = STATUS_NOTFOUND;
+    end
+
+    Desconecta();
+    
+    Module.SetExecStatus(retStatus);
+    
+    return retStr;
+end
+
+private function processQuerySingleResult(stmtStr as char) return char
+objects begin
+    retStr as char default ""
+    miCursor as SqlCursor
+    //jsonRet as json
+    jsonArray as json
+    jsonRecord as json
+//    id as json
+    stateStr nameStateStr as char
+
+    order_nbr customer order_date pay_date payform order_status customerCompany payformDescrition as char
+    orderDateValue as date
+    payDateValue as date
+
+    retStatus as integer
+    found as boolean default FALSE
+end
+begin
+
+    miCursor.Prepare(stmtStr);
+    if Sql.Error() == 0 then begin
+        miCursor.Open();
+        
+        if miCursor.Fetch(order_nbr, customer, orderDateValue, payDateValue, payform, order_status, customerCompany, payformDescrition).Found() then begin
+            jsonRecord.Clear();
+            jsonRecord.Set("orderNbr", order_nbr);
+//            jsonRecord.Set("orderDate", orderDateValue.ToChar("YYYY/MM/DD"));
+//            jsonRecord.Set("payDate", payDateValue.ToChar("YYYY/MM/DD"));
+            jsonRecord.Set("orderDate", orderDateValue.ToChar("MM/DD/YYYY"));
+            jsonRecord.Set("payDate", payDateValue.ToChar("MM/DD/YYYY"));
+            jsonRecord.Set("orderStatus", order_status);
+            
+            jsonRecord.Set("customers.company", customerCompany);
+            jsonRecord.Set("payforms.description", payformDescrition);
+            jsonArray.AddArrayElement(jsonRecord);
+            found = TRUE;
+        end
+
+        miCursor.Close();
+
+        if not found then retStatus = getNoRecorsStatusCode();
+
+    end else begin
+        retStatus = BAD_REQUEST;
+    end
+
+    miCursor.Free();
+    Module.SetExecStatus(retStatus);
+
+    retStr = jsonRecord;
+    return retStr;
+end
+
+
+private function processQueryCount(stmtStr as char) return integer
+objects begin
+    retCount as integer
+end
+begin
+    Sql.Select(stmtStr , retCount);
+    return retCount;
+end
+
+
+private function processFilterStr (filter as char) return char
+objects begin
+    js as json
+    customer payform invoiced as char
+    retStr as char default ""
+    addAnd as boolean default false
+    andStr as char default ""
+end
+begin
+    if filter is not null then begin
+        js.LoadFromChar(filter);
+        
+        customer = js.Get("customers.customer");
+        if customer is null or customer == "" then begin
+            customer = js.Get("customer");
+        end
+        if customer is not null and customer != "" then begin
+            retStr = retStr + " orders.customer = " + customer;
+            andStr =  " and " ;
+        end
+
+        payform = js.Get("payforms.payform");
+        if payform is null or payform == "" then begin
+            payform = js.Get("payform");
+        end
+        if payform is not null and payform != "" then begin
+            retStr = retStr + andStr + " orders.payform matches '*" + payform + "*'";
+            andStr =  " and " ;
+        end
+
+        invoiced = js.Get("orderStatus");
+        if invoiced is not null and invoiced != "" then begin
+            retStr = retStr + andStr + " orders.order_status matches '*" + invoiced + "*'";
+            andStr =  " and " ;
+        end
+
+    end
+
+    return retStr;
+end
+//{{CODEEND
+END
+

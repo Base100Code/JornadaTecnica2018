@@ -1,0 +1,140 @@
+
+<form name="customersForm" class="form-horizontal" role="form">
+<fieldset>
+	<legend>
+		<i class="glyphicon glyphicon-file"></i> {{vm.isNew ? ('Añadir Customers'): ('Editar Customers')}}
+	</legend>
+	<p></p>
+
+
+	<!-- group default -->
+	<section name="default" class="panel panel-default Auto">
+	<div class="panel-body" >
+
+
+		<div class="form-group" ng-class="{'has-error': customersForm.customer.$invalid}">
+			<label for="customer" class="col-sm-2 control-label">Customer Code</label>
+	        <div id="customerControls" class="col-sm-10">
+			<div ng-show="vm.isNew">
+				<input type="text" class="form-control" name="customer" placeholder="Customer Code" ng-model="vm.instance.customer" ng-pattern="/^[0-9]+([0-9])?$/"
+				ng-required="true"
+				>
+				</input>
+			</div>
+			<div class="control-value"  ng-show="!vm.isNew">
+						{{vm.instance.customer}}
+			</div>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.company.$invalid}">
+			<label for="company" class="col-sm-2 control-label">Company</label>
+	        <div id="companyControls" class="col-sm-10">
+            <input id="company" name="company" type="text" class="form-control" ng-model="vm.instance.company" placeholder="Company"
+			></input>
+            <span class="help-block error" ng-show="customersForm.company.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.surname.$invalid}">
+			<label for="surname" class="col-sm-2 control-label">Surname</label>
+	        <div id="surnameControls" class="col-sm-10">
+            <input id="surname" name="surname" type="text" class="form-control" ng-model="vm.instance.surname" placeholder="Surname"
+			></input>
+            <span class="help-block error" ng-show="customersForm.surname.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.fname.$invalid}">
+			<label for="fname" class="col-sm-2 control-label">Name</label>
+	        <div id="fnameControls" class="col-sm-10">
+            <input id="fname" name="fname" type="text" class="form-control" ng-model="vm.instance.fname" placeholder="Name"
+			></input>
+            <span class="help-block error" ng-show="customersForm.fname.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.address1.$invalid}">
+			<label for="address1" class="col-sm-2 control-label">Address1</label>
+	        <div id="address1Controls" class="col-sm-10">
+            <input id="address1" name="address1" type="text" class="form-control" ng-model="vm.instance.address1" placeholder="Address1"
+			></input>
+            <span class="help-block error" ng-show="customersForm.address1.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.address2.$invalid}">
+			<label for="address2" class="col-sm-2 control-label">Address2</label>
+	        <div id="address2Controls" class="col-sm-10">
+            <input id="address2" name="address2" type="text" class="form-control" ng-model="vm.instance.address2" placeholder="Address2"
+			></input>
+            <span class="help-block error" ng-show="customersForm.address2.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.city.$invalid}">
+			<label for="city" class="col-sm-2 control-label">City</label>
+	        <div id="cityControls" class="col-sm-10">
+            <input id="city" name="city" type="text" class="form-control" ng-model="vm.instance.city" placeholder="City"
+			></input>
+            <span class="help-block error" ng-show="customersForm.city.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.zip.$invalid}">
+			<label for="zip" class="col-sm-2 control-label">Zip Code</label>
+	        <div id="zipControls" class="col-sm-10">
+				<input type="text" class="form-control" name="zip" placeholder="Zip Code" ng-model="vm.instance.zip" ng-pattern="/^[0-9]+([0-9])?$/"
+				>
+				</input>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.phone.$invalid}">
+			<label for="phone" class="col-sm-2 control-label">Phone</label>
+	        <div id="phoneControls" class="col-sm-10">
+            <input id="phone" name="phone" type="text" class="form-control" ng-model="vm.instance.phone" placeholder="Phone"
+			></input>
+            <span class="help-block error" ng-show="customersForm.phone.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.payform.$invalid}">
+			<label for="payform" class="col-sm-2 control-label">Form of Payment</label>
+	        <div id="payformControls" class="col-sm-10">
+            <input id="payform" name="payform" type="text" class="form-control" ng-model="vm.instance.payform" placeholder="Form of Payment"
+			></input>
+            <span class="help-block error" ng-show="customersForm.payform.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.totalInvoice.$invalid}">
+			<label for="totalInvoice" class="col-sm-2 control-label">Total Invoiced</label>
+	        <div id="totalInvoiceControls" class="col-sm-10">
+				<input type="text" class="form-control" name="totalInvoice" placeholder="Total Invoiced" ng-model="vm.instance.totalInvoice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+				>
+				</input>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': customersForm.state.$invalid}">
+			<label for="state" class="col-sm-2 control-label">State</label>
+	        <div id="stateControls" class="col-sm-10">
+            <input id="state" name="state" type="text" class="form-control" ng-model="vm.instance.state" placeholder="State"
+				ng-required="true"
+			></input>
+            <span class="help-block error" ng-show="customersForm.state.$error.required">es un valor requerido</span> 
+
+			</div>
+		</div>
+	</div>
+	</section>
+	<!-- end group default -->
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button id="save" name="save" class="btn btn-primary" ng-disabled="customersForm.$invalid" ng-click="vm.doSave()"><span class="glyphicon glyphicon-ok-sign"></span>Guardar</button> 
+            <button id="cancel" name="cancel" class="btn btn-default" ng-click="vm.doCancel()">Cancelar</button>            
+            <button id="delete" name="delete" class="btn btn-danger" ng-show="!vm.isNew" ng-click="vm.doDelete()">Borrar</button>
+        </div>
+    </div>
+</fieldset>
+</form>
+	<div>
+	</div>
